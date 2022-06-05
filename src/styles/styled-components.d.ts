@@ -30,6 +30,7 @@ declare module 'styled-components' {
 			textLight: string;
 			body: string;
 			container: string;
+			red: string;
 		};
 	}
 }

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { IoIosVideocam, IoIosArrowRoundForward } from 'react-icons/io';
+import { BiVideo, BiRightArrowAlt } from 'react-icons/bi';
 
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { v4 as uuid } from 'uuid';
 
 import * as S from './styles';
 
@@ -31,8 +32,8 @@ const Home: NextPage = () => {
 					</header>
 
 					<main className="home__content">
-						<button className="start__meeting" onClick={ () => router.push('/call') }>
-							<IoIosVideocam className="start__meeting-icon" />
+						<button className="start__meeting" onClick={ () => router.push(`/meet/${uuid()}`) }>
+							<BiVideo className="start__meeting-icon" />
 							Start a new call
 						</button>
 
@@ -47,7 +48,7 @@ const Home: NextPage = () => {
 
 							<button className="paste__link-button" disabled={ !callLink }>
 								Join
-								<IoIosArrowRoundForward className="paste__link-icon" />
+								<BiRightArrowAlt className="paste__link-icon" />
 							</button>
 						</div>
 					</main>
