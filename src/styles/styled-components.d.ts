@@ -2,6 +2,9 @@ import 'styled-components';
 
 declare module 'styled-components' {
 	export interface DefaultTheme {
+		defaults: {
+			footerHeight: string;
+		};
 		font: {
 			family: string;
 
