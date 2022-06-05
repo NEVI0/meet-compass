@@ -78,25 +78,3 @@ const Home: NextPage = () => {
 }
 
 export default Home;
-
-/*
-
-import Lottie from 'react-lottie';
-import * as rocketAnimation from '../../../public/assets/animations/rocket.json';
-
-<Lottie
-	width={ 400 }
-	height={ 400 }
-	isStopped={ false }
-	isPaused={ false }
-	options={{
-		loop: true,
-		autoplay: true, 
-		animationData: rocketAnimation,
-		rendererSettings: {
-			preserveAspectRatio: 'xMidYMid slice'
-		}
-	}}
-/>
-
-*/

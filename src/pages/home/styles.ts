@@ -90,6 +90,10 @@ export const HomeContainer = styled.div`
 					background-color: ${props => props.theme.colors.secondary};
 					color: #FFF;
 				}
+
+				&:active {
+					transform: scale(0.98);
+				}
 			}
 
 			.paste__link {
