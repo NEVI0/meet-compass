@@ -24,7 +24,6 @@ export const MeetContainer = styled.div<{ isUsingVideo: boolean; }>`
 			overflow: hidden;
 			border-radius: 1rem;
 			border: 3px solid ${props => props.theme.colors.primary};
-			transition: .3s;
 			
 			&__video {
 				width: 100%;
@@ -33,22 +32,32 @@ export const MeetContainer = styled.div<{ isUsingVideo: boolean; }>`
 			}
 
 			&__options {
+				display: flex;
+				flex-direction: column;
+				row-gap: 1rem;
 				position: absolute;
 				top: 1rem;
 				right: 1rem;
-				width: 30px;
-				height: 30px;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				border-radius: .5rem;
-				background-color: ${props => transparentize(.5, props.theme.colors.body)};
-				color: ${props => props.theme.colors.container};
-				font-size: ${props => props.theme.font.iconSize};
-				color: #FFF;
+				
+				.option {					
+					width: 30px;
+					height: 30px;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					border-radius: .5rem;
+					background-color: ${props => transparentize(.5, props.theme.colors.body)};
+					color: ${props => props.theme.colors.container};
+					font-size: ${props => props.theme.font.iconSize};
+					color: #FFF;
+					
+					&-grab {
+						cursor: grab;
+					}
+				}
 			}
 
-			${props => !props.isUsingVideo && 'opacity: 0'};
+			${props => !props.isUsingVideo && 'transition: .3s ease all; opacity: 0'};
 		}
 		
 		&__content {

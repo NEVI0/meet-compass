@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, BiChat, BiPhoneOff, BiDotsHorizontalRounded } from 'react-icons/bi';
+import React, { useState, useEffect } from 'react';
+import { BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, BiChat, BiPhoneOff, BiMove, BiUndo } from 'react-icons/bi';
 import Lottie from 'react-lottie';
 
 import type { NextPage } from 'next';
@@ -14,43 +14,120 @@ const Meet: NextPage = () => {
 
 	const router = useRouter();
 	
-	const [ isUsingVideo, setIsUsingVideo ] = useState<boolean>(false);
-	const [ isUsingMicrophone, setIsUsingMicrophone ] = useState<boolean>(false);
+	const [ isUsingVideo, setIsUsingVideo ] = useState<boolean>(true);
+	const [ isUsingMicrophone, setIsUsingMicrophone ] = useState<boolean>(true);
 
 	const handleDisplayHour = () => {
 		const hour = moment().hours();
 		return moment().format(`HH:mm [${hour >= 12 ? 'PM' : 'AM'}]`);
 	}
 
-	const handleGetUserVideo = async () => {
-		try {
-			const userVideo = document.getElementById('user-video');
-			const video = await navigator.mediaDevices.getUserMedia({ video: true }); // @ts-ignore
-
-			window.localStream = video; // @ts-ignore
-			userVideo.srcObject = video;
-			setIsUsingVideo(true);
+	const handleChangeUserVideoState = () => {
+		try { // @ts-ignore
+			localStream.getVideoTracks()[0].enabled = !isUsingVideo;
+			setIsUsingVideo(!isUsingVideo);
 		} catch (err) {
 			console.log('Error: ', err);
 		}
 	}
 
-	const handleRemoveUserVideo = () => {
-		try {
-			const userVideo = document.getElementById('user-video'); // @ts-ignore
-
-			localStream.getTracks().forEach(track => track.stop()); // @ts-ignore
-			userVideo.srcObject = null;
-			setIsUsingVideo(false);
+	const handleChangeUserAudioState = () => {
+		try { // @ts-ignore
+			localStream.getAudioTracks()[0].enabled = !isUsingMicrophone;
+			setIsUsingMicrophone(!isUsingMicrophone);
 		} catch (err) {
 			console.log('Error: ', err);
 		}
 	}
 
-	const handleHangUp = async () => {
-		handleRemoveUserVideo();
+	const handleHangUp = async () => { // @ts-ignore
+		localStream.getTracks().forEach(track => track.stop());
 		router.push('/home');
 	}
+
+	useEffect(() => {
+		const getUserMedia = async () => {
+			try {
+				const userVideo = document.getElementById('user-video');
+				const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true }); // @ts-ignore
+				
+				window.localStream = stream; // @ts-ignore
+				userVideo.srcObject = stream;
+
+				handleChangeUserVideoState();
+				handleChangeUserAudioState();
+			} catch (err) {
+				console.log('Error: ', err);
+			}
+		}
+
+		getUserMedia();
+	}, []);
+
+	useEffect(() => {
+		const userVideoContainer = document.getElementById('user-video-container');
+		const resetPositionButton = document.getElementById('reset-position-button');
+		const moveButton = document.getElementById('user-move-button');
+
+		if (!userVideoContainer || !resetPositionButton || !moveButton) return;
+		
+		const initialPosition = {
+			x: userVideoContainer.offsetLeft,
+			y: userVideoContainer.offsetTop
+		}
+
+		let mousePosition;
+		let calculedPosition = { x: 0, y: 0 };
+		let isPressed = false;
+
+		const onResetPosition = () => {
+			userVideoContainer.style.left = initialPosition.x + 'px';
+			userVideoContainer.style.top = initialPosition.y + 'px';
+		}
+
+		const onMouseDown = (event: MouseEvent) => {
+			isPressed = true;
+
+			calculedPosition.x = userVideoContainer.offsetLeft - event.clientX;
+			calculedPosition.y = userVideoContainer.offsetTop - event.clientY;
+		}
+
+		const onMouseUp = () => {
+			isPressed = false;
+		}
+
+		const onMouseMove = (event: MouseEvent) => {
+			event.preventDefault();
+
+			if (!isPressed) return;
+			mousePosition = { x : event.clientX, y : event.clientY };
+
+			const newPosition = {
+				x: mousePosition.x + calculedPosition.x,
+				y: mousePosition.y + calculedPosition.y
+			}
+
+			if (newPosition.x > 16 && newPosition.x < initialPosition.x) {
+				userVideoContainer.style.left = newPosition.x + 'px';
+			}
+
+			if (newPosition.y > 16 && newPosition.y < initialPosition.y) {
+				userVideoContainer.style.top = newPosition.y + 'px';
+			}
+		}
+
+		resetPositionButton.addEventListener('click', onResetPosition, true);
+		moveButton.addEventListener('mousedown', onMouseDown, true);
+		document.addEventListener('mouseup', onMouseUp, true);
+		document.addEventListener('mousemove', onMouseMove, true);
+
+		return () => {
+			resetPositionButton.removeEventListener('click', onResetPosition, true);
+			moveButton.removeEventListener('mousedown', onMouseDown, true);
+			document.removeEventListener('mouseup', onMouseUp, true);
+			document.removeEventListener('mousemove', onMouseMove, true);
+		}
+	}, []);
 
 	return (
 		<S.MeetContainer isUsingVideo={ isUsingVideo }>
@@ -88,12 +165,18 @@ const Meet: NextPage = () => {
 					</div>
 				</main>
 
-				<aside className="user" id="user-container">
+				<aside className="user" id="user-video-container">
 					<video autoPlay={ true } className="user__video" id="user-video"></video>
 
-					<button className="user__options" id="user-button">
-						<BiDotsHorizontalRounded className="user__options-icon" />
-					</button>
+					<div className="user__options">
+						<button className="option option-grab" id="user-move-button">
+							<BiMove />
+						</button>
+
+						<button className="option" id="reset-position-button">
+							<BiUndo />
+						</button>
+					</div>
 				</aside>
 
 				<footer className="meet__footer">
@@ -104,11 +187,11 @@ const Meet: NextPage = () => {
 					</div>
 
 					<section className="meet__actions">
-						<button className="action" onClick={ () => setIsUsingMicrophone(!isUsingMicrophone) }>
+						<button className="action" onClick={ handleChangeUserAudioState }>
 							{ isUsingMicrophone ? <BiMicrophone className="action-icon" /> : <BiMicrophoneOff className="action-icon" /> }
 						</button>
 
-						<button className="action" onClick={ isUsingVideo ? handleRemoveUserVideo : handleGetUserVideo }>
+						<button className="action" onClick={ handleChangeUserVideoState }>
 							{ isUsingVideo ? <BiVideo className="action-icon" /> : <BiVideoOff className="action-icon" /> }
 						</button>
 
