@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import { transparentize } from 'polished';
+import { transparentize, darken } from 'polished';
 
-export const MeetContainer = styled.div`
+export const MeetContainer = styled.div<{ isUsingVideo: boolean; }>`
 	display: flex;
 	flex-direction: column;
 	height: 100vh;
@@ -12,25 +12,27 @@ export const MeetContainer = styled.div`
 		display: flex;
 		flex-direction: column;
 
-		.webcam {
-			position: fixed;
-			right: 1rem;
-			bottom: calc(100px + 1rem);
-			width: 300px;
-			height: 180px;
+		.user {
 			display: flex;
 			align-items: center;
 			justify-content: center;
+			position: fixed;
+			right: 1rem;
+			bottom: calc(${props => props.theme.defaults.footerHeight} + 1rem);
+			width: 340px;
+			height: 200px;
 			overflow: hidden;
 			border-radius: 1rem;
-			border: 3px solid ${props => props.theme.colors.container};
+			border: 3px solid ${props => props.theme.colors.primary};
+			transition: .3s;
 			
 			&__video {
 				width: 100%;
 				height: 100%;
+				object-fit: cover;
 			}
 
-			&__move {
+			&__options {
 				position: absolute;
 				top: 1rem;
 				right: 1rem;
@@ -43,12 +45,10 @@ export const MeetContainer = styled.div`
 				background-color: ${props => transparentize(.5, props.theme.colors.body)};
 				color: ${props => props.theme.colors.container};
 				font-size: ${props => props.theme.font.iconSize};
-				transition: .3s;
-
-				&:hover {
-					color: #FFF;
-				}
+				color: #FFF;
 			}
+
+			${props => !props.isUsingVideo && 'opacity: 0'};
 		}
 		
 		&__content {
@@ -75,6 +75,22 @@ export const MeetContainer = styled.div`
 					height: 100%;
 				}
 			}
+
+			.empty {
+				display: flex;
+				flex-direction: column;
+				row-gap: 2rem;
+				text-align: center;
+
+				&__title {
+					margin-bottom: .25rem;
+					font-size: ${props => props.theme.font.h1Size};
+				}
+
+				&__message {
+					color: ${props => props.theme.colors.textLight};
+				}
+			}
 		}
 
 		&__footer {
@@ -82,42 +98,78 @@ export const MeetContainer = styled.div`
 			align-items: center;
 			justify-content: space-between;
 			padding: 0 3.25rem;
-			height: 100px;
+			height: ${props => props.theme.defaults.footerHeight};
 			background-color: ${props => props.theme.colors.container};
+			position: relative;
+		}
 
-			.actions {
+		&__data {
+			display: flex;
+			align-items: center;
+			column-gap: 1rem;
+
+			&-divider {
+				height: 15px;
+				width: 1px;
+				background-color: ${props => props.theme.colors.textLight};
+				border-radius: 1rem;
+			}
+		}
+
+		&__time {
+			font-size: ${props => props.theme.font.h3Size};
+		}
+
+		&__name {
+			font-weight: ${props => props.theme.font.semiBold};
+			font-size: ${props => props.theme.font.h3Size};
+		}
+
+		&__actions {
+			display: flex;
+			align-items: center;
+			column-gap: 1rem;
+			position: absolute;
+			left: 50%;
+			transform: translateX(-50%);
+
+			.action {
 				display: flex;
 				align-items: center;
-				column-gap: 1rem;
+				justify-content: center;
+				width: 40px;
+				height: 40px;
+				border-radius: 100%;
+				border: 1px solid ${props => props.theme.colors.primary};
+				background-color: ${props => props.theme.colors.primary};
+				font-size: ${props => props.theme.font.iconSize};
+				color: ${props => props.theme.colors.text};
+				transition: .3s;
+				
+				&:hover:not(&-hangup) {
+					border-color: ${props => props.theme.colors.secondary};
+					background-color: ${props => props.theme.colors.secondary};
+				}
 
-				.action {
-					display: flex;
-					align-items: center;
-					justify-content: center;
-					width: 45px;
-					height: 45px;
-					border-radius: 100%;
-					border: 1px solid ${props => props.theme.colors.primary};
-					background-color: ${props => props.theme.colors.primary};
-					font-size: ${props => props.theme.font.iconSize};
-					color: ${props => props.theme.colors.text};
-					transition: .3s;
-					
-					&:hover:not(&-hangup), &:focus:not(&-hangup) {
-						border-color: ${props => props.theme.colors.secondary};
-						background-color: ${props => props.theme.colors.secondary};
-					}
+				&:active {
+					transform: scale(0.9);
+				}
 
-					&-hangup {
-						border-color: ${props => props.theme.colors.red};
-						background-color: ${props => props.theme.colors.red};
+				&-hangup {
+					border-color: ${props => props.theme.colors.red};
+					background-color: ${props => props.theme.colors.red};
+
+					&:hover {
+						border-color: ${props => darken(.2, props.theme.colors.red)};
+						background-color: ${props => darken(.2, props.theme.colors.red)};
 					}
 				}
 			}
 		}
 
-		&__name {
-			font-size: ${props => props.theme.font.h2Size};
+		&__id {
+			color: ${props => props.theme.colors.textLight};
+			font-size: ${props => props.theme.font.smallSize};
 		}
 	} 
 `;
