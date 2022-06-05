@@ -6,7 +6,6 @@ export const HomeContainer = styled.div`
 	justify-content: center;
 	min-height: 100vh;
 	background-image: url(assets/images/home-wallpaper.png);
-	background-repeat: no-repeat;
 	background-position: center;
 	background-size: cover;
 
@@ -128,10 +127,15 @@ export const HomeContainer = styled.div`
 					&:hover, &:focus {
 						color: ${props => props.theme.colors.primary};
 					}
+
+					&:disabled {
+						color: #303030;
+						cursor: no-drop;
+					}
 				}
 
-				&-button:hover > .paste__link-icon,
-				&-button:focus > .paste__link-icon {
+				&-button:hover:not(:disabled) > .paste__link-icon,
+				&-button:focus:not(:disabled) > .paste__link-icon {
 					transform: translateX(.25rem);
 				}
 

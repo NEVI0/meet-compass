@@ -13,7 +13,7 @@ const Home: NextPage = () => {
 	const [ callLink, setCallLink ] = useState<string>('');
 
 	return (
-		<S.HomeContainer>
+		<S.HomeContainer id="home-container">
 			<Head>
 				<title>Home - Video Compass</title>
 			</Head>
