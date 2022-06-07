@@ -14,6 +14,8 @@ const Meet: NextPage = () => {
 
 	const router = useRouter();
 	
+	const [ hasGuests, setHasGuests ] = useState<boolean>(true);
+	const [ isSharingScreen, setIsSharingScreen ] = useState<boolean>(true);
 	const [ isUsingVideo, setIsUsingVideo ] = useState<boolean>(true);
 	const [ isUsingMicrophone, setIsUsingMicrophone ] = useState<boolean>(true);
 
@@ -130,39 +132,61 @@ const Meet: NextPage = () => {
 	}, []);
 
 	return (
-		<S.MeetContainer isUsingVideo={ isUsingVideo }>
+		<S.MeetContainer hasGuests={ hasGuests } isSharingScreen={ isSharingScreen } isUsingVideo={ isUsingVideo }>
 			<Head>
 				<title>Meet - Video Compass</title>
 			</Head>
 
 			<div className="meet">
 				<main className="meet__content">
-					<div className="empty">
-						<Lottie
-							width={ 550 }
-							height={ 230 }
-							isStopped={ false }
-							isPaused={ false }
-							options={{
-								loop: true,
-								autoplay: true, 
-								animationData: emptyAnimation,
-								rendererSettings: {
-									preserveAspectRatio: 'xMidYMid slice'
+					{
+						hasGuests ? (
+							<div className="meet__guests">
+								{
+									new Array(1).fill(0).map((_, index) => (
+										<div key={ index.toString() }className="guest">
+											<video src="public/assets/test.mp4" autoPlay={ true } controls={ true } className="guest__video" id="guest-video"></video>
+
+											<div className="guest__data">
+												<span className="guest__name">
+													Hernesto Rodrigez
+												</span>
+
+												<BiMicrophoneOff className="guest__microphone-icon" />
+											</div>
+										</div>
+									))
 								}
-							}}
-						/>
+							</div>
+						) : (
+							<div className="empty">
+								<Lottie
+									width={ 550 }
+									height={ 230 }
+									isStopped={ false }
+									isPaused={ false }
+									options={{
+										loop: true,
+										autoplay: true, 
+										animationData: emptyAnimation,
+										rendererSettings: {
+											preserveAspectRatio: 'xMidYMid slice'
+										}
+									}}
+								/>
 
-						<div>
-							<h2 className="empty__title">
-								There is nobody here!
-							</h2>
+								<div>
+									<h2 className="empty__title">
+										There is nobody here!
+									</h2>
 
-							<p className="empty__message">
-								Try to invite some friend of yours to have a call with you.
-							</p>
-						</div>
-					</div>
+									<p className="empty__message">
+										Try to invite some friend of yours to have a call with you.
+									</p>
+								</div>
+							</div>
+						)
+					}
 				</main>
 
 				<aside className="user" id="user-video-container">
@@ -195,7 +219,7 @@ const Meet: NextPage = () => {
 							{ isUsingVideo ? <BiVideo className="action-icon" /> : <BiVideoOff className="action-icon" /> }
 						</button>
 
-						<button className="action">
+						<button className="action action-sharing" onClick={ () => setIsSharingScreen(!isSharingScreen) }>
 							<BiDesktop className="action-icon" />
 						</button>
 

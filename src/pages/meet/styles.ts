@@ -1,7 +1,13 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { transparentize, darken } from 'polished';
 
-export const MeetContainer = styled.div<{ isUsingVideo: boolean; }>`
+type TMeetContainer = {
+	hasGuests: boolean;
+	isSharingScreen: boolean;
+	isUsingVideo: boolean;
+};
+
+export const MeetContainer = styled.div<TMeetContainer>`
 	display: flex;
 	flex-direction: column;
 	height: 100vh;
@@ -24,6 +30,7 @@ export const MeetContainer = styled.div<{ isUsingVideo: boolean; }>`
 			overflow: hidden;
 			border-radius: 1rem;
 			border: 3px solid ${props => props.theme.colors.primary};
+			z-index: 5;
 			
 			&__video {
 				width: 100%;
@@ -39,7 +46,7 @@ export const MeetContainer = styled.div<{ isUsingVideo: boolean; }>`
 				top: 1rem;
 				right: 1rem;
 				
-				.option {					
+				.option {
 					width: 30px;
 					height: 30px;
 					display: flex;
@@ -49,7 +56,7 @@ export const MeetContainer = styled.div<{ isUsingVideo: boolean; }>`
 					background-color: ${props => transparentize(.5, props.theme.colors.body)};
 					color: ${props => props.theme.colors.container};
 					font-size: ${props => props.theme.font.iconSize};
-					color: #FFF;
+					color: ${props => props.theme.colors.text};
 					
 					&-grab {
 						cursor: grab;
@@ -63,27 +70,12 @@ export const MeetContainer = styled.div<{ isUsingVideo: boolean; }>`
 		&__content {
 			flex: 1;
 			padding: 1rem;
-
-			display: grid;
-			grid-template-columns: auto auto;
-			align-items: center;
-			justify-content: center;
-			gap: 1rem;
-
-			.guest {
-				height: 400px;
-				display: flex;
+			display: flex;
+			
+			${props => !props.hasGuests && css`
 				align-items: center;
 				justify-content: center;
-				overflow: hidden;
-				border-radius: 1rem;
-				border: 3px solid ${props => props.theme.colors.container};
-
-				&__video {
-					width: 100%;
-					height: 100%;
-				}
-			}
+			`};
 
 			.empty {
 				display: flex;
@@ -98,6 +90,50 @@ export const MeetContainer = styled.div<{ isUsingVideo: boolean; }>`
 
 				&__message {
 					color: ${props => props.theme.colors.textLight};
+				}
+			}
+		}
+
+		&__guests {
+			flex: 1;
+			display: grid;
+			grid-template-columns: 80%;
+			align-items: center;
+			justify-content: center;
+			gap: 1rem;
+
+			.guest {
+				position: relative;
+				align-self: center;
+				justify-self: center;
+				width: 100%;
+				height: 100%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				overflow: hidden;
+				border-radius: 1rem;
+				border: 3px solid ${props => props.theme.colors.container};
+
+				&__video {
+					width: 100%;
+					height: 100%;
+				}
+
+				&__data {
+					display: flex;
+					align-items: center;
+					column-gap: .5rem;
+					position: absolute;
+					bottom: 1rem;
+					left: 1rem;
+					background-color: ${props => transparentize(.5, props.theme.colors.body)};
+					padding: .5rem;
+					border-radius: .5rem;
+				}
+
+				&__name {
+					font-size: ${props => props.theme.font.smallSize};
 				}
 			}
 		}
@@ -155,11 +191,6 @@ export const MeetContainer = styled.div<{ isUsingVideo: boolean; }>`
 				color: ${props => props.theme.colors.text};
 				transition: .3s;
 				
-				&:hover:not(&-hangup) {
-					border-color: ${props => props.theme.colors.secondary};
-					background-color: ${props => props.theme.colors.secondary};
-				}
-
 				&:active {
 					transform: scale(0.9);
 				}
@@ -169,10 +200,22 @@ export const MeetContainer = styled.div<{ isUsingVideo: boolean; }>`
 					background-color: ${props => props.theme.colors.red};
 
 					&:hover {
-						border-color: ${props => darken(.2, props.theme.colors.red)};
-						background-color: ${props => darken(.2, props.theme.colors.red)};
+						border-color: ${props => darken(.2, props.theme.colors.red)} !important;
+						background-color: ${props => darken(.2, props.theme.colors.red)} !important;
 					}
 				}
+
+				${props => props.isSharingScreen && css`
+					&-sharing {
+						border-color: ${props => props.theme.colors.green};
+						background-color: ${props => props.theme.colors.green};
+
+						&:hover {
+							border-color: ${props => darken(.2, props.theme.colors.green)} !important;
+							background-color: ${props => darken(.2, props.theme.colors.green)} !important;
+						}
+					}
+				`};
 			}
 		}
 
