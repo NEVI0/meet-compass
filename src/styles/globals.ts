@@ -32,7 +32,7 @@ export const GlobalStyles = createGlobalStyle`
 	body {
 		background-color: ${props => props.theme.colors.body};
 		color: ${props => props.theme.colors.text};
-		transition: .4s; /*For animation dark mode*/
+		transition: .3s; /*For animation dark mode*/
 	}
 
 	button {
