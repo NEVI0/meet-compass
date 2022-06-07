@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, BiChat, BiPhoneOff, BiMove, BiUndo } from 'react-icons/bi';
+import { BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, BiChat, BiPhoneOff, BiMove, BiUndo, BiDotsVerticalRounded } from 'react-icons/bi';
 import Lottie from 'react-lottie';
 
 import type { NextPage } from 'next';
@@ -15,7 +15,7 @@ const Meet: NextPage = () => {
 	const router = useRouter();
 	
 	const [ hasGuests, setHasGuests ] = useState<boolean>(true);
-	const [ isSharingScreen, setIsSharingScreen ] = useState<boolean>(true);
+	const [ isSharingScreen, setIsSharingScreen ] = useState<boolean>(false);
 	const [ isUsingVideo, setIsUsingVideo ] = useState<boolean>(true);
 	const [ isUsingMicrophone, setIsUsingMicrophone ] = useState<boolean>(true);
 
@@ -211,30 +211,66 @@ const Meet: NextPage = () => {
 					</div>
 
 					<section className="meet__actions">
-						<button className="action" onClick={ handleChangeUserAudioState }>
-							{ isUsingMicrophone ? <BiMicrophone className="action-icon" /> : <BiMicrophoneOff className="action-icon" /> }
-						</button>
+						<div className="action">
+							<button className="action__button" onClick={ handleChangeUserAudioState }>
+								{ isUsingMicrophone ? <BiMicrophone className="action__button-icon" /> : <BiMicrophoneOff className="action__button-icon" /> }
+							</button>
 
-						<button className="action" onClick={ handleChangeUserVideoState }>
-							{ isUsingVideo ? <BiVideo className="action-icon" /> : <BiVideoOff className="action-icon" /> }
-						</button>
+							<div className="action__tooltip">
+								{ isUsingMicrophone ? 'Disable ' : 'Enable ' } microphone
+							</div>
+						</div>
 
-						<button className="action action-sharing" onClick={ () => setIsSharingScreen(!isSharingScreen) }>
-							<BiDesktop className="action-icon" />
-						</button>
+						<div className="action">
+							<button className="action__button" onClick={ handleChangeUserVideoState }>
+								{ isUsingVideo ? <BiVideo className="action__button-icon" /> : <BiVideoOff className="action__button-icon" /> }
+							</button>
 
-						<button className="action">
-							<BiChat className="action-icon" />
-						</button>
+							<div className="action__tooltip">
+								{ isUsingVideo ? 'Disable ' : 'Enable ' } your video
+							</div>
+						</div>
 
-						<button className="action action-hangup" onClick={ handleHangUp }>
-							<BiPhoneOff className="action-icon" />
-						</button>
+						<div className="action">
+							<button className="action__button action__button-sharing" onClick={ () => setIsSharingScreen(!isSharingScreen) }>
+								<BiDesktop className="action__button-icon" />
+							</button>
+
+							<div className="action__tooltip">
+								{ isSharingScreen ? 'Stop ' : 'Start ' } sharing your screen
+							</div>
+						</div>
+
+						<div className="action">
+							<button className="action__button">
+								<BiChat className="action__button-icon" />
+							</button>
+
+							<div className="action__tooltip">
+								Open chat
+							</div>
+						</div>
+
+						<div className="action">
+							<button className="action__button action__button-hangup" onClick={ handleHangUp }>
+								<BiPhoneOff className="action__button-icon" />
+							</button>
+
+							<div className="action__tooltip">
+								Left meeting
+							</div>
+						</div>
 					</section>
 
-					<span className="meet__id">
-						{ router.query.id }
-					</span>
+					<div className="meet__options">
+						<span className="meet__id">
+							{ router.query.id }
+						</span>
+
+						<button className="meet__option">
+							<BiDotsVerticalRounded className="meet__option-icon" />
+						</button>
+					</div>
 				</footer>
 			</div>
 		</S.MeetContainer>

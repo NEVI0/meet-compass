@@ -179,44 +179,90 @@ export const MeetContainer = styled.div<TMeetContainer>`
 			transform: translateX(-50%);
 
 			.action {
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				width: 40px;
-				height: 40px;
-				border-radius: 100%;
-				border: 1px solid ${props => props.theme.colors.primary};
-				background-color: ${props => props.theme.colors.primary};
-				font-size: ${props => props.theme.font.iconSize};
-				color: ${props => props.theme.colors.text};
-				transition: .3s;
-				
-				&:active {
-					transform: scale(0.9);
-				}
+				position: relative;
 
-				&-hangup {
-					border-color: ${props => props.theme.colors.red};
-					background-color: ${props => props.theme.colors.red};
-
-					&:hover {
-						border-color: ${props => darken(.2, props.theme.colors.red)} !important;
-						background-color: ${props => darken(.2, props.theme.colors.red)} !important;
+				&__button {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					width: 40px;
+					height: 40px;
+					border-radius: 100%;
+					border: 1px solid ${props => props.theme.colors.primary};
+					background-color: ${props => props.theme.colors.primary};
+					font-size: ${props => props.theme.font.iconSize};
+					color: ${props => props.theme.colors.text};
+					transition: .3s;
+					
+					&:active {
+						transform: scale(0.9);
 					}
-				}
 
-				${props => props.isSharingScreen && css`
-					&-sharing {
-						border-color: ${props => props.theme.colors.green};
-						background-color: ${props => props.theme.colors.green};
+					&-hangup {
+						border-color: ${props => props.theme.colors.red};
+						background-color: ${props => props.theme.colors.red};
 
 						&:hover {
-							border-color: ${props => darken(.2, props.theme.colors.green)} !important;
-							background-color: ${props => darken(.2, props.theme.colors.green)} !important;
+							border-color: ${props => darken(.2, props.theme.colors.red)} !important;
+							background-color: ${props => darken(.2, props.theme.colors.red)} !important;
 						}
 					}
-				`};
+
+					${props => props.isSharingScreen && css`
+						&-sharing {
+							border-color: ${props => props.theme.colors.green};
+							background-color: ${props => props.theme.colors.green};
+
+							&:hover {
+								border-color: ${props => darken(.2, props.theme.colors.green)} !important;
+								background-color: ${props => darken(.2, props.theme.colors.green)} !important;
+							}
+						}
+					`};
+				}
+
+				&__tooltip {
+					position: absolute;
+					top: -45px;
+					left: 50%;
+					transform: translateX(-50%);
+					transition: .3s;
+					opacity: 0;
+					cursor: default;
+					padding: .5rem;
+					border-radius: .5rem;
+					text-align: center;
+					white-space: nowrap;
+					font-size: ${props => props.theme.font.smallerSize};
+					color: ${props => props.theme.colors.textLight};
+					background-color: ${props => props.theme.colors.container};
+					box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.25);
+				}
+
+				&__button:hover + .action__tooltip {
+					transition: .3s;
+					opacity: 1;
+				}
 			}
+		}
+
+		&__options {
+			display: flex;
+			align-items: center;
+			column-gap: 1rem;
+		}
+
+		&__option {
+			width: 30px;
+			height: 30px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-radius: .5rem;
+			background-color: ${props => props.theme.colors.body};
+			color: ${props => props.theme.colors.container};
+			font-size: ${props => props.theme.font.iconSize};
+			color: ${props => props.theme.colors.text};
 		}
 
 		&__id {
