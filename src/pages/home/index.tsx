@@ -4,8 +4,8 @@ import { BiVideo, BiRightArrowAlt } from 'react-icons/bi';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { v4 as uuid } from 'uuid';
 
+import { v4 as uuid } from 'uuid';
 import * as S from './styles';
 
 const Home: NextPage = () => {
