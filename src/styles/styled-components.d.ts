@@ -34,6 +34,7 @@ declare module 'styled-components' {
 			body: string;
 			container: string;
 			red: string;
+			green: string;
 		};
 	}
 }

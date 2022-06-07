@@ -32,6 +32,7 @@ export const theme: DefaultTheme = {
 		textLight: '#b4b4ba',
 		body: '#08080c',
 		container: '#111114',
-		red: '#e22b2b'
+		red: '#e22b2b',
+		green: '#1e9228'
 	}
 }
