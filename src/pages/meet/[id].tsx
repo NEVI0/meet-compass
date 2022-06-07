@@ -1,20 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, BiChat, BiPhoneOff, BiMove, BiUndo, BiDotsVerticalRounded } from 'react-icons/bi';
-import Lottie from 'react-lottie';
+import Lottie from 'react-lottie'; // @ts-ignore
+import { useSnackbar } from 'react-simple-snackbar';
 
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import moment from 'moment';
 
+import { theme } from '../../styles/theme';
 import * as emptyAnimation from '../../../public/assets/animations/empty.json';
 import * as S from './styles';
+
+const SNACKBAR_OPTIONS = {
+	position: 'bottom-left',
+	style: {
+		backgroundColor: theme.colors.container,
+		borderRadius: '.5rem',
+		marginBottom: '86px',
+		marginLeft: '8px',
+		padding: '.25rem .5rem',
+		fontFamily: theme.font.family,
+		fontSize: theme.font.smallSize
+	}
+}
 
 const Meet: NextPage = () => {
 
 	const router = useRouter();
-	
-	const [ hasGuests, setHasGuests ] = useState<boolean>(true);
+	const [ openSnackbar, closeSnackbar ] = useSnackbar(SNACKBAR_OPTIONS);
+
+	const [ hasGuests, setHasGuests ] = useState<boolean>(false);
 	const [ isSharingScreen, setIsSharingScreen ] = useState<boolean>(false);
 	const [ isUsingVideo, setIsUsingVideo ] = useState<boolean>(true);
 	const [ isUsingMicrophone, setIsUsingMicrophone ] = useState<boolean>(true);
@@ -267,7 +283,7 @@ const Meet: NextPage = () => {
 							{ router.query.id }
 						</span>
 
-						<button className="meet__option">
+						<button className="meet__option" onClick={ () => openSnackbar('User Danieli is connection...', 5000000000000) }>
 							<BiDotsVerticalRounded className="meet__option-icon" />
 						</button>
 					</div>

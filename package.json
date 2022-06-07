@@ -17,6 +17,7 @@
     "react-dom": "18.1.0",
     "react-icons": "^4.4.0",
     "react-lottie": "^1.2.3",
+    "react-simple-snackbar": "^1.1.11",
     "styled-components": "^5.3.5",
     "uuid": "^8.3.2"
   },
