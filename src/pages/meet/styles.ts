@@ -2,7 +2,6 @@ import styled, { css } from 'styled-components';
 import { transparentize, darken } from 'polished';
 
 type TMeetContainer = {
-	hasGuests: boolean;
 	isSharingScreen: boolean;
 	isUsingVideo: boolean;
 };
@@ -30,6 +29,7 @@ export const MeetContainer = styled.div<TMeetContainer>`
 			overflow: hidden;
 			border-radius: 1rem;
 			border: 3px solid ${props => props.theme.colors.primary};
+			background-color: ${props => props.theme.colors.body};
 			z-index: 5;
 			
 			&__video {
@@ -69,15 +69,15 @@ export const MeetContainer = styled.div<TMeetContainer>`
 		
 		&__content {
 			flex: 1;
-			padding: 1rem;
 			display: flex;
+			padding: 1rem;
+			position: relative;
 			
-			${props => !props.hasGuests && css`
-				align-items: center;
-				justify-content: center;
-			`};
-
 			.empty {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
 				display: flex;
 				flex-direction: column;
 				row-gap: 2rem;
@@ -97,7 +97,7 @@ export const MeetContainer = styled.div<TMeetContainer>`
 		&__guests {
 			flex: 1;
 			display: grid;
-			grid-template-columns: 80%;
+			grid-template-columns: 340px 340px;
 			align-items: center;
 			justify-content: center;
 			gap: 1rem;
@@ -132,7 +132,7 @@ export const MeetContainer = styled.div<TMeetContainer>`
 					border-radius: .5rem;
 				}
 
-				&__name {
+				&__id {
 					font-size: ${props => props.theme.font.smallSize};
 				}
 			}

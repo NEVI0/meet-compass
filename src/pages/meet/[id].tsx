@@ -6,7 +6,9 @@ import { useSnackbar } from 'react-simple-snackbar';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+
 import moment from 'moment';
+import { io } from 'socket.io-client';
 
 import { theme } from '../../styles/theme';
 import * as emptyAnimation from '../../../public/assets/animations/empty.json';
@@ -30,56 +32,124 @@ const Meet: NextPage = () => {
 	const router = useRouter();
 	const [ openSnackbar, closeSnackbar ] = useSnackbar(SNACKBAR_OPTIONS);
 
-	const [ hasGuests, setHasGuests ] = useState<boolean>(false);
+	const [ hasGuests, setHasGuests ] = useState<boolean>(true);
 	const [ isSharingScreen, setIsSharingScreen ] = useState<boolean>(false);
-	const [ isUsingVideo, setIsUsingVideo ] = useState<boolean>(true);
-	const [ isUsingMicrophone, setIsUsingMicrophone ] = useState<boolean>(true);
+	const [ isUsingVideo, setIsUsingVideo ] = useState<boolean>(false);
+	const [ isUsingMicrophone, setIsUsingMicrophone ] = useState<boolean>(false);
 
 	const handleDisplayHour = () => {
 		const hour = moment().hours();
 		return moment().format(`HH:mm [${hour >= 12 ? 'PM' : 'AM'}]`);
 	}
 
-	const handleChangeUserVideoState = () => {
-		try { // @ts-ignore
-			localStream.getVideoTracks()[0].enabled = !isUsingVideo;
-			setIsUsingVideo(!isUsingVideo);
-		} catch (err) {
-			console.log('Error: ', err);
-		}
-	}
-
-	const handleChangeUserAudioState = () => {
-		try { // @ts-ignore
-			localStream.getAudioTracks()[0].enabled = !isUsingMicrophone;
-			setIsUsingMicrophone(!isUsingMicrophone);
-		} catch (err) {
-			console.log('Error: ', err);
-		}
-	}
-
 	const handleHangUp = async () => { // @ts-ignore
-		localStream.getTracks().forEach(track => track.stop());
+		const userVideo = document.getElementById('user-video');
+		if (userVideo) userVideo.remove();
+		
+		setIsUsingVideo(false);
+		setIsUsingMicrophone(false);
+
 		router.push('/home');
 	}
 
-	useEffect(() => {
-		const getUserMedia = async () => {
-			try {
-				const userVideo = document.getElementById('user-video');
-				const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true }); // @ts-ignore
-				
-				window.localStream = stream; // @ts-ignore
-				userVideo.srcObject = stream;
+	const handleUpdateUserAudioState = () => {
+		try {
+			const userVideo = document.getElementById('user-video'); // @ts-ignore
+			if (userVideo) userVideo.muted = isUsingMicrophone;
+			setIsUsingMicrophone(!isUsingMicrophone);
+		} catch (error) {
+			console.log('Could not change user audio! ', error);
+		}
+	}
 
-				handleChangeUserVideoState();
-				handleChangeUserAudioState();
-			} catch (err) {
-				console.log('Error: ', err);
+	useEffect(() => {
+		const displayUserVideo = (stream: MediaStream) => {
+			try {
+				const userVideo = document.createElement('video');
+				const userVideoOptions = document.getElementById('user-video-options');
+				const userVideoContainer = document.getElementById('user-video-container');
+				
+				userVideo.id = 'user-video';
+				userVideo.className = 'user__video';
+				userVideo.srcObject = stream;
+				userVideo.autoplay = true;
+	
+				userVideoContainer?.insertBefore(userVideo, userVideoOptions);
+
+				setIsUsingVideo(true);
+				setIsUsingMicrophone(true);
+			} catch (error) {
+				console.log('Could not set user video! ', error);
 			}
 		}
 
-		getUserMedia();
+		const setGuestVideo = (stream: MediaStream) => {
+			try {
+				const guestDiv = document.createElement('div');
+				const guestId = document.createElement('span');
+				const guestData = document.createElement('div');
+				const guestVideo = document.createElement('video');
+				const guestsContainer = document.getElementById('guests-container');
+
+				guestDiv.id = 'guest-video';
+				guestDiv.className = 'guest';
+				guestId.className = 'guest__id';
+				guestData.className = 'guest__data';
+
+				guestVideo.className = 'guest__video';
+				guestVideo.srcObject = stream;
+				guestVideo.autoplay = true;
+				guestVideo.muted = true;
+
+				guestId.append('Nome do sacana');
+				guestData.append(guestId);
+				guestDiv.append(guestVideo);
+				guestDiv.append(guestData);
+				guestsContainer?.append(guestDiv);
+			} catch (error) {
+				console.log('Could not set guest video! ', error);
+			}
+		}
+
+		const initSocketConnection = async () => {
+			try {
+				await fetch('/api/socket');
+				const socket = io(); // @ts-ignore
+
+				const peer = new Peer();
+				const userStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+				displayUserVideo(userStream);
+
+				// peer.on('call', (call: any) => {
+				// 	call.answer(userStream);
+
+				// 	call.on('stream', (guestStream: MediaStream) => {
+				// 		setGuestVideo(guestStream);
+				// 	});
+				// });
+
+				// socket.on('user-connected', userId => {
+				// 	const call = peer.call(userId, userStream);
+					
+				// 	call.on('stream', (guestStream: MediaStream) => {
+				// 		setGuestVideo(guestStream);
+				// 	});
+				// });
+
+				// peer.on('open', (userId: string) => {
+				// 	socket.emit('join-meet', router.query.id, userId);
+				// });
+			} catch (error) {
+				console.log('Error: ', error);
+			}
+		}
+
+		initSocketConnection();
+
+		return () => {
+			document.getElementById('user-video')?.remove();
+			document.getElementById('guest-video')?.remove();
+		};
 	}, []);
 
 	useEffect(() => {
@@ -148,33 +218,18 @@ const Meet: NextPage = () => {
 	}, []);
 
 	return (
-		<S.MeetContainer hasGuests={ hasGuests } isSharingScreen={ isSharingScreen } isUsingVideo={ isUsingVideo }>
+		<S.MeetContainer isSharingScreen={ isSharingScreen } isUsingVideo={ isUsingVideo }>
 			<Head>
 				<title>Meet - Video Compass</title>
 			</Head>
 
 			<div className="meet">
 				<main className="meet__content">
+					<div className="meet__guests" id="guests-container">
+					</div>
+
 					{
-						hasGuests ? (
-							<div className="meet__guests">
-								{
-									new Array(1).fill(0).map((_, index) => (
-										<div key={ index.toString() }className="guest">
-											<video src="public/assets/test.mp4" autoPlay={ true } controls={ true } className="guest__video" id="guest-video"></video>
-
-											<div className="guest__data">
-												<span className="guest__name">
-													Hernesto Rodrigez
-												</span>
-
-												<BiMicrophoneOff className="guest__microphone-icon" />
-											</div>
-										</div>
-									))
-								}
-							</div>
-						) : (
+						hasGuests && (
 							<div className="empty">
 								<Lottie
 									width={ 550 }
@@ -206,9 +261,7 @@ const Meet: NextPage = () => {
 				</main>
 
 				<aside className="user" id="user-video-container">
-					<video autoPlay={ true } className="user__video" id="user-video"></video>
-
-					<div className="user__options">
+					<div className="user__options" id="user-video-options">
 						<button className="option option-grab" id="user-move-button">
 							<BiMove />
 						</button>
@@ -228,7 +281,7 @@ const Meet: NextPage = () => {
 
 					<section className="meet__actions">
 						<div className="action">
-							<button className="action__button" onClick={ handleChangeUserAudioState }>
+							<button className="action__button" onClick={ handleUpdateUserAudioState }>
 								{ isUsingMicrophone ? <BiMicrophone className="action__button-icon" /> : <BiMicrophoneOff className="action__button-icon" /> }
 							</button>
 
@@ -238,7 +291,7 @@ const Meet: NextPage = () => {
 						</div>
 
 						<div className="action">
-							<button className="action__button" onClick={ handleChangeUserVideoState }>
+							<button className="action__button" onClick={ () => setIsUsingVideo(!isUsingVideo) }>
 								{ isUsingVideo ? <BiVideo className="action__button-icon" /> : <BiVideoOff className="action__button-icon" /> }
 							</button>
 
