@@ -1,5 +1,5 @@
 const nextConfig = {
-	reactStrictMode: true,
+	reactStrictMode: false,
 	async redirects() {
 		return [
 			{
