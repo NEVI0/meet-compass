@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BiCompass, BiUser, BiEnvelope, BiLock, BiAt } from 'react-icons/bi';
 
 import type { NextPage } from 'next';
@@ -23,6 +23,11 @@ const Home: NextPage = () => {
 
 	const isStartNewMeetButtonDisabled = () => !userName || !userEmail || !isPrivateMeet || !meetName;
 
+	useEffect(() => {
+		const { joinMeet } = router.query;
+		if (joinMeet && joinMeet === 'true') setIsJoinMeetModalVisible(true);
+	}, []);
+ 
 	return (
 		<S.HomeContainer id="home-container">
 			<Head>
@@ -117,7 +122,14 @@ const Home: NextPage = () => {
 						</div>
 					</div>
 
-					<button className="start__meet" disabled={ isStartNewMeetButtonDisabled() }>
+					<button
+						className="start__meet"
+						disabled={ isStartNewMeetButtonDisabled() }
+						onClick={ (event) => {
+							event.preventDefault();
+							router.push(`/meet/${uuid()}`)
+						} }
+					>
 						Start new meet
 					</button>
 				</form>
