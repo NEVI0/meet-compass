@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BiVideo, BiRightArrowAlt } from 'react-icons/bi';
+import { BiCompass, BiUser, BiEnvelope, BiLock, BiAt } from 'react-icons/bi';
 
 import type { NextPage } from 'next';
 import Head from 'next/head';
@@ -11,67 +11,123 @@ import * as S from './styles';
 const Home: NextPage = () => {
 
 	const router = useRouter();
-	const [ callLink, setCallLink ] = useState<string>('');
+
+	const [ userName, setUserName ] = useState<string>('');
+	const [ userEmail, setUserEmail ] = useState<string>('');
+	const [ isPrivateMeet, setIsPrivateMeet ] = useState<string>('');
+	const [ meetName, setMeetName ] = useState<string>('');
+
+	const isStartNewMeetButtonDisabled = () => !userName || !userEmail || !isPrivateMeet || !meetName;
 
 	return (
 		<S.HomeContainer id="home-container">
 			<Head>
-				<title>Home - Video Compass</title>
+				<title>Meet Compass</title>
 			</Head>
 
-			<div className="home">
-				<section className="home__column home__column-left">
-					<header className="home__header">
+			<aside className="column column__left">
+				<BiCompass className="logo" />
+			</aside>
+
+			<main className="column column__right home">
+				<header className="home__header">
+					<div className="home__logo">
+						<BiCompass className="home__logo-icon" />
+					</div>
+
+					<div>
 						<h1 className="home__title">
-							Video compass, callings faster than ever here!
+							Welcome to Meet Compass
 						</h1>
 
 						<p className="home__description">
-							Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec consequat, sapien sit amet tempus tempor, risus tellus pulvinar metus, non gravida magna mauris nec elit. 
+							Fusce ultricies diam ut lectus scelerisque, non blandit velit accumsan. Pellentesque id magna elementum enim posuere pretium scelerisque a urna.
 						</p>
-					</header>
+					</div>
+				</header>
 
-					<main className="home__content">
-						<button className="start__meeting" onClick={ () => router.push(`/meet/${uuid()}`) }>
-							<BiVideo className="start__meeting-icon" />
-							Start a new call
-						</button>
+				<form className="home__content">
+					<div className="input">
+						<BiUser className="input__icon" />
 
-						<div className="paste__link">
+						<input
+							type="text"
+							className="input__field"
+							placeholder="Your name"
+							value={ userName }
+							onChange={ event => setUserName(event.target.value) }
+						/>
+					</div>
+
+					<div className="input">
+						<BiEnvelope className="input__icon" />
+
+						<input
+							type="text"
+							className="input__field"
+							placeholder="E-mail"
+							value={ userEmail }
+							onChange={ event => setUserEmail(event.target.value) }
+						/>
+					</div>
+
+					<div className="inputs-row">
+						<div className="select">							
+							<div className="input">
+								<BiLock className="input__icon" />
+
+								<input
+									type="text"
+									className="input__field"
+									placeholder="Is a private meet?"
+									disabled={ true }
+									value={
+										isPrivateMeet === 'YES' ? 'Yes, it is a private meet' :
+										isPrivateMeet === 'NO' ? 'No, it is not a private meet'
+										: ''
+									}
+								/>
+							</div>
+
+							<div className="select__items">
+								<span className="select__items-item" onClick={ () => setIsPrivateMeet('YES') }>
+									Yes, only allowed people can enter
+								</span>
+								
+								<span className="select__items-item" onClick={ () => setIsPrivateMeet('NO') }>
+									No, every one can enter
+								</span>
+							</div>
+						</div>
+
+						<div className="input">
+							<BiAt className="input__icon" />
+
 							<input
 								type="text"
-								className="paste__link-input"
-								placeholder="Paste here a call link"
-								value={ callLink }
-								onChange={ event => setCallLink(event.target.value) }
+								className="input__field"
+								placeholder="Meet name"
+								value={ meetName }
+								onChange={ event => setMeetName(event.target.value) }
 							/>
-
-							<button className="paste__link-button" disabled={ !callLink }>
-								Join
-								<BiRightArrowAlt className="paste__link-icon" />
-							</button>
 						</div>
-					</main>
-
-					<hr className="home__divider" />
-
-					<footer className="home__footer">
-						<span className="footer__more">
-							Know more about video compass <a>here!</a>
-						</span>
-
-						<span className="footer__copyright">
-							All rights reserved for Névio Costa Magagnin &copy;
-						</span>
-					</footer>
-				</section>
-
-				<aside className="home__column home__column-right">
-					<div className="home__wallpaper">
-						
 					</div>
-				</aside>
-			</div>
+
+					<button className="start__meet" disabled={ isStartNewMeetButtonDisabled() }>
+						Start new meet
+					</button>
+				</form>
+
+				<div className="home__divider">
+					<div className="home__divider-line" />
+					OR
+					<div className="home__divider-line" />
+				</div>
+
+				<span className="home__join">
+					Just enter in a public meet <a>clicking here!</a>
+				</span>
+			</main>
 		</S.HomeContainer>
 	);
 

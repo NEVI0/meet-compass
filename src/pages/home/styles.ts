@@ -1,63 +1,63 @@
 import styled from 'styled-components';
+import { darken } from 'polished';
 
 export const HomeContainer = styled.div`
 	display: flex;
-	align-items: center;
-	justify-content: center;
-	min-height: 100vh;
-	background-image: url(assets/images/home-wallpaper.png);
-	background-position: center;
-	background-size: cover;
+	align-items: stretch;
+	height: 100vh;
+
+	.column {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.column__left {
+		width: 50%;
+		position: relative;
+
+		.logo {
+			font-size: 80rem;
+			position: absolute;
+			bottom: -550px;
+			left: -450px;
+			color: ${props => props.theme.colors.primary};
+		}
+	}
+
+	.column__right {
+		width: 50%;
+		background-color: ${props => props.theme.colors.container};
+	}
 
 	.home {
-		display: flex;
-		align-items: stretch;
-		column-gap: 3.25rem;
-		width: 1250px;
-		height: 725px;
-		border-radius: 1rem;
-
-		&__column {
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			row-gap: 3.25rem;
-			padding: 0 3.25rem;
-
-			&-left {
-				flex: .6;
-			}
-
-			&-right {
-				flex: .4;
-			}
-		}
-
-		&__wallpaper {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			width: 100%;
-			height: 70%;
-			background-image:
-				linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)),
-				url(https://images.pexels.com/photos/3184423/pexels-photo-3184423.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1)
-			;
-			background-repeat: no-repeat;
-			background-position: center;
-			background-size: cover;
-			box-shadow: 1rem 1rem 0 0 ${props => props.theme.colors.container};
-		}
+		padding: 4rem 10rem;
+		justify-content: center;
+		row-gap: 4rem;
 
 		&__header {
 			display: flex;
 			flex-direction: column;
-			row-gap: 1rem;
-			cursor: default;
+			row-gap: 1.5rem;
+		}
+
+		&__logo {
+			width: 50px;
+			height: 50px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-radius: .75rem;
+			background-color: ${props => props.theme.colors.body};
+
+			&-icon {
+				font-size: 1.5rem;
+				color: ${props => props.theme.colors.primary};
+			}
 		}
 
 		&__title {
 			font-size: ${props => props.theme.font.biggestSize};
+			margin-bottom: .25rem;
 		}
 
 		&__description {
@@ -66,27 +66,91 @@ export const HomeContainer = styled.div`
 
 		&__content {
 			display: flex;
-			align-items: center;
-			column-gap: 1rem;
+			flex-direction: column;
+			row-gap: 1.5rem;
+			position: relative;
 
-			.start__meeting {
+			.inputs-row {
 				display: flex;
 				align-items: center;
-				column-gap: .75rem;
+				column-gap: 1.5rem;
+			}
+
+			.input {
+				flex: 1;
+				display: flex;
+				align-items: center;
+				column-gap: 1.25rem;
+				background-color: ${props => props.theme.colors.body};
+				padding: 1rem 1.25rem;
+				border-radius: 1rem;
+
+				&__icon {
+					color: ${props => props.theme.colors.primary};
+					font-size: ${props => props.theme.font.iconSize};
+				}
+
+				&__field {
+					flex: 1;
+					background-color: transparent;
+					border: none;
+					outline: none;
+					color: ${props => props.theme.colors.text};
+				}
+
+				&__field:focus ~ .input {
+				}
+			}
+
+			.select {
+				position: relative;
+
+				&__items {
+					opacity: 0;
+					z-index: -5;
+					margin-top: .5rem;
+					position: absolute;
+					display: flex;
+					flex-direction: column;
+					row-gap: 1rem;
+					width: 100%;
+					padding: 1rem 1.25rem;
+					background-color: ${props => props.theme.colors.body};
+					box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.25);
+					border-radius: 1rem;
+					transition: .3s;
+
+					&-item {
+						font-size: ${props => props.theme.font.smallSize};
+						color: ${props => props.theme.colors.textLight};
+						transition: .3s;
+						cursor: pointer;
+
+						&:hover {
+							color: ${props => props.theme.colors.primary};
+						}
+					}
+				}
+
+				&:hover .select__items {
+					opacity: 1;
+					z-index: 5;
+				}
+			}
+
+			.start__meet {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				column-gap: 1.25rem;
 				padding: 1rem 2rem;
 				border-radius: 1rem;
-				border: 1px solid ${props => props.theme.colors.primary};
 				background-color: ${props => props.theme.colors.primary};
 				color: ${props => props.theme.colors.text};
 				font-weight: ${props => props.theme.font.medium};
 				transition: .3s;
-
-				&-icon {
-					font-size: ${props => props.theme.font.iconSize};
-				}
-
+				
 				&:hover, &:focus {
-					border-color: ${props => props.theme.colors.secondary};
 					background-color: ${props => props.theme.colors.secondary};
 					color: #FFF;
 				}
@@ -94,88 +158,43 @@ export const HomeContainer = styled.div`
 				&:active {
 					transform: scale(0.98);
 				}
-			}
 
-			.paste__link {
-				flex: 1;
-				display: flex;
-				align-items: center;
-				overflow: hidden;
-
-				&-input {
-					flex: 1;
-					outline: none;
-					padding: 1rem 1.25rem;
-					border: 1px solid ${props => props.theme.colors.container};
-					background-color: ${props => props.theme.colors.container};
-					color: ${props => props.theme.colors.text};
-					border-radius: 1rem;
-					transition: .3s;
-
-					&:focus {
-						border-color: ${props => props.theme.colors.primary};
-					}
-				}
-
-				&-button {
-					display: flex;
-					align-items: center;
-					column-gap: .5rem;
-					padding: 1rem;
-					border-radius: 1rem;
-					color: ${props => props.theme.colors.text};
-					font-weight: ${props => props.theme.font.medium};
-					transition: .3s;
-					background-color: transparent;
-					
-					&:hover, &:focus {
-						color: ${props => props.theme.colors.primary};
-					}
-
-					&:disabled {
-						color: #303030;
-						cursor: no-drop;
-					}
-				}
-
-				&-button:hover:not(:disabled) > .paste__link-icon,
-				&-button:focus:not(:disabled) > .paste__link-icon {
-					transform: translateX(.25rem);
-				}
-
-				&-icon {
-					transition: .2s;
-					font-size: ${props => props.theme.font.iconSize};
+				&:disabled {
+					color: ${props => props.theme.colors.textLight};
+					background-color: ${props => props.theme.colors.body};
+					cursor: no-drop;
 				}
 			}
 		}
-		
+
 		&__divider {
-			height: 1px;
-			border: none;
-			background-color: ${props => props.theme.colors.textLight};
-			border-radius: 1rem;
-		}
-
-		&__footer {
 			display: flex;
-			flex-direction: column;
-			row-gap: .25rem;
+			align-items: center;
+			justify-content: center;
+			column-gap: 1.5rem;
+			font-size: ${props => props.theme.font.smallerSize};
 			color: ${props => props.theme.colors.textLight};
 
-			.footer__more a {
+			&-line {
+				height: 1px;
+				width: 125px;
+				border-radius: 1rem;
+				background-color: ${props => props.theme.colors.textLight};
+			}
+		}
+
+		&__join {
+			text-align: center;
+			font-size: ${props => props.theme.font.smallSize};
+
+			> a {
 				cursor: pointer;
-				font-size: ${props => props.theme.font.smallSize};
 				color: ${props => props.theme.colors.primary};
-			}
 
-			.footer__more a:hover,
-			.footer__more a:focus {
-				text-decoration: underline;
-			}
-
-			.footer__copyright {
-				font-size: ${props => props.theme.font.smallerSize};
+				&:hover {
+					color: ${props => props.theme.colors.secondary};
+					text-decoration: underline;
+				}
 			}
 		}
 	}
