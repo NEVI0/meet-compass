@@ -99,5 +99,12 @@ export const JoinMeetModal = styled.div<{ visible: boolean; }>`
 				color: ${props => props.theme.colors.textLight};
 			}
 		}
+
+		&__error {
+			color: ${props => props.theme.colors.red};
+			font-size: ${props => props.theme.font.smallSize};
+			font-weight: 500;
+			text-align: center;
+		}
 	}
 `;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BiAt, BiRightArrowAlt, BiX } from 'react-icons/bi';
+import { BiLink, BiRightArrowAlt, BiX } from 'react-icons/bi';
 
 import * as S from './styles';
 
@@ -10,7 +10,14 @@ interface JoinMeetModalProps {
 
 const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, onClose }) => {
 
+	const [ error, setError ] = useState<string>('');
 	const [ meetLink, setMeetLink ] = useState<string>('');
+
+	const handleJoinMeet = () => {
+		setError('');
+		if (!meetLink.includes('/meet/')) return setError('Invalid link!')
+		console.log('Avaiable link!');
+	}
 
 	return (
 		<S.JoinMeetModal visible={ visible }>
@@ -27,7 +34,7 @@ const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, onClose }) => {
 
 				<div className="joinmeet__input-row">
 					<div className="input">
-						<BiAt className="input__icon" />
+						<BiLink className="input__icon" />
 
 						<input
 							type="text"
@@ -38,10 +45,22 @@ const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, onClose }) => {
 						/>
 					</div>
 
-					<button className="joinmeet__button" disabled={ !meetLink }>
+					<button
+						className="joinmeet__button"
+						disabled={ !meetLink }
+						onClick={ handleJoinMeet }
+					>
 						Join <BiRightArrowAlt className="joinmeet__button-icon" />
 					</button>
 				</div>
+
+				{
+					error && (
+						<span className="joinmeet__error">
+							{ error }
+						</span>
+					)
+				}
 			</div>
 		</S.JoinMeetModal>
 	);
