@@ -13,11 +13,10 @@ export const HomeContainer = styled.div`
 
 	.column__left {
 		width: 50%;
-		position: relative;
 
 		.logo {
 			font-size: 80rem;
-			position: absolute;
+			position: fixed;
 			bottom: -550px;
 			left: -450px;
 			color: ${props => props.theme.colors.primary};
