@@ -51,10 +51,11 @@ export const JoinMeetModal = styled.div<{ visible: boolean; }>`
 			color: ${props => props.theme.colors.text};
 		}
 
-		&__input-row {
+		&__content {
 			display: flex;
-			align-items: center;
-			column-gap: 1.5rem;
+			flex-direction: column;
+			row-gap: .75rem;
+
 
 			.input {
 				flex: 1;
@@ -78,6 +79,12 @@ export const JoinMeetModal = styled.div<{ visible: boolean; }>`
 					color: ${props => props.theme.colors.text};
 				}
 			}
+		}
+
+		&__input-row {
+			display: flex;
+			align-items: center;
+			column-gap: .75rem;
 		}
 
 		&__button {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BiLink, BiRightArrowAlt, BiX } from 'react-icons/bi';
+import { BiLink, BiUser, BiRightArrowAlt, BiX } from 'react-icons/bi';
 
 import * as S from './styles';
 
@@ -11,6 +11,7 @@ interface JoinMeetModalProps {
 const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, onClose }) => {
 
 	const [ error, setError ] = useState<string>('');
+	const [ userName, setUserName ] = useState<string>('');
 	const [ meetLink, setMeetLink ] = useState<string>('');
 
 	const handleJoinMeet = () => {
@@ -32,26 +33,40 @@ const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, onClose }) => {
 					</button>
 				</header>
 
-				<div className="joinmeet__input-row">
+				<div className="joinmeet__content">
 					<div className="input">
-						<BiLink className="input__icon" />
+						<BiUser className="input__icon" />
 
 						<input
 							type="text"
 							className="input__field"
-							placeholder="Meet link"
-							value={ meetLink }
-							onChange={ event => setMeetLink(event.target.value) }
+							placeholder="Your name"
+							value={ userName }
+							onChange={ event => setUserName(event.target.value) }
 						/>
 					</div>
 
-					<button
-						className="joinmeet__button"
-						disabled={ !meetLink }
-						onClick={ handleJoinMeet }
-					>
-						Join <BiRightArrowAlt className="joinmeet__button-icon" />
-					</button>
+					<div className="joinmeet__input-row">
+						<div className="input">
+							<BiLink className="input__icon" />
+
+							<input
+								type="text"
+								className="input__field"
+								placeholder="Meet link"
+								value={ meetLink }
+								onChange={ event => setMeetLink(event.target.value) }
+							/>
+						</div>
+
+						<button
+							className="joinmeet__button"
+							disabled={ !userName || !meetLink }
+							onClick={ handleJoinMeet }
+						>
+							Join <BiRightArrowAlt className="joinmeet__button-icon" />
+						</button>
+					</div>
 				</div>
 
 				{
