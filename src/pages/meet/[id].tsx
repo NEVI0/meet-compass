@@ -32,7 +32,7 @@ const Meet: NextPage = () => {
 	const router = useRouter();
 	const [ openSnackbar, closeSnackbar ] = useSnackbar(SNACKBAR_OPTIONS);
 
-	const [ hasGuests, setHasGuests ] = useState<boolean>(true);
+	const [ hasNoGuests, setHasNoGuests ] = useState<boolean>(true);
 	const [ isSharingScreen, setIsSharingScreen ] = useState<boolean>(false);
 	const [ isUsingVideo, setIsUsingVideo ] = useState<boolean>(false);
 	const [ isUsingMicrophone, setIsUsingMicrophone ] = useState<boolean>(false);
@@ -83,12 +83,10 @@ const Meet: NextPage = () => {
 			}
 		}
 
-		const setGuestVideo = (stream: MediaStream) => {
+		const setGuestVideo = (stream: MediaStream, guestVideo: HTMLVideoElement, guestDiv: HTMLDivElement) => {
 			try {
-				const guestDiv = document.createElement('div');
 				const guestId = document.createElement('span');
 				const guestData = document.createElement('div');
-				const guestVideo = document.createElement('video');
 				const guestsContainer = document.getElementById('guests-container');
 
 				guestDiv.id = 'guest-video';
@@ -106,6 +104,8 @@ const Meet: NextPage = () => {
 				guestDiv.append(guestVideo);
 				guestDiv.append(guestData);
 				guestsContainer?.append(guestDiv);
+
+				setHasNoGuests(false);
 			} catch (error) {
 				console.log('Could not set guest video! ', error);
 			}
@@ -113,6 +113,8 @@ const Meet: NextPage = () => {
 
 		const initSocketConnection = async () => {
 			try {
+				let connectedPeers: any = {};
+
 				await fetch('/api/socket');
 				const socket = io(); // @ts-ignore
 
@@ -120,25 +122,45 @@ const Meet: NextPage = () => {
 				const userStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
 				displayUserVideo(userStream);
 
-				// peer.on('call', (call: any) => {
-				// 	call.answer(userStream);
+				peer.on('call', (call: any) => {
+					call.answer(userStream);
+					const guestDiv = document.createElement('div');
+					const guestVideo = document.createElement('video');
 
-				// 	call.on('stream', (guestStream: MediaStream) => {
-				// 		setGuestVideo(guestStream);
-				// 	});
-				// });
+					call.on('stream', (guestStream: MediaStream) => {
+						setGuestVideo(guestStream, guestVideo, guestDiv);
+					});
+				});
 
-				// socket.on('user-connected', userId => {
-				// 	const call = peer.call(userId, userStream);
+				socket.on('user-connected', userId => {
+					const call = peer.call(userId, userStream);
+					const guestDiv = document.createElement('div');
+					const guestVideo = document.createElement('video');
 					
-				// 	call.on('stream', (guestStream: MediaStream) => {
-				// 		setGuestVideo(guestStream);
-				// 	});
-				// });
+					call.on('stream', (guestStream: MediaStream) => {
+						console.log('Malakoi here!');
+						setGuestVideo(guestStream, guestVideo, guestDiv);
+					});
 
-				// peer.on('open', (userId: string) => {
-				// 	socket.emit('join-meet', router.query.id, userId);
-				// });
+					call.on('close', () => {
+						guestVideo.remove();
+						guestDiv.remove();
+					});
+
+					connectedPeers[userId] = call;
+				});
+
+				peer.on('open', (userId: string) => {
+					socket.emit('join-meet', router.query.id, userId);
+				});
+
+				socket.on('user-disconnected', (guestId: string) => {
+					console.log('Disconnected guest: ', guestId);
+					if (connectedPeers[guestId]) connectedPeers[guestId].close();
+
+					const guestContainer = document.getElementById('guests-container');
+					if (guestContainer?.childElementCount === 0) setHasNoGuests(true);
+				});
 			} catch (error) {
 				console.log('Error: ', error);
 			}
@@ -229,7 +251,7 @@ const Meet: NextPage = () => {
 					</div>
 
 					{
-						hasGuests && (
+						hasNoGuests && (
 							<div className="empty">
 								<Lottie
 									width={ 550 }

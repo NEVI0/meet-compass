@@ -97,7 +97,7 @@ export const MeetContainer = styled.div<TMeetContainer>`
 		&__guests {
 			flex: 1;
 			display: grid;
-			grid-template-columns: 340px 340px;
+			grid-template-columns:  repeat(auto-fill, 800px);
 			align-items: center;
 			justify-content: center;
 			gap: 1rem;
@@ -107,7 +107,7 @@ export const MeetContainer = styled.div<TMeetContainer>`
 				align-self: center;
 				justify-self: center;
 				width: 100%;
-				height: 100%;
+				/* height: 100%; */
 				display: flex;
 				align-items: center;
 				justify-content: center;
