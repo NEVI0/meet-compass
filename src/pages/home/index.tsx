@@ -5,6 +5,8 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
+import { JoinMeetModal } from '../../components';
+
 import { v4 as uuid } from 'uuid';
 import * as S from './styles';
 
@@ -16,6 +18,8 @@ const Home: NextPage = () => {
 	const [ userEmail, setUserEmail ] = useState<string>('');
 	const [ isPrivateMeet, setIsPrivateMeet ] = useState<string>('');
 	const [ meetName, setMeetName ] = useState<string>('');
+
+	const [ isJoinMeetModalVisible, setIsJoinMeetModalVisible ] = useState<boolean>(false);
 
 	const isStartNewMeetButtonDisabled = () => !userName || !userEmail || !isPrivateMeet || !meetName;
 
@@ -125,9 +129,14 @@ const Home: NextPage = () => {
 				</div>
 
 				<span className="home__join">
-					Just enter in a public meet <a>clicking here!</a>
+					Just enter in a public meet <a onClick={ () => setIsJoinMeetModalVisible(true) }>clicking here!</a>
 				</span>
 			</main>
+
+			<JoinMeetModal
+				visible={ isJoinMeetModalVisible }
+				onClose={ () => setIsJoinMeetModalVisible(false) }
+			/>
 		</S.HomeContainer>
 	);
 

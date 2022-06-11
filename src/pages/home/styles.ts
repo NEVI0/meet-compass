@@ -96,9 +96,6 @@ export const HomeContainer = styled.div`
 					outline: none;
 					color: ${props => props.theme.colors.text};
 				}
-
-				&__field:focus ~ .input {
-				}
 			}
 
 			.select {
