@@ -1,6 +1,11 @@
 import styled, { css } from 'styled-components';
 
-export const JoinMeetModal = styled.div<{ visible: boolean; }>`
+type TJoinMeetModal = { 
+	visible: boolean;
+	isCallingUser: boolean;
+}
+
+export const JoinMeetModal = styled.div<TJoinMeetModal>`
 	position: fixed;
 	inset: 0;
 	display: flex;
@@ -56,7 +61,6 @@ export const JoinMeetModal = styled.div<{ visible: boolean; }>`
 			flex-direction: column;
 			row-gap: .75rem;
 
-
 			.input {
 				flex: 1;
 				display: flex;
@@ -69,6 +73,7 @@ export const JoinMeetModal = styled.div<{ visible: boolean; }>`
 				&__icon {
 					color: ${props => props.theme.colors.primary};
 					font-size: ${props => props.theme.font.iconSize};
+					transition: .3s;
 				}
 
 				&__field {
@@ -77,8 +82,19 @@ export const JoinMeetModal = styled.div<{ visible: boolean; }>`
 					border: none;
 					outline: none;
 					color: ${props => props.theme.colors.text};
+					transition: .3s;
 				}
 			}
+
+			${props => props.isCallingUser && css`
+				.input__icon {
+					color: ${props => props.theme.colors.textLight};
+				}
+
+				.input__field {
+					color: ${props => props.theme.colors.textLight};
+				}
+			`};
 		}
 
 		&__input-row {
