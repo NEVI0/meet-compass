@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components';
 
 type TJoinMeetModal = { 
 	visible: boolean;
-	isCallingUser: boolean;
+	isCalling: boolean;
 }
 
 export const JoinMeetModal = styled.div<TJoinMeetModal>`
@@ -86,7 +86,7 @@ export const JoinMeetModal = styled.div<TJoinMeetModal>`
 				}
 			}
 
-			${props => props.isCallingUser && css`
+			${props => props.isCalling && css`
 				.input__icon {
 					color: ${props => props.theme.colors.textLight};
 				}

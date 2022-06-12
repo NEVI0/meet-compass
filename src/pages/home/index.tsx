@@ -141,7 +141,7 @@ const Home: NextPage = () => {
 				</div>
 
 				<span className="home__join">
-					Just enter in a public meet <a onClick={ () => setIsJoinMeetModalVisible(true) }>clicking here!</a>
+					Just enter in a friends meet <a onClick={ () => setIsJoinMeetModalVisible(true) }>clicking here!</a>
 				</span>
 			</main>
 

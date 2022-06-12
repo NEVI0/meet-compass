@@ -8,32 +8,33 @@ import * as S from './styles';
 
 interface JoinMeetModalProps {
 	visible: boolean;
+	defaultMeetId?: string;
 	onClose: () => void;
 }
 
-const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, onClose }) => {
+const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultMeetId, onClose }) => {
 
 	const { callGuest } = useAppContext();
 
 	const [ error, setError ] = useState<string>('');
 	const [ userName, setUserName ] = useState<string>('');
-	const [ userToCallId, setUserToCallId ] = useState<string>('');
+	const [ meetId, setMeetId ] = useState<string>(defaultMeetId || '');
 
-	const [ isCallingUser, setIsCallingUser ] = useState<boolean>(false);
+	const [ isCalling, setIsCalling ] = useState<boolean>(false);
 
 	const handleCallGuest = () => {
 		try {
 			setError('');
-			setIsCallingUser(true);
-			callGuest(userToCallId);
+			setIsCalling(true);
+			callGuest(meetId);
 		} catch (error) {
-			setIsCallingUser(false);
+			setIsCalling(false);
 			setError('Could not call the user!');
 		}
 	}
 
 	return (
-		<S.JoinMeetModal visible={ visible } isCallingUser={ isCallingUser }>
+		<S.JoinMeetModal visible={ visible } isCalling={ isCalling }>
 			<div className="joinmeet">
 				<header className="joinmeet__header">
 					<h2 className="joinmeet__title">
@@ -53,7 +54,7 @@ const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, onClose }) => {
 							type="text"
 							className="input__field"
 							placeholder="Your name"
-							disabled={ isCallingUser }
+							disabled={ isCalling }
 							value={ userName }
 							onChange={ event => setUserName(event.target.value) }
 						/>
@@ -66,20 +67,20 @@ const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, onClose }) => {
 							<input
 								type="text"
 								className="input__field"
-								placeholder="Meet link"
-								disabled={ isCallingUser }
-								value={ userToCallId }
-								onChange={ event => setUserToCallId(event.target.value) }
+								placeholder="Meet ID"
+								disabled={ isCalling }
+								value={ meetId }
+								onChange={ event => setMeetId(event.target.value) }
 							/>
 						</div>
 
 						<button
 							className="joinmeet__button"
-							disabled={ !userName || !userToCallId || isCallingUser }
+							disabled={ !userName || !meetId || isCalling }
 							onClick={ handleCallGuest }
 						>
 							{
-								isCallingUser ? (
+								isCalling ? (
 									<Oval
 										ariaLabel="loading-indicator"
 										height={20}
