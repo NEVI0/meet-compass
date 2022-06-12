@@ -12,6 +12,7 @@ interface AppContextProps {
 	userVideoRef: React.RefObject<HTMLVideoElement>;
 	guestVideoRef: React.RefObject<HTMLVideoElement>;
 
+	meetName: string;
 	userId: string;
 	guestId: string;
 	userStream?: MediaStream;
@@ -20,8 +21,10 @@ interface AppContextProps {
 	callAccepted: boolean;
 	isReceivingCall: boolean;
 
+	startNewMeet: (userName: string, userEmail: string, meet: string) => void;
 	callGuest: (id: string) => void;
 	acceptCall: () => void;
+	rejectCallRequest: () => void;
 }
 
 const AppContext: React.Context<AppContextProps> = createContext({} as AppContextProps);
@@ -34,6 +37,8 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 	const userVideoRef = useRef<HTMLVideoElement>(null);
 	const guestVideoRef = useRef<HTMLVideoElement>(null);
 
+	const [ meetName, setMeetName ] = useState<string>('');
+
 	const [ userId, setUserId ] = useState<string>('');
 	const [ userStream, setUserStream ] = useState<MediaStream>();
 	const [ guestId, setGuestId ] = useState<string>('');
@@ -41,6 +46,34 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 
 	const [ callAccepted, setCallAccepted ] = useState<boolean>(false);
 	const [ isReceivingCall, setIsReceivingCall ] = useState<boolean>(false);
+
+	const startNewMeet = async (userName: string, userEmail: string, meet: string) => {
+		try {			
+			const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true }); 
+			if (userVideoRef.current) userVideoRef.current.srcObject = stream;
+
+			setMeetName(meet);
+			setUserStream(stream);
+			setUserId(socketRef.current.id);
+			
+			socketRef.current.emit('meet-data', {
+				id: socketRef.current.id,
+				name: userName,
+				email: userEmail,
+				meetName: meet
+			});
+
+			socketRef.current.on('request-connection', (data: any) => {
+				setIsReceivingCall(true);
+				setGuestId(data.from);
+				setGuestSignal(data.signal);
+			});			
+
+			router.push('/call');
+		} catch (error) {
+			console.log('Error: ', error);
+		}
+	}
 
 	const callGuest = (id: string) => {
 		try {
@@ -96,25 +129,17 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 		}
 	}
 
+	const rejectCallRequest = () => {
+		setIsReceivingCall(false);
+	}
+
 	useEffect(() => {
 		const initSocketConnection = async () => {
 			try {
 				await fetch('/api/socket');
 				socketRef.current = io();
-				
-				const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true }); 
-				if (userVideoRef.current) userVideoRef.current.srcObject = stream;
-
-				setUserStream(stream);
-				setUserId(socketRef.current.id);				
-
-				socketRef.current.on('request-connection', (data: any) => {
-					setIsReceivingCall(true);
-					setGuestId(data.from);
-					setGuestSignal(data.signal);
-				});
 			} catch (error) {
-				console.log('Error: ', error);
+				console.log('Could not init socket connection! ', error);
 			}
 		}
 
@@ -128,16 +153,19 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 				userVideoRef,
 				guestVideoRef,
 
+				meetName,
 				userId,
 				guestId,
 				userStream,
 				guestSignal,
 				
+				startNewMeet,
 				callAccepted,
 				isReceivingCall,
 
 				callGuest,
-				acceptCall
+				acceptCall,
+				rejectCallRequest
 			}}
 		>
 			{ children }

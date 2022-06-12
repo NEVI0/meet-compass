@@ -8,13 +8,18 @@ const handler = (_: any, response: any) => {
 		let users: any = {};
 		
 		io.on('connection', socket => {
-			if (users[socket.id]) users[socket.id] = socket.id;
+			// if (users[socket.id]) users[socket.id] = socket.id;
+
+			socket.on('meet-data', (data: any) => {
+				users[socket.id] = data;
+			});
 
 			socket.on('disconnect', () => {
 				delete users[socket.id];
 			});
 
 			socket.on('call-guest', (data: any) => {
+				console.log(users);
 				const { guestToCall, signal, from } = data;
 				io.to(guestToCall).emit('request-connection', { signal, from });
 			});

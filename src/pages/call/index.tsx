@@ -17,7 +17,14 @@ import * as S from './styles';
 const Meet: NextPage = () => {
 
 	const router = useRouter();
-	const { userId, guestId, isReceivingCall, userVideoRef, guestVideoRef } = useAppContext();
+	const {
+		meetName,
+		userId,
+		guestId,
+		isReceivingCall,
+		userVideoRef,
+		guestVideoRef
+	} = useAppContext();
 
 	const [ isSharingScreen, setIsSharingScreen ] = useState<boolean>(false);
 	const [ isUsingVideo, setIsUsingVideo ] = useState<boolean>(false);
@@ -47,6 +54,10 @@ const Meet: NextPage = () => {
 			console.log('Could not change user audio! ', error);
 		}
 	}
+
+	useEffect(() => {
+		if (!userId || !meetName) router.push('/home');
+	}, []);
 
 	useEffect(() => {
 		const userVideoContainer = document.getElementById('user-video-container');
@@ -194,7 +205,7 @@ const Meet: NextPage = () => {
 					<div className="meet__data">
 						<h3 className="meet__time">{ handleDisplayHour() }</h3>
 						<div className="meet__data-divider" />
-						<span className="meet__name">Team call</span>
+						<span className="meet__name">{ meetName }</span>
 					</div>
 					
 					<section className="meet__actions">
@@ -261,10 +272,7 @@ const Meet: NextPage = () => {
 				</footer>
 			</div>
 
-			<ReceivingCallModal
-				visible={ isReceivingCall }
-				onClose={ () => null }
-			/>
+			<ReceivingCallModal visible={ isReceivingCall } />
 		</S.MeetContainer>
 	);
 

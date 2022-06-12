@@ -4,14 +4,9 @@ import { BiX } from 'react-icons/bi';
 import useAppContext from '../../contexts/AppContext';
 import * as S from './styles';
 
-interface ReceivingCallModalProps {
-	visible: boolean;
-	onClose: () => void;
-}
+const ReceivingCallModal: React.FC<{ visible: boolean; }> = ({ visible }) => {
 
-const ReceivingCallModal: React.FC<ReceivingCallModalProps> = ({ visible, onClose }) => {
-
-	const { acceptCall } = useAppContext();
+	const { acceptCall, rejectCallRequest } = useAppContext();
 
 	return (
 		<S.ReceivingCallModal visible={ visible }>
@@ -21,17 +16,17 @@ const ReceivingCallModal: React.FC<ReceivingCallModalProps> = ({ visible, onClos
 						Fernando is calling you
 					</h2>
 
-					<button className="receivingcall__close" onClick={ onClose }>
+					<button className="receivingcall__close" onClick={ rejectCallRequest }>
 						<BiX />
 					</button>
 				</header>
 
 				<div className="receivingcall__content">
-					<button className="receivingcall__button receivingcall__button-default">
+					<button className="receivingcall__button receivingcall__button-default" onClick={ rejectCallRequest }>
 						Decline
 					</button>
 
-					<button className="receivingcall__button receivingcall__button-primary">
+					<button className="receivingcall__button receivingcall__button-primary" onClick={ acceptCall }>
 						Accept
 					</button>
 				</div>

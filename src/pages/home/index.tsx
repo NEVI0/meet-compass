@@ -6,13 +6,14 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 import { JoinMeetModal } from '../../components';
+import useAppContext from '../../contexts/AppContext';
 
-import { v4 as uuid } from 'uuid';
 import * as S from './styles';
 
 const Home: NextPage = () => {
 
 	const router = useRouter();
+	const { startNewMeet } = useAppContext();
 
 	const [ userName, setUserName ] = useState<string>('');
 	const [ userEmail, setUserEmail ] = useState<string>('');
@@ -127,7 +128,7 @@ const Home: NextPage = () => {
 						disabled={ isStartNewMeetButtonDisabled() }
 						onClick={ (event) => {
 							event.preventDefault();
-							router.push(`/meet/${uuid()}`)
+							startNewMeet(userName, userEmail, meetName);
 						} }
 					>
 						Start new meet
