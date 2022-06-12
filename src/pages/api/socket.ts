@@ -5,18 +5,26 @@ const handler = (_: any, response: any) => {
 		const io = new Server(response.socket.server);
 		response.socket.server.io = io;
 		
+		let users: any = {};
+		
 		io.on('connection', socket => {
-			socket.on('join-meet', (meetId, userId) => {
-				socket.join(meetId);
-				socket.broadcast.to(meetId).emit('user-connected', userId);
+			if (users[socket.id]) users[socket.id] = socket.id;
 
-				socket.on('disconnect', () => {
-					socket.broadcast.to(meetId).emit('user-disconnected', userId);
-				});
+			socket.on('disconnect', () => {
+				delete users[socket.id];
+			});
+
+			socket.on('call-guest', (data: any) => {
+				const { guestToCall, signal, from } = data;
+				io.to(guestToCall).emit('request-connection', { signal, from });
+			});
+
+			socket.on('accept-call', (data: any) => {
+				io.to(data.to).emit('call-accepted', data.signal);
 			});
 		});		
 	}
-	
+
 	response.end();
 }
 
