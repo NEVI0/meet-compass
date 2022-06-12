@@ -1,8 +1,7 @@
-// @ts-ignore
-import SnackbarProvider from 'react-simple-snackbar';
-
 import type { AppProps } from 'next/app'
 import styled, { ThemeProvider } from 'styled-components';
+
+import { AppProvider } from '../contexts/AppContext';
 
 import { GlobalStyles } from '../styles/globals';
 import { theme } from '../styles/theme';
@@ -16,12 +15,12 @@ export const Layout = styled.div`
 const App = ({ Component, pageProps }: AppProps) => {
 	return (
 		<ThemeProvider theme={ theme }>
-			<SnackbarProvider>
+			<AppProvider>
 				<Layout>
 					<GlobalStyles />
 					<Component { ...pageProps } />
 				</Layout>
-			</SnackbarProvider>
+			</AppProvider>
 		</ThemeProvider>
 	);
 }
