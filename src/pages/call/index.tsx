@@ -1,38 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, BiChat, BiPhoneOff, BiMove, BiUndo, BiDotsVerticalRounded } from 'react-icons/bi';
-import Lottie from 'react-lottie'; // @ts-ignore
-import { useSnackbar } from 'react-simple-snackbar';
+import Lottie from 'react-lottie';
 
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 import moment from 'moment';
-import { io } from 'socket.io-client';
 
-import { theme } from '../../styles/theme';
+import { ReceivingCallModal } from '../../components';
+import useAppContext from '../../contexts/AppContext';
+
 import * as emptyAnimation from '../../../public/assets/animations/empty.json';
 import * as S from './styles';
-
-const SNACKBAR_OPTIONS = {
-	position: 'bottom-left',
-	style: {
-		backgroundColor: theme.colors.container,
-		borderRadius: '.5rem',
-		marginBottom: '86px',
-		marginLeft: '8px',
-		padding: '.25rem .5rem',
-		fontFamily: theme.font.family,
-		fontSize: theme.font.smallSize
-	}
-}
 
 const Meet: NextPage = () => {
 
 	const router = useRouter();
-	const [ openSnackbar, closeSnackbar ] = useSnackbar(SNACKBAR_OPTIONS);
+	const { userId, guestId, isReceivingCall, userVideoRef, guestVideoRef } = useAppContext();
 
-	const [ hasNoGuests, setHasNoGuests ] = useState<boolean>(true);
 	const [ isSharingScreen, setIsSharingScreen ] = useState<boolean>(false);
 	const [ isUsingVideo, setIsUsingVideo ] = useState<boolean>(false);
 	const [ isUsingMicrophone, setIsUsingMicrophone ] = useState<boolean>(false);
@@ -61,118 +47,6 @@ const Meet: NextPage = () => {
 			console.log('Could not change user audio! ', error);
 		}
 	}
-
-	useEffect(() => {
-		const displayUserVideo = (stream: MediaStream) => {
-			try {
-				const userVideo = document.createElement('video');
-				const userVideoOptions = document.getElementById('user-video-options');
-				const userVideoContainer = document.getElementById('user-video-container');
-				
-				userVideo.id = 'user-video';
-				userVideo.className = 'user__video';
-				userVideo.srcObject = stream;
-				userVideo.autoplay = true;
-	
-				userVideoContainer?.insertBefore(userVideo, userVideoOptions);
-
-				setIsUsingVideo(true);
-				setIsUsingMicrophone(true);
-			} catch (error) {
-				console.log('Could not set user video! ', error);
-			}
-		}
-
-		const setGuestVideo = (stream: MediaStream, guestVideo: HTMLVideoElement, guestDiv: HTMLDivElement) => {
-			try {
-				const guestId = document.createElement('span');
-				const guestData = document.createElement('div');
-				const guestsContainer = document.getElementById('guests-container');
-
-				guestDiv.id = 'guest-video';
-				guestDiv.className = 'guest';
-				guestId.className = 'guest__id';
-				guestData.className = 'guest__data';
-
-				guestVideo.className = 'guest__video';
-				guestVideo.srcObject = stream;
-				guestVideo.autoplay = true;
-				guestVideo.muted = true;
-
-				guestId.append('Nome do sacana');
-				guestData.append(guestId);
-				guestDiv.append(guestVideo);
-				guestDiv.append(guestData);
-				guestsContainer?.append(guestDiv);
-
-				setHasNoGuests(false);
-			} catch (error) {
-				console.log('Could not set guest video! ', error);
-			}
-		}
-
-		const initSocketConnection = async () => {
-			try {
-				let connectedPeers: any = {};
-
-				await fetch('/api/socket');
-				const socket = io(); // @ts-ignore
-
-				const peer = new Peer();
-				const userStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-				displayUserVideo(userStream);
-
-				peer.on('call', (call: any) => {
-					call.answer(userStream);
-					const guestDiv = document.createElement('div');
-					const guestVideo = document.createElement('video');
-
-					call.on('stream', (guestStream: MediaStream) => {
-						setGuestVideo(guestStream, guestVideo, guestDiv);
-					});
-				});
-
-				socket.on('user-connected', userId => {
-					const call = peer.call(userId, userStream);
-					const guestDiv = document.createElement('div');
-					const guestVideo = document.createElement('video');
-					
-					call.on('stream', (guestStream: MediaStream) => {
-						console.log('Malakoi here!');
-						setGuestVideo(guestStream, guestVideo, guestDiv);
-					});
-
-					call.on('close', () => {
-						guestVideo.remove();
-						guestDiv.remove();
-					});
-
-					connectedPeers[userId] = call;
-				});
-
-				peer.on('open', (userId: string) => {
-					socket.emit('join-meet', router.query.id, userId);
-				});
-
-				socket.on('user-disconnected', (guestId: string) => {
-					console.log('Disconnected guest: ', guestId);
-					if (connectedPeers[guestId]) connectedPeers[guestId].close();
-
-					const guestContainer = document.getElementById('guests-container');
-					if (guestContainer?.childElementCount === 0) setHasNoGuests(true);
-				});
-			} catch (error) {
-				console.log('Error: ', error);
-			}
-		}
-
-		initSocketConnection();
-
-		return () => {
-			document.getElementById('user-video')?.remove();
-			document.getElementById('guest-video')?.remove();
-		};
-	}, []);
 
 	useEffect(() => {
 		const userVideoContainer = document.getElementById('user-video-container');
@@ -242,16 +116,29 @@ const Meet: NextPage = () => {
 	return (
 		<S.MeetContainer isSharingScreen={ isSharingScreen } isUsingVideo={ isUsingVideo }>
 			<Head>
-				<title>Meet - Video Compass</title>
+				<title>Call - Meet Compass</title>
 			</Head>
 
 			<div className="meet">
 				<main className="meet__content">
-					<div className="meet__guests" id="guests-container">
-					</div>
-
 					{
-						hasNoGuests && (
+						guestId ? (
+							<div className="guest">
+								<video
+									playsInline
+									autoPlay
+									ref={ guestVideoRef }
+									className="guest__video"
+									id="guest-video"
+								></video>
+
+								<div className="guest__data">
+									<span className="guest__id">
+										dsbhfbsdjbfjsdjhfdsadas
+									</span>
+								</div>
+							</div>
+						) : (
 							<div className="empty">
 								<Lottie
 									width={ 550 }
@@ -283,6 +170,15 @@ const Meet: NextPage = () => {
 				</main>
 
 				<aside className="user" id="user-video-container">
+					<video
+						muted
+						playsInline
+						autoPlay
+						ref={ userVideoRef }
+						className="user__video"
+						id="user-video"
+					></video>
+
 					<div className="user__options" id="user-video-options">
 						<button className="option option-grab" id="user-move-button">
 							<BiMove />
@@ -300,7 +196,7 @@ const Meet: NextPage = () => {
 						<div className="meet__data-divider" />
 						<span className="meet__name">Team call</span>
 					</div>
-
+					
 					<section className="meet__actions">
 						<div className="action">
 							<button className="action__button" onClick={ handleUpdateUserAudioState }>
@@ -332,7 +228,7 @@ const Meet: NextPage = () => {
 							</div>
 						</div>
 
-						<div className="action">
+						{/* <div className="action">
 							<button className="action__button">
 								<BiChat className="action__button-icon" />
 							</button>
@@ -340,7 +236,7 @@ const Meet: NextPage = () => {
 							<div className="action__tooltip">
 								Open chat
 							</div>
-						</div>
+						</div> */}
 
 						<div className="action">
 							<button className="action__button action__button-hangup" onClick={ handleHangUp }>
@@ -355,15 +251,20 @@ const Meet: NextPage = () => {
 
 					<div className="meet__options">
 						<span className="meet__id">
-							{ router.query.id }
+							{ userId }
 						</span>
 
-						<button className="meet__option" onClick={ () => openSnackbar('User Danieli is connection...', 5000000000000) }>
+						<button className="meet__option">
 							<BiDotsVerticalRounded className="meet__option-icon" />
 						</button>
 					</div>
 				</footer>
 			</div>
+
+			<ReceivingCallModal
+				visible={ isReceivingCall }
+				onClose={ () => null }
+			/>
 		</S.MeetContainer>
 	);
 

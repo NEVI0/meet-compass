@@ -70,9 +70,10 @@ export const MeetContainer = styled.div<TMeetContainer>`
 		&__content {
 			flex: 1;
 			display: flex;
+			align-items: center;
+			justify-content: center;
 			padding: 1rem;
-			position: relative;
-			
+
 			.empty {
 				position: absolute;
 				top: 50%;
@@ -94,47 +95,35 @@ export const MeetContainer = styled.div<TMeetContainer>`
 			}
 		}
 
-		&__guests {
-			flex: 1;
-			display: grid;
-			grid-template-columns:  repeat(auto-fill, 800px);
+		.guest {
+			position: relative;
+			display: flex;
 			align-items: center;
 			justify-content: center;
-			gap: 1rem;
+			width: 1090px;
+			max-height: 100%;
+			overflow: hidden;
+			border-radius: 1rem;
+			border: 3px solid ${props => props.theme.colors.container};
 
-			.guest {
-				position: relative;
-				align-self: center;
-				justify-self: center;
+			&__video {
 				width: 100%;
-				/* height: 100%; */
+			} 
+
+			&__data {
 				display: flex;
 				align-items: center;
-				justify-content: center;
-				overflow: hidden;
-				border-radius: 1rem;
-				border: 3px solid ${props => props.theme.colors.container};
+				column-gap: .5rem;
+				position: absolute;
+				bottom: 1rem;
+				left: 1rem;
+				background-color: ${props => transparentize(.5, props.theme.colors.body)};
+				padding: .5rem;
+				border-radius: .5rem;
+			}
 
-				&__video {
-					width: 100%;
-					height: 100%;
-				}
-
-				&__data {
-					display: flex;
-					align-items: center;
-					column-gap: .5rem;
-					position: absolute;
-					bottom: 1rem;
-					left: 1rem;
-					background-color: ${props => transparentize(.5, props.theme.colors.body)};
-					padding: .5rem;
-					border-radius: .5rem;
-				}
-
-				&__id {
-					font-size: ${props => props.theme.font.smallSize};
-				}
+			&__id {
+				font-size: ${props => props.theme.font.smallSize};
 			}
 		}
 
@@ -145,7 +134,6 @@ export const MeetContainer = styled.div<TMeetContainer>`
 			padding: 0 3.25rem;
 			height: ${props => props.theme.defaults.footerHeight};
 			background-color: ${props => props.theme.colors.container};
-			position: relative;
 		}
 
 		&__data {
