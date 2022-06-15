@@ -8,18 +8,18 @@ import * as S from './styles';
 
 interface JoinMeetModalProps {
 	visible: boolean;
-	defaultUserToMeetId?: string;
+	defaultUserToCallId?: string;
 	onClose: () => void;
 }
 
-const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultUserToMeetId, onClose }) => {
+const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultUserToCallId, onClose }) => {
 
 	const { meetOtherUser } = useAppContext();
 
 	const [ error, setError ] = useState<string>('');
 	const [ userName, setUserName ] = useState<string>('');
 	const [ userEmail, setUserEmail ] = useState<string>('');
-	const [ userToMeetId, setUserToMeetId ] = useState<string>(defaultUserToMeetId || '');
+	const [ userToCallId, setUserToCallId ] = useState<string>(defaultUserToCallId || '');
 
 	const [ isCalling, setIsCalling ] = useState<boolean>(false);
 
@@ -27,7 +27,7 @@ const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultUserToMee
 		try {
 			setError('');
 			setIsCalling(true);
-			meetOtherUser(userName, userEmail, userToMeetId);
+			meetOtherUser(userName, userEmail, userToCallId);
 		} catch (error) {
 			setIsCalling(false);
 			setError('Could not call the user!');
@@ -38,7 +38,7 @@ const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultUserToMee
 		setError('');
 		setUserName('');
 		setUserEmail('');
-		setUserToMeetId('');
+		setUserToCallId('');
 		setIsCalling(false);
 
 		onClose();
@@ -93,14 +93,14 @@ const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultUserToMee
 								className="input__field"
 								placeholder="Meet ID"
 								disabled={ isCalling }
-								value={ userToMeetId }
-								onChange={ event => setUserToMeetId(event.target.value) }
+								value={ userToCallId }
+								onChange={ event => setUserToCallId(event.target.value) }
 							/>
 						</div>
 
 						<button
 							className="joinmeet__button"
-							disabled={ !userName || !userEmail || !userToMeetId || isCalling }
+							disabled={ !userName || !userEmail || !userToCallId || isCalling }
 							onClick={ handleMeetUser }
 						>
 							{

@@ -19,14 +19,19 @@ const Home: NextPage = () => {
 	const [ userEmail, setUserEmail ] = useState<string>('');
 	const [ isPrivateMeet, setIsPrivateMeet ] = useState<string>('');
 	const [ meetName, setMeetName ] = useState<string>('');
+	const [ defaultUserToCallId, setDefaultUserToCallId ] = useState<string>('');
 
 	const [ isJoinMeetModalVisible, setIsJoinMeetModalVisible ] = useState<boolean>(false);
 
 	const isStartNewMeetButtonDisabled = () => !userName || !userEmail || !isPrivateMeet || !meetName;
 
-	useEffect(() => {
-		const { joinMeet } = router.query;
-		if (joinMeet && joinMeet === 'true') setIsJoinMeetModalVisible(true);
+	useEffect(() => { 
+		const { callId } = router.query;
+
+		if (callId) {
+			setIsJoinMeetModalVisible(true); // @ts-ignore
+			setDefaultUserToCallId(callId);
+		}
 	}, []);
  
 	return (
@@ -148,6 +153,7 @@ const Home: NextPage = () => {
 
 			<JoinMeetModal
 				visible={ isJoinMeetModalVisible }
+				defaultUserToCallId={ defaultUserToCallId }
 				onClose={ () => setIsJoinMeetModalVisible(false) }
 			/>
 		</S.HomeContainer>
