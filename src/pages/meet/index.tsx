@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, BiChat, BiPhoneOff, BiMove, BiUndo, BiDotsVerticalRounded } from 'react-icons/bi';
 import Lottie from 'react-lottie';
 
@@ -11,6 +11,7 @@ import moment from 'moment';
 import { ReceivingCallModal } from '../../components';
 import useAppContext from '../../contexts/AppContext';
 
+import { isEmpty } from '../../utils/functions';
 import * as emptyAnimation from '../../../public/assets/animations/empty.json';
 import * as S from './styles';
 
@@ -18,12 +19,12 @@ const Meet: NextPage = () => {
 
 	const router = useRouter();
 	const {
-		meetName,
-		userId,
-		guestId,
-		isReceivingCall,
+		socketRef,
+		userData,
+		otherUserData,
+		isReceivingMeetRequest,
 		userVideoRef,
-		guestVideoRef
+		otherUserVideoRef
 	} = useAppContext();
 
 	const [ isSharingScreen, setIsSharingScreen ] = useState<boolean>(false);
@@ -56,7 +57,7 @@ const Meet: NextPage = () => {
 	}
 
 	useEffect(() => {
-		if (!userId || !meetName) router.push('/home');
+		if (isEmpty(userData)) router.push('/home');
 	}, []);
 
 	useEffect(() => {
@@ -133,12 +134,12 @@ const Meet: NextPage = () => {
 			<div className="meet">
 				<main className="meet__content">
 					{
-						guestId ? (
+						!isEmpty(otherUserData) ? (
 							<div className="guest">
 								<video
 									playsInline
 									autoPlay
-									ref={ guestVideoRef }
+									ref={ otherUserVideoRef }
 									className="guest__video"
 									id="guest-video"
 								></video>
@@ -205,7 +206,7 @@ const Meet: NextPage = () => {
 					<div className="meet__data">
 						<h3 className="meet__time">{ handleDisplayHour() }</h3>
 						<div className="meet__data-divider" />
-						<span className="meet__name">{ meetName }</span>
+						<span className="meet__name">{ userData.meetName }</span>
 					</div>
 					
 					<section className="meet__actions">
@@ -262,7 +263,7 @@ const Meet: NextPage = () => {
 
 					<div className="meet__options">
 						<span className="meet__id">
-							{ userId }
+							{ userData.id }
 						</span>
 
 						<button className="meet__option">
@@ -272,7 +273,7 @@ const Meet: NextPage = () => {
 				</footer>
 			</div>
 
-			<ReceivingCallModal visible={ isReceivingCall } />
+			<ReceivingCallModal visible={ isReceivingMeetRequest } />
 		</S.MeetContainer>
 	);
 
