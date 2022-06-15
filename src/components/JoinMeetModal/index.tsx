@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BiAt, BiUser, BiRightArrowAlt, BiX } from 'react-icons/bi';
+import { BiAt, BiEnvelope, BiUser, BiRightArrowAlt, BiX } from 'react-icons/bi';
 import { Oval } from 'react-loader-spinner';
 
 import useAppContext from '../../contexts/AppContext';
@@ -8,29 +8,40 @@ import * as S from './styles';
 
 interface JoinMeetModalProps {
 	visible: boolean;
-	defaultMeetId?: string;
+	defaultUserToMeetId?: string;
 	onClose: () => void;
 }
 
-const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultMeetId, onClose }) => {
+const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultUserToMeetId, onClose }) => {
 
-	const { callGuest } = useAppContext();
+	const { meetOtherUser } = useAppContext();
 
 	const [ error, setError ] = useState<string>('');
 	const [ userName, setUserName ] = useState<string>('');
-	const [ meetId, setMeetId ] = useState<string>(defaultMeetId || '');
+	const [ userEmail, setUserEmail ] = useState<string>('');
+	const [ userToMeetId, setUserToMeetId ] = useState<string>(defaultUserToMeetId || '');
 
 	const [ isCalling, setIsCalling ] = useState<boolean>(false);
 
-	const handleCallGuest = () => {
+	const handleMeetUser = () => {
 		try {
 			setError('');
 			setIsCalling(true);
-			callGuest(meetId);
+			meetOtherUser(userName, userEmail, userToMeetId);
 		} catch (error) {
 			setIsCalling(false);
 			setError('Could not call the user!');
 		}
+	}
+
+	const handleCloseModal = () => {
+		setError('');
+		setUserName('');
+		setUserEmail('');
+		setUserToMeetId('');
+		setIsCalling(false);
+
+		onClose();
 	}
 
 	return (
@@ -41,7 +52,7 @@ const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultMeetId, o
 						Join meet
 					</h2>
 
-					<button className="joinmeet__close" onClick={ onClose }>
+					<button className="joinmeet__close" onClick={ handleCloseModal }>
 						<BiX />
 					</button>
 				</header>
@@ -60,6 +71,19 @@ const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultMeetId, o
 						/>
 					</div>
 
+					<div className="input">
+						<BiEnvelope className="input__icon" />
+
+						<input
+							type="email"
+							className="input__field"
+							placeholder="E-mail"
+							disabled={ isCalling }
+							value={ userEmail }
+							onChange={ event => setUserEmail(event.target.value) }
+						/>
+					</div>
+
 					<div className="joinmeet__input-row">
 						<div className="input">
 							<BiAt className="input__icon" />
@@ -69,15 +93,15 @@ const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultMeetId, o
 								className="input__field"
 								placeholder="Meet ID"
 								disabled={ isCalling }
-								value={ meetId }
-								onChange={ event => setMeetId(event.target.value) }
+								value={ userToMeetId }
+								onChange={ event => setUserToMeetId(event.target.value) }
 							/>
 						</div>
 
 						<button
 							className="joinmeet__button"
-							disabled={ !userName || !meetId || isCalling }
-							onClick={ handleCallGuest }
+							disabled={ !userName || !userEmail || !userToMeetId || isCalling }
+							onClick={ handleMeetUser }
 						>
 							{
 								isCalling ? (
