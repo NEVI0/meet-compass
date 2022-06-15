@@ -1,4 +1,5 @@
 import { Server } from 'socket.io';
+import { TUser } from '../../types/user';
 
 const handler = (_: any, response: any) => {
 	if (!response.socket.server.io) {
@@ -10,7 +11,7 @@ const handler = (_: any, response: any) => {
 		io.on('connection', socket => {
 			// if (users[socket.id]) users[socket.id] = socket.id;
 
-			socket.on('meet-data', (data: any) => {
+			socket.on('save-user-data', (data: TUser) => {
 				users[socket.id] = data;
 			});
 
@@ -18,10 +19,9 @@ const handler = (_: any, response: any) => {
 				delete users[socket.id];
 			});
 
-			socket.on('call-guest', (data: any) => {
-				console.log(users);
-				const { guestToCall, signal, from } = data;
-				io.to(guestToCall).emit('request-connection', { signal, from });
+			socket.on('call-user', (data: any) => {
+				const { userToCall, stream } = data;
+				io.to(userToCall).emit('request-connection', { stream, from: users[socket.id] });
 			});
 
 			socket.on('accept-call', (data: any) => {
