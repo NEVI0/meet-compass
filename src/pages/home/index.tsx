@@ -5,7 +5,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
-import { JoinMeetModal } from '../../components';
+import { Input, Button, JoinMeetModal } from '../../components';
 import useAppContext from '../../contexts/AppContext';
 
 import * as S from './styles';
@@ -40,11 +40,11 @@ const Home: NextPage = () => {
 				<title>Meet Compass</title>
 			</Head>
 
-			<aside className="column column__left">
+			<aside className="left">
 				<BiCompass className="logo" />
 			</aside>
 
-			<main className="column column__right home">
+			<main className="home">
 				<header className="home__header">
 					<div className="home__logo">
 						<BiCompass className="home__logo-icon" />
@@ -56,89 +56,40 @@ const Home: NextPage = () => {
 						</h1>
 
 						<p className="home__description">
-							Fusce ultricies diam ut lectus scelerisque, non blandit velit accumsan. Pellentesque id magna elementum enim posuere pretium scelerisque a urna.
+							Fusce ultricies diam ut lectus scelerisque, non blandit velit accumsan. 
 						</p>
 					</div>
 				</header>
 
-				<form className="home__content">
-					<div className="input">
-						<BiUser className="input__icon" />
+				<div className="home__content">
+					<Input
+						label="Your name"
+						value={ userName }
+						onChangeValue={ setUserName }
+						icon={ <BiUser className="input__icon" /> }
+					/>
 
-						<input
-							type="text"
-							className="input__field"
-							placeholder="Your name"
-							value={ userName }
-							onChange={ event => setUserName(event.target.value) }
-						/>
-					</div>
+					<Input
+						label="E-mail"
+						value={ userEmail }
+						onChangeValue={ setUserEmail }
+						icon={ <BiEnvelope className="input__icon" /> }
+					/>
 
-					<div className="input">
-						<BiEnvelope className="input__icon" />
+					<Input
+						label="Meet name"
+						value={ meetName }
+						onChangeValue={ setMeetName }
+						icon={ <BiAt className="input__icon" /> }
+					/>
 
-						<input
-							type="text"
-							className="input__field"
-							placeholder="E-mail"
-							value={ userEmail }
-							onChange={ event => setUserEmail(event.target.value) }
-						/>
-					</div>
-
-					<div className="inputs-row">
-						<div className="select">							
-							<div className="input">
-								<BiLock className="input__icon" />
-
-								<input
-									type="text"
-									className="input__field"
-									placeholder="Is a private meet?"
-									disabled={ true }
-									value={
-										isPrivateMeet === 'YES' ? 'Yes, it is a private meet' :
-										isPrivateMeet === 'NO' ? 'No, it is not a private meet'
-										: ''
-									}
-								/>
-							</div>
-
-							<div className="select__items">
-								<span className="select__items-item" onClick={ () => setIsPrivateMeet('YES') }>
-									Yes, only allowed people can enter
-								</span>
-								
-								<span className="select__items-item" onClick={ () => setIsPrivateMeet('NO') }>
-									No, every one can enter
-								</span>
-							</div>
-						</div>
-
-						<div className="input">
-							<BiAt className="input__icon" />
-
-							<input
-								type="text"
-								className="input__field"
-								placeholder="Meet name"
-								value={ meetName }
-								onChange={ event => setMeetName(event.target.value) }
-							/>
-						</div>
-					</div>
-
-					<button
-						className="start__meet"
+					<Button
 						disabled={ isStartNewMeetButtonDisabled() }
-						onClick={ (event) => {
-							event.preventDefault();
-							startNewMeet(userName, userEmail, meetName);
-						} }
+						onClick={ () => startNewMeet(userName, userEmail, meetName) }
 					>
 						Start new meet
-					</button>
-				</form>
+					</Button>
+				</div>
 
 				<div className="home__divider">
 					<div className="home__divider-line" />

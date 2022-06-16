@@ -1,42 +1,26 @@
 import styled from 'styled-components';
-import { darken } from 'polished';
 
 export const HomeContainer = styled.div`
 	display: flex;
-	align-items: stretch;
-	height: 100vh;
+	flex-direction: column-reverse;
 
-	.column {
-		display: flex;
-		flex-direction: column;
-	}
-
-	.column__left {
-		width: 50%;
-
-		.logo {
-			font-size: 80rem;
-			position: fixed;
-			bottom: -550px;
-			left: -450px;
-			color: ${props => props.theme.colors.primary};
-		}
-	}
-
-	.column__right {
-		width: 50%;
-		background-color: ${props => props.theme.colors.container};
+	.left {
+		display: none;
 	}
 
 	.home {
-		padding: 4rem 10rem;
+		height: 100vh;
+		row-gap: 2.5rem;
+		padding: 0 2rem;
+		display: flex;
+		flex-direction: column;
 		justify-content: center;
-		row-gap: 4rem;
+		background-color: ${props => props.theme.colors.container};
 
 		&__header {
 			display: flex;
 			flex-direction: column;
-			row-gap: 1.5rem;
+			row-gap: 1rem;
 		}
 
 		&__logo {
@@ -66,114 +50,20 @@ export const HomeContainer = styled.div`
 		&__content {
 			display: flex;
 			flex-direction: column;
-			row-gap: 1.5rem;
-			position: relative;
-
-			.inputs-row {
-				display: flex;
-				align-items: center;
-				column-gap: 1.5rem;
-			}
-
-			.input {
-				flex: 1;
-				display: flex;
-				align-items: center;
-				column-gap: 1.25rem;
-				background-color: ${props => props.theme.colors.body};
-				padding: 1rem 1.25rem;
-				border-radius: 1rem;
-
-				&__icon {
-					color: ${props => props.theme.colors.primary};
-					font-size: ${props => props.theme.font.iconSize};
-				}
-
-				&__field {
-					flex: 1;
-					background-color: transparent;
-					border: none;
-					outline: none;
-					color: ${props => props.theme.colors.text};
-				}
-			}
-
-			.select {
-				position: relative;
-
-				&__items {
-					opacity: 0;
-					z-index: -5;
-					margin-top: .5rem;
-					position: absolute;
-					display: flex;
-					flex-direction: column;
-					row-gap: 1rem;
-					width: 100%;
-					padding: 1rem 1.25rem;
-					background-color: ${props => props.theme.colors.body};
-					box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.25);
-					border-radius: 1rem;
-					transition: .3s;
-
-					&-item {
-						font-size: ${props => props.theme.font.smallSize};
-						color: ${props => props.theme.colors.textLight};
-						transition: .3s;
-						cursor: pointer;
-
-						&:hover {
-							color: ${props => props.theme.colors.primary};
-						}
-					}
-				}
-
-				&:hover .select__items {
-					opacity: 1;
-					z-index: 5;
-				}
-			}
-
-			.start__meet {
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				column-gap: 1.25rem;
-				padding: 1rem 2rem;
-				border-radius: 1rem;
-				background-color: ${props => props.theme.colors.primary};
-				color: ${props => props.theme.colors.text};
-				font-weight: ${props => props.theme.font.medium};
-				transition: .3s;
-				
-				&:hover, &:focus {
-					background-color: ${props => props.theme.colors.secondary};
-					color: #FFF;
-				}
-
-				&:active {
-					transform: scale(0.98);
-				}
-
-				&:disabled {
-					color: ${props => props.theme.colors.textLight};
-					background-color: ${props => props.theme.colors.body};
-					cursor: no-drop;
-				}
-			}
+			row-gap: 1rem;
 		}
 
 		&__divider {
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			column-gap: 1.5rem;
+			column-gap: 1rem;
 			font-size: ${props => props.theme.font.smallerSize};
 			color: ${props => props.theme.colors.textLight};
 
 			&-line {
 				height: 1px;
-				width: 125px;
+				width: 50px;
 				border-radius: 1rem;
 				background-color: ${props => props.theme.colors.textLight};
 			}
