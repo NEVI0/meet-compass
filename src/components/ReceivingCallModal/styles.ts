@@ -68,7 +68,8 @@ export const ReceivingCallModal = styled.div<TReceivingCallModal>`
 			align-items: center;
 			justify-content: center;
 			column-gap: 1.25rem;
-			padding: 1rem 2rem;
+			padding: 0 2rem;
+			height: 56px;
 			border-radius: .75rem;
 			font-weight: ${props => props.theme.font.medium};
 			color: ${props => props.theme.colors.text};
@@ -85,13 +86,23 @@ export const ReceivingCallModal = styled.div<TReceivingCallModal>`
 			&-primary {
 				background-color: ${props => props.theme.colors.primary};
 				
-				&:hover, &:focus {
+				&:hover:not(&:disabled),
+				&:focus:not(&:disabled) {
+					background-color: ${props => props.theme.colors.secondary};
+				}
+
+				&:disabled {
+					color: ${props => props.theme.colors.textLight};
 					background-color: ${props => props.theme.colors.secondary};
 				}
 			}
 
 			&:active {
 				transform: scale(0.98);
+			}
+
+			&:disabled {
+				cursor: no-drop;
 			}
 		}
 	}
