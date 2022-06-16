@@ -8,6 +8,7 @@ export const Input = styled.div<{ disabled?: boolean; }>`
 	padding: 0 1.25rem;
 	height: 48px;
 	border-radius: 1rem;
+	transition: .3s;
 
 	.input__icon {
 		color: ${props => props.disabled ? props.theme.colors.textLight : props.theme.colors.primary};
@@ -22,5 +23,9 @@ export const Input = styled.div<{ disabled?: boolean; }>`
 		outline: none;
 		color: ${props => props.disabled ? props.theme.colors.textLight : props.theme.colors.text};
 		transition: .3s;
+	}
+
+	@media screen and (min-width: 767px) {
+		height: 52px;
 	}
 `;

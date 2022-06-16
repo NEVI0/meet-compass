@@ -26,4 +26,8 @@ export const Button = styled.button`
 		background-color: ${props => props.theme.colors.body};
 		cursor: no-drop;
 	}
+
+	@media screen and (min-width: 767px) {
+		height: 52px;
+	}
 `;
