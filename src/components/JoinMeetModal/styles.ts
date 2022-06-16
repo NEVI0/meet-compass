@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 
-type TJoinMeetModal = { 
+type TJoinMeetModal = {
 	visible: boolean;
 	isCalling: boolean;
 }
@@ -25,13 +25,13 @@ export const JoinMeetModal = styled.div<TJoinMeetModal>`
 	.joinmeet {
 		display: flex;
 		flex-direction: column;
-		row-gap: 1.5rem;
+		row-gap: 1rem;
 		padding: 1.5rem;
 		background-color: ${props => props.theme.colors.container};
 		box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.25);
 		border-radius: 1rem;
 		transition: .3s;
-		width: 450px;
+		width: 90%;
 
 		&__header {
 			display: flex;
@@ -51,7 +51,6 @@ export const JoinMeetModal = styled.div<TJoinMeetModal>`
 			justify-content: center;
 			border-radius: .5rem;
 			background-color: ${props => props.theme.colors.body};
-			color: ${props => props.theme.colors.container};
 			font-size: ${props => props.theme.font.iconSize};
 			color: ${props => props.theme.colors.text};
 		}
@@ -60,67 +59,6 @@ export const JoinMeetModal = styled.div<TJoinMeetModal>`
 			display: flex;
 			flex-direction: column;
 			row-gap: .75rem;
-
-			.input {
-				flex: 1;
-				display: flex;
-				align-items: center;
-				column-gap: 1.25rem;
-				background-color: ${props => props.theme.colors.body};
-				padding: 1rem 1.25rem;
-				border-radius: 1rem;
-
-				&__icon {
-					color: ${props => props.theme.colors.primary};
-					font-size: ${props => props.theme.font.iconSize};
-					transition: .3s;
-				}
-
-				&__field {
-					flex: 1;
-					background-color: transparent;
-					border: none;
-					outline: none;
-					color: ${props => props.theme.colors.text};
-					transition: .3s;
-				}
-			}
-
-			${props => props.isCalling && css`
-				.input__icon {
-					color: ${props => props.theme.colors.textLight};
-				}
-
-				.input__field {
-					color: ${props => props.theme.colors.textLight};
-				}
-			`};
-		}
-
-		&__input-row {
-			display: flex;
-			align-items: center;
-			column-gap: .75rem;
-		}
-
-		&__button {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			column-gap: .5rem;
-			transition: .3s;
-			color: ${props => props.theme.colors.text};
-			background-color: transparent;
-			cursor: pointer;
-
-			&:hover, &:focus {
-				color: ${props => props.theme.colors.primary};
-			}
-
-			&:disabled {
-				cursor: no-drop;
-				color: ${props => props.theme.colors.textLight};
-			}
 		}
 
 		&__error {
