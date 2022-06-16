@@ -6,6 +6,7 @@ import SimplePeer from 'simple-peer';
 import { io } from 'socket.io-client';
 
 import { PEER_CONFIGS } from '../utils/constants';
+import { TCallAccepted, TRequestConnectionData } from '../types/socket';
 import { TUser } from '../types/user';
 
 interface AppContextProps {
@@ -13,15 +14,17 @@ interface AppContextProps {
 	userVideoRef: React.RefObject<HTMLVideoElement>;
 	otherUserVideoRef: React.RefObject<HTMLVideoElement>;
 
+	meetName: string;
 	userData: TUser;
 	otherUserData: TUser;
-
+	
 	userStream?: MediaStream;
-	otherUserStream?: MediaStream;
+	otherUserSignal?: SimplePeer.SignalData;
 
 	meetRequestAccepted: boolean;
 	isReceivingMeetRequest: boolean;
 
+	getUserStream: () => void;
 	startNewMeet: (userName: string, userEmail: string, meetName: string) => void;
 	meetOtherUser: (userName: string, userEmail: string, userToCallId: string) => void;
 	acceptMeetRequest: () => void;
@@ -38,37 +41,41 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 	const userVideoRef = useRef<HTMLVideoElement>(null);
 	const otherUserVideoRef = useRef<HTMLVideoElement>(null);
 
+	const [ meetName, setMeetName ] = useState<string>('');
 	const [ userData, setUserData ] = useState<TUser>({} as TUser);
 	const [ otherUserData, setOtherUserData ] = useState<TUser>({} as TUser);
 	
 	const [ userStream, setUserStream ] = useState<MediaStream>();
-  	const [ otherUserStream, setOtherUserStream ] = useState<MediaStream>();
+  	const [ otherUserSignal, setOtherUserSignal ] = useState<SimplePeer.SignalData>();
 
 	const [ meetRequestAccepted, setMeetRequestAccepted ] = useState<boolean>(false);
 	const [ isReceivingMeetRequest, setIsReceivingMeetRequest ] = useState<boolean>(false);
 
-	const setInitialUserData = async (name: string, email: string, meetName: string = '') => {
+	const getUserStream = async () => {
 		try {
 			const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true }); 
 			if (userVideoRef.current) userVideoRef.current.srcObject = stream;
 
 			setUserStream(stream);
-			setUserData({ id: socketRef.current.id, name, email, meetName });
-
-			socketRef.current.emit('save-user-data', { id: socketRef.current.id, name, email, meetName });
+			return stream;
 		} catch (error) {
 			console.log('Error: ', error);
 		}
 	}
 
-	const startNewMeet = async (userName: string, userEmail: string, meetName: string) => {
+	const startNewMeet = async (userName: string, userEmail: string, meet: string) => {
 		try {
-			await setInitialUserData(userName, userEmail, meetName);
+			const user = { id: socketRef.current.id, name: userName, email: userEmail }
+			socketRef.current.emit('save-user-data', user);
+			
+			setUserData(user);
+			setMeetName(meet);
 
-			socketRef.current.on('request-connection', (data: any) => {
+			socketRef.current.on('request-connection', (data: TRequestConnectionData) => {
 				setIsReceivingMeetRequest(true);
-				setOtherUserData({ ...data.from, meetName: userData.meetName });
-				setOtherUserStream(data.stream);
+
+				setOtherUserData(data.from);
+				setOtherUserSignal(data.signal);
 			});			
 
 			router.push('/meet');
@@ -79,31 +86,38 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 
 	const meetOtherUser = async (userName: string, userEmail: string, userToCallId: string) => {
 		try {
+			const stream = await getUserStream();
+
 			const peer = new SimplePeer({
 				initiator: true,
 				trickle: false,
 				config: PEER_CONFIGS,
-				stream: userStream, 
+				stream: stream, 
 			});
 
-			await setInitialUserData(userName, userEmail);
+			const user = { id: socketRef.current.id, name: userName, email: userEmail }
+			socketRef.current.emit('save-user-data', user);
+			setUserData(user);
 
 			peer.on('signal', data => {
 				socketRef.current.emit('call-user', {
-					userToCall: userToCallId,
-					stream: data,
-					from: userData.id
+					to: userToCallId,
+					from: user,
+					signal: data,
 				});
 			})
 		
-			peer.on('stream', stream => {
+			// ERROR IS HERE!
+			// otherUserVideoRef.current is null so the user video will never be displayed
+			peer.on('stream', stream => { 
 				if (otherUserVideoRef.current) otherUserVideoRef.current.srcObject = stream;
 			});
 		
-			socketRef.current.on('call-accepted', (signal: any) => {
+			socketRef.current.on('call-accepted', (data: TCallAccepted) => {
 				setMeetRequestAccepted(true);
+				setMeetName(data.meetName);
 
-				peer.signal(signal);
+				peer.signal(data.signal);
 				router.push('/meet');
 			});
 		} catch (error) {
@@ -111,8 +125,11 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 		}
 	}
 
-	const acceptMeetRequest = () => {
+	const acceptMeetRequest = async () => {
 		try {
+			setMeetRequestAccepted(true);
+			setIsReceivingMeetRequest(false);
+
 			const peer = new SimplePeer({
 				initiator: false,
 				trickle: false,
@@ -120,14 +137,18 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 			});
 
 			peer.on('signal', data => {
-				socketRef.current.emit('accept-meet', { signal: data, to: otherUserData })
+				socketRef.current.emit('accept-call', {
+					signal: data,
+					to: otherUserData.id,
+					meetName
+				});
 			});
 
-			peer.on('stream', stream => {
+			peer.on('stream', stream => { 
 				if (otherUserVideoRef.current) otherUserVideoRef.current.srcObject = stream;
 			}); // @ts-ignore
 
-			peer.signal(otherUserStream);
+			peer.signal(otherUserSignal);
 		} catch (error) {
 			console.log('Error: ', error);
 		}
@@ -135,6 +156,7 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 
 	const rejectMeetRequest = () => {
 		setIsReceivingMeetRequest(false);
+		setMeetRequestAccepted(false);
 	}
 
 	useEffect(() => {
@@ -157,15 +179,17 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 				userVideoRef,
 				otherUserVideoRef,
 
+				meetName,
 				userData,
 				otherUserData,
 				userStream,
-				otherUserStream,
+				otherUserSignal,
 				
-				startNewMeet,
 				meetRequestAccepted,
 				isReceivingMeetRequest,
-
+				
+				startNewMeet,
+				getUserStream,
 				meetOtherUser,
 				acceptMeetRequest,
 				rejectMeetRequest
