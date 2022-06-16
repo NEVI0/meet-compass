@@ -10,18 +10,18 @@ import * as S from './styles';
 
 interface JoinMeetModalProps {
 	visible: boolean;
-	defaultUserToCallId?: string;
+	defaultMeetId?: string;
 	onClose: () => void;
 }
 
-const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultUserToCallId, onClose }) => {
+const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultMeetId, onClose }) => {
 
 	const { meetOtherUser } = useAppContext();
 
 	const [ error, setError ] = useState<string>('');
 	const [ userName, setUserName ] = useState<string>('');
 	const [ userEmail, setUserEmail ] = useState<string>('');
-	const [ meetId, setMeetId ] = useState<string>(defaultUserToCallId || '');
+	const [ meetId, setMeetId ] = useState<string>(defaultMeetId || '');
 
 	const [ isCalling, setIsCalling ] = useState<boolean>(false);
 

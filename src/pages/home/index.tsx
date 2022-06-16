@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BiCompass, BiUser, BiEnvelope, BiLock, BiAt } from 'react-icons/bi';
+import { BiCompass, BiUser, BiEnvelope, BiAt } from 'react-icons/bi';
 
 import type { NextPage } from 'next';
 import Head from 'next/head';
@@ -17,20 +17,19 @@ const Home: NextPage = () => {
 
 	const [ userName, setUserName ] = useState<string>('');
 	const [ userEmail, setUserEmail ] = useState<string>('');
-	const [ isPrivateMeet, setIsPrivateMeet ] = useState<string>('');
 	const [ meetName, setMeetName ] = useState<string>('');
-	const [ defaultUserToCallId, setDefaultUserToCallId ] = useState<string>('');
+	const [ defaultMeetId, setDefaultMeetId ] = useState<string>('');
 
 	const [ isJoinMeetModalVisible, setIsJoinMeetModalVisible ] = useState<boolean>(false);
 
 	const isStartNewMeetButtonDisabled = () => !userName || !userEmail || !meetName;
 
 	useEffect(() => { 
-		const { callId } = router.query;
+		const { meetId } = router.query;
 
-		if (callId) {
+		if (meetId) {
 			setIsJoinMeetModalVisible(true); // @ts-ignore
-			setDefaultUserToCallId(callId);
+			setDefaultMeetId(meetId);
 		}
 	}, []);
  
@@ -104,7 +103,7 @@ const Home: NextPage = () => {
 
 			<JoinMeetModal
 				visible={ isJoinMeetModalVisible }
-				defaultUserToCallId={ defaultUserToCallId }
+				defaultMeetId={ defaultMeetId }
 				onClose={ () => setIsJoinMeetModalVisible(false) }
 			/>
 		</S.HomeContainer>
