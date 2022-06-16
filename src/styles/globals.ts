@@ -39,6 +39,7 @@ export const GlobalStyles = createGlobalStyle`
 		cursor: pointer;
 		border: none;
 		outline: none;
+		-webkit-tap-highlight-color: transparent;
 	}
 
 	h1, h2, h3 {
@@ -52,6 +53,7 @@ export const GlobalStyles = createGlobalStyle`
 
 	a {
 		text-decoration: none;
+		-webkit-tap-highlight-color: transparent;
 	}
 
 	img {
