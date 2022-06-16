@@ -68,4 +68,10 @@ export const JoinMeetModal = styled.div<TJoinMeetModal>`
 			text-align: center;
 		}
 	}
+
+	@media screen and (min-width: 576px) {
+		.joinmeet {
+			width: 450px;
+		}
+	}
 `;
