@@ -1,5 +1,7 @@
 import { Server } from 'socket.io';
+
 import { TUser } from '../../types/user';
+import { TCallUserData, TAcceptCallData } from '../../types/socket';
 
 const handler = (_: any, response: any) => {
 	if (!response.socket.server.io) {
@@ -9,23 +11,22 @@ const handler = (_: any, response: any) => {
 		let users: any = {};
 		
 		io.on('connection', socket => {
-			// if (users[socket.id]) users[socket.id] = socket.id;
-
-			socket.on('save-user-data', (data: TUser) => {
-				users[socket.id] = data;
+			socket.on('save-user-data', (userData: TUser) => {
+				users[socket.id] = userData;
 			});
 
 			socket.on('disconnect', () => {
 				delete users[socket.id];
 			});
 
-			socket.on('call-user', (data: any) => {
-				const { userToCall, stream } = data;
-				io.to(userToCall).emit('request-connection', { stream, from: users[socket.id] });
+			socket.on('call-user', (data: TCallUserData) => {
+				const { to, from, signal } = data;
+				io.to(to).emit('request-connection', { signal, from });
 			});
 
-			socket.on('accept-call', (data: any) => {
-				io.to(data.to).emit('call-accepted', data.signal);
+			socket.on('accept-call', (data: TAcceptCallData) => {
+				const { to, signal, meetName } = data;
+				io.to(to).emit('call-accepted', { signal, meetName });
 			});
 		});		
 	}
