@@ -4,7 +4,7 @@ export const Button = styled.button`
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	height: 52px;
+	height: 48px;
 	padding: 0 2rem;
 	border-radius: 1rem;
 	background-color: ${props => props.theme.colors.primary};

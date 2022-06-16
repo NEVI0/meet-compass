@@ -6,7 +6,7 @@ export const Input = styled.div<{ disabled?: boolean; }>`
 	column-gap: 1.25rem;
 	background-color: ${props => props.theme.colors.body};
 	padding: 0 1.25rem;
-	height: 52px;
+	height: 48px;
 	border-radius: 1rem;
 
 	.input__icon {
