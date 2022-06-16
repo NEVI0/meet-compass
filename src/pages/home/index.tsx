@@ -23,7 +23,7 @@ const Home: NextPage = () => {
 
 	const [ isJoinMeetModalVisible, setIsJoinMeetModalVisible ] = useState<boolean>(false);
 
-	const isStartNewMeetButtonDisabled = () => !userName || !userEmail || !isPrivateMeet || !meetName;
+	const isStartNewMeetButtonDisabled = () => !userName || !userEmail || !meetName;
 
 	useEffect(() => { 
 		const { callId } = router.query;

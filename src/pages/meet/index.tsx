@@ -19,12 +19,14 @@ const Meet: NextPage = () => {
 
 	const router = useRouter();
 	const {
-		socketRef,
+		userVideoRef,
+		otherUserVideoRef,
+		meetName,
 		userData,
 		otherUserData,
+		meetRequestAccepted,
 		isReceivingMeetRequest,
-		userVideoRef,
-		otherUserVideoRef
+		getUserStream
 	} = useAppContext();
 
 	const [ isSharingScreen, setIsSharingScreen ] = useState<boolean>(false);
@@ -58,6 +60,7 @@ const Meet: NextPage = () => {
 
 	useEffect(() => {
 		if (isEmpty(userData)) router.push('/home');
+		getUserStream();
 	}, []);
 
 	useEffect(() => {
@@ -134,7 +137,7 @@ const Meet: NextPage = () => {
 			<div className="meet">
 				<main className="meet__content">
 					{
-						!isEmpty(otherUserData) ? (
+						(meetRequestAccepted && !isEmpty(otherUserData)) ? (
 							<div className="guest">
 								<video
 									playsInline
@@ -146,7 +149,7 @@ const Meet: NextPage = () => {
 
 								<div className="guest__data">
 									<span className="guest__id">
-										dsbhfbsdjbfjsdjhfdsadas
+										{ otherUserData.name }
 									</span>
 								</div>
 							</div>
@@ -206,7 +209,7 @@ const Meet: NextPage = () => {
 					<div className="meet__data">
 						<h3 className="meet__time">{ handleDisplayHour() }</h3>
 						<div className="meet__data-divider" />
-						<span className="meet__name">{ userData.meetName }</span>
+						<span className="meet__name">{ meetName || 'Meet name' }</span>
 					</div>
 					
 					<section className="meet__actions">
@@ -273,7 +276,7 @@ const Meet: NextPage = () => {
 				</footer>
 			</div>
 
-			<ReceivingCallModal visible={ isReceivingMeetRequest } />
+			<ReceivingCallModal visible={ isReceivingMeetRequest && !meetRequestAccepted } />
 		</S.MeetContainer>
 	);
 
