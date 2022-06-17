@@ -1,6 +1,6 @@
 const nextConfig = {
 	reactStrictMode: false,
-	pageExtensions: ['page.tsx', 'page.ts'],
+	pageExtensions: ['page.tsx', 'page.ts', 'page.jsx', 'page.js'],
 	async redirects() {
 		return [
 			{
