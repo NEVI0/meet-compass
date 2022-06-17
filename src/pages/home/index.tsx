@@ -22,8 +22,6 @@ const Home: NextPage = () => {
 
 	const [ isJoinMeetModalVisible, setIsJoinMeetModalVisible ] = useState<boolean>(false);
 
-	const isStartNewMeetButtonDisabled = () => !userName || !userEmail || !meetName;
-
 	useEffect(() => { 
 		const { meetId } = router.query;
 
@@ -83,7 +81,7 @@ const Home: NextPage = () => {
 					/>
 
 					<Button
-						disabled={ isStartNewMeetButtonDisabled() }
+						disabled={ !userName || !userEmail || !meetName }
 						onClick={ () => startNewMeet(userName, userEmail, meetName) }
 					>
 						Start new meet
@@ -97,7 +95,7 @@ const Home: NextPage = () => {
 				</div>
 
 				<span className="home__join">
-					Just enter in a friends meet <a onClick={ () => setIsJoinMeetModalVisible(true) }>clicking here!</a>
+					Just enter in a friend meet <a onClick={ () => setIsJoinMeetModalVisible(true) }>clicking here!</a>
 				</span>
 			</main>
 
