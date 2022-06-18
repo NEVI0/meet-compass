@@ -12,14 +12,25 @@ import { ReceivingCallModal } from '../../components';
 import useAppContext from '../../contexts/AppContext';
 
 import { isEmpty } from '../../utils/functions';
-import { TOAST_DEFAULT_CONFIG } from '../../utils/constants';
+import { useWindowBreakpoints } from '../../hooks';
+import { LOTTIE_OPTIONS, TOAST_DEFAULT_CONFIG } from '../../utils/constants';
 
 import * as emptyAnimation from '../../../public/assets/animations/empty.json';
 import * as S from './styles';
 
+const ANIMATION_DIMENSIONS = {
+	'xsm': { width: 275, height: 115 },
+	'sm': { width: 275, height: 115 },
+	'md': { width: 370, height: 165 },
+	'lg': { width: 370, height: 165 },
+	'xl': { width: 550, height: 230 },
+	'xxl': { width: 550, height: 230 }
+}
+
 const Meet: NextPage = () => {
 
 	const router = useRouter();
+	const breakpoint = useWindowBreakpoints();
 	const {
 		userVideoRef,
 		otherUserVideoRef,
@@ -191,19 +202,13 @@ const Meet: NextPage = () => {
 				</div> */}
 				<div className="empty">
 					<Lottie
-						width={ 550 / 2 }
-						height={ 230 / 2 }
-						isStopped={ false }
 						isPaused={ false }
+						isStopped={ false }
 						isClickToPauseDisabled={ true }
-						options={{
-							loop: true,
-							autoplay: true, 
-							animationData: emptyAnimation,
-							rendererSettings: {
-								preserveAspectRatio: 'xMidYMid slice'
-							}
-						}}
+						style={{ transition: '.3s' }}
+						width={ ANIMATION_DIMENSIONS[breakpoint].width }
+						height={ ANIMATION_DIMENSIONS[breakpoint].height }
+						options={{ ...LOTTIE_OPTIONS, animationData: emptyAnimation }}
 					/>
 
 					<div>

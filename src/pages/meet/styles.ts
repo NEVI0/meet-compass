@@ -215,6 +215,30 @@ export const MeetContainer = styled.div<TMeetContainer>`
  			font-size: ${props => props.theme.font.smallSize};
 		}
 	}
+
+	/* @media screen and (min-width: 576px) {
+		.meet {
+			background-color: red;
+		}
+	}
+
+	@media screen and (min-width: 767px) {
+		.meet {
+			background-color: green;
+		}
+	}
+
+	@media screen and (min-width: 1120px) {
+		.meet {
+			background-color: blue;
+		}
+	}
+
+	@media screen and (min-width: 1490px) {
+		.meet {
+			background-color: orange;
+		}
+	} */
 `;
 
 export const ActionButton = styled.div`
