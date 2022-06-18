@@ -24,7 +24,7 @@ const Home: NextPage = () => {
 
 	const [ isJoinMeetModalVisible, setIsJoinMeetModalVisible ] = useState<boolean>(false);
 
-	useEffect(() => { 
+	useEffect(() => {
 		const { meetId } = router.query;
 
 		if (meetId) {
@@ -62,21 +62,24 @@ const Home: NextPage = () => {
 
 				<div className="home__content">
 					<Input
-						label={ t('inputPlaceholder.userName') }
+						name="name"
+						placeholder={ t('inputPlaceholder.userName') }
 						value={ userName }
 						onChangeValue={ setUserName }
 						icon={ <BiUser className="input__icon" /> }
 					/>
 
 					<Input
-						label={ t('inputPlaceholder.email') }
+						name="email"
+						placeholder={ t('inputPlaceholder.email') }
 						value={ userEmail }
 						onChangeValue={ setUserEmail }
 						icon={ <BiEnvelope className="input__icon" /> }
 					/>
 
 					<Input
-						label={ t('inputPlaceholder.meetName') }
+						name="meet-name"
+						placeholder={ t('inputPlaceholder.meetName') }
 						value={ meetName }
 						onChangeValue={ setMeetName }
 						icon={ <BiAt className="input__icon" /> }

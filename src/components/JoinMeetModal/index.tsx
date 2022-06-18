@@ -61,21 +61,24 @@ const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultMeetId, o
 
 				<div className="joinmeet__content">
 					<Input
-						label={ t('inputPlaceholder.userName') }
+						name="name"
+						placeholder={ t('inputPlaceholder.userName') }
 						value={ userName }
 						onChangeValue={ setUserName }
 						icon={ <BiUser className="input__icon" /> }
 					/>
 
 					<Input
-						label={ t('inputPlaceholder.email') }
+						name="email"
+						placeholder={ t('inputPlaceholder.email') }
 						value={ userEmail }
 						onChangeValue={ setUserEmail }
 						icon={ <BiEnvelope className="input__icon" /> }
 					/>
 
 					<Input
-						label={ t('inputPlaceholder.meetId') }
+						name="meet-id"
+						placeholder={ t('inputPlaceholder.meetId') }
 						value={ meetId }
 						onChangeValue={ setMeetId }
 						icon={ <BiAt className="input__icon" /> }
