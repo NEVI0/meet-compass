@@ -1,27 +1,25 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BiX } from 'react-icons/bi';
-import { Oval } from 'react-loader-spinner';
+import { useTranslation } from 'react-i18next';
 
+import { darken } from 'polished';
+
+import { Button } from '..';
 import useAppContext from '../../contexts/AppContext';
+import { theme } from '../../styles/theme';
 import * as S from './styles';
 
 const ReceivingCallModal: React.FC<{ visible: boolean; }> = ({ visible }) => {
 
+	const { t } = useTranslation();
 	const { otherUserData, acceptMeetRequest, rejectMeetRequest } = useAppContext();
-	const [ isAcceptingRequest, setIsAcceptingRequest ] = useState<boolean>(false);
-
-	const handleAcceptMeetRequest = () => {
-		setIsAcceptingRequest(true);
-		acceptMeetRequest();
-		setIsAcceptingRequest(false);
-	}
 
 	return (
 		<S.ReceivingCallModal visible={ visible }>
 			<div className="receivingcall">
 				<header className="receivingcall__header">
 					<h2 className="receivingcall__title">
-						{ otherUserData.name } is calling you
+						{ t('receivingCallModal.title', { user: otherUserData.name }) }
 					</h2>
 
 					<button className="receivingcall__close" onClick={ rejectMeetRequest }>
@@ -30,32 +28,17 @@ const ReceivingCallModal: React.FC<{ visible: boolean; }> = ({ visible }) => {
 				</header>
 
 				<div className="receivingcall__content">
-					<button
-						className="receivingcall__button receivingcall__button-default"
+					<Button
+						bgColor={ theme.colors.red }
+						actionBgColor={ darken(.2, theme.colors.red) }
 						onClick={ rejectMeetRequest }
 					>
-						Decline
-					</button>
+						{ t('receivingCallModal.decline') }
+					</Button>
 
-					<button
-						className="receivingcall__button receivingcall__button-primary"
-						disabled={ isAcceptingRequest }
-						onClick={ handleAcceptMeetRequest }
-					>
-						{
-							isAcceptingRequest ? (
-								<Oval
-									ariaLabel="loading-indicator"
-									height={ 20 }
-									width={ 20 }
-									strokeWidth={ 5 }
-									strokeWidthSecondary={ 5 }
-									color="#fff"
-									secondaryColor="transparent"
-								/>
-							) : 'Accept'
-						}
-					</button>
+					<Button onClick={ acceptMeetRequest }>
+						{ t('receivingCallModal.accept') }
+					</Button>
 				</div>
 			</div>
 		</S.ReceivingCallModal>

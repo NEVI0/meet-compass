@@ -1,0 +1,62 @@
+{
+	"page": {
+		"home": {
+			"title": "Welcome to Meet Compass",
+			"subtitle": "Fusce ultricies diam ut lectus scelerisque, non blandit velit accumsan.",
+			"button": "Start new meet",
+			"or": "or",
+			"joinMeet": "Just enter in a friend meet ",
+			"joinMeetLink": "clicking here!",
+			"menu": {
+				"editName": "Edit meet name",
+				"copyId": "Copy meet ID",
+				"sendEmail": "Send email to {{ user }}",
+				"removeUser": "Remove {{ user }} from meet"
+			}
+		},
+		"meet": {
+			"title": "Metting",
+			"toastMessage": "Meet ID copied to your clipboard!",
+			"calling": {
+				"title"	: "Calling {{ user }}...",
+				"message": "the calling request.",
+				"messageLink": "Tap here to cancel "
+			},
+			"empty": {
+				"title": "There is nobody here!",
+				"message": "Try to invite a friend of you to have a meet ",
+				"messageLink": "clicking here."
+			},
+			"tooltip": {
+				"microphone": {
+					"enable": "Enable microphone",
+					"disable": "Disable microphone"
+				},
+				"video": {
+					"enable": "Enable your video",
+					"disable": "Disable your video"
+				},
+				"shareScreen": {
+					"start": "Start sharing your screen",
+					"stop": "Stop sharing your screen"
+				},
+				"left": "Left meeting"
+			}			
+		}
+	},
+	"joinMeetModal": {
+		"title": "Join meet",
+		"button": "Join meet"
+	},
+	"receivingCallModal": {
+		"title": "{{ user }} is calling you...",
+		"decline": "Decline",
+		"accept": "Accept"
+	},
+	"inputPlaceholder": {
+		"userName": "Your name",
+		"email": "E-mail",
+		"meetName": "Meet name",
+		"meetId": "Meet ID"
+	}
+}

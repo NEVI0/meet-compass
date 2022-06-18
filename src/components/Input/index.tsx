@@ -2,7 +2,8 @@ import React from 'react';
 import * as S from './styles';
 
 interface InputProps {
-	label: string;
+	name: string;
+	placeholder: string;
 	type?: string;
 	disabled?: boolean;
 	value: string;
@@ -10,15 +11,16 @@ interface InputProps {
 	icon: any;
 }
 
-const Input: React.FC<InputProps> = ({ label, type = 'text', disabled = false, value, onChangeValue, icon }) => {
+const Input: React.FC<InputProps> = ({ name, placeholder, type = 'text', disabled = false, value, onChangeValue, icon }) => {
 	return (
 		<S.Input disabled={ disabled }>
 			{ icon }
 
 			<input
+				name={ name }
 				type={ type }
 				disabled={ disabled }
-				placeholder={ label }
+				placeholder={ placeholder }
 				value={ value }
 				onChange={ event => onChangeValue(event.target.value) }
 				className="input__field"

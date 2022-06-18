@@ -3,6 +3,7 @@ import { createGlobalStyle } from 'styled-components';
 export const GlobalStyles = createGlobalStyle`
 	:root {
 		--toastify-toast-width: 490px;
+		--toastify-color-dark: ${props => props.theme.colors.container};
 	}
 
 	* {
@@ -32,7 +33,6 @@ export const GlobalStyles = createGlobalStyle`
 	body {
 		background-color: ${props => props.theme.colors.body};
 		color: ${props => props.theme.colors.text};
-		transition: .3s; /*For animation dark mode*/
 	}
 
 	button {
@@ -67,8 +67,26 @@ export const GlobalStyles = createGlobalStyle`
 		margin: 0;
 	}
 
+	input:-webkit-autofill,
+	input:-webkit-autofill:hover, 
+	input:-webkit-autofill:focus, 
+	input:-webkit-autofill:active{
+		-webkit-box-shadow: 0 0 0px 1000px ${props => props.theme.colors.body} inset;
+		-webkit-text-fill-color: ${props => props.theme.colors.text};
+		transition: background-color 5000s ease-in-out 0s;
+	}
+
 	/* Firefox */
 	input[type=number] {
 		-moz-appearance: textfield;
 	}
 `;
+
+/*
+Breakpoints
+
+@media screen and (min-width: 576px) {}
+@media screen and (min-width: 768px) {}
+@media screen and (min-width: 992px) {}
+@media screen and (min-width: 1200px) {}
+*/

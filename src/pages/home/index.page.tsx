@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BiCompass, BiUser, BiEnvelope, BiAt } from 'react-icons/bi';
+import { useTranslation } from 'react-i18next';
 
 import type { NextPage } from 'next';
 import Head from 'next/head';
@@ -13,7 +14,8 @@ import * as S from './styles';
 const Home: NextPage = () => {
 
 	const router = useRouter();
-	const { startNewMeet } = useAppContext();
+	const { t } = useTranslation();
+	const { selectedLanguage, startNewMeet, changeSelectedLanguage } = useAppContext();
 
 	const [ userName, setUserName ] = useState<string>('');
 	const [ userEmail, setUserEmail ] = useState<string>('');
@@ -22,7 +24,7 @@ const Home: NextPage = () => {
 
 	const [ isJoinMeetModalVisible, setIsJoinMeetModalVisible ] = useState<boolean>(false);
 
-	useEffect(() => { 
+	useEffect(() => {
 		const { meetId } = router.query;
 
 		if (meetId) {
@@ -49,32 +51,35 @@ const Home: NextPage = () => {
 
 					<div>
 						<h1 className="home__title">
-							Welcome to Meet Compass
+							{ t("page.home.title") }
 						</h1>
 
 						<p className="home__description">
-							Fusce ultricies diam ut lectus scelerisque, non blandit velit accumsan. 
+							{ t("page.home.subtitle") } 
 						</p>
 					</div>
 				</header>
 
 				<div className="home__content">
 					<Input
-						label="Your name"
+						name="name"
+						placeholder={ t('inputPlaceholder.userName') }
 						value={ userName }
 						onChangeValue={ setUserName }
 						icon={ <BiUser className="input__icon" /> }
 					/>
 
 					<Input
-						label="E-mail"
+						name="email"
+						placeholder={ t('inputPlaceholder.email') }
 						value={ userEmail }
 						onChangeValue={ setUserEmail }
 						icon={ <BiEnvelope className="input__icon" /> }
 					/>
 
 					<Input
-						label="Meet name"
+						name="meet-name"
+						placeholder={ t('inputPlaceholder.meetName') }
 						value={ meetName }
 						onChangeValue={ setMeetName }
 						icon={ <BiAt className="input__icon" /> }
@@ -84,20 +89,32 @@ const Home: NextPage = () => {
 						disabled={ !userName || !userEmail || !meetName }
 						onClick={ () => startNewMeet(userName, userEmail, meetName) }
 					>
-						Start new meet
+						{ t('page.home.button') }
 					</Button>
 				</div>
 
 				<div className="home__divider">
 					<div className="home__divider-line" />
-					OR
+					{ t('page.home.or') }
 					<div className="home__divider-line" />
 				</div>
 
 				<span className="home__join">
-					Just enter in a friend meet <a onClick={ () => setIsJoinMeetModalVisible(true) }>clicking here!</a>
+					{ t('page.home.joinMeet') } <a onClick={ () => setIsJoinMeetModalVisible(true) }>{ t('page.home.joinMeetLink') }</a>
 				</span>
 			</main>
+
+			<button className="language" onClick={ changeSelectedLanguage }>
+				<img
+					src={ selectedLanguage === 'en' ? 'assets/images/usa-icon.png' : 'assets/images/brazil-icon.png' }
+					alt={ selectedLanguage === 'en' ? 'United States flag' : 'Brazil flag' }
+					className="language__icon"
+				/>
+
+				<span className="language__initials">
+					{ selectedLanguage }
+				</span>
+			</button>
 
 			<JoinMeetModal
 				visible={ isJoinMeetModalVisible }

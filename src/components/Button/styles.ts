@@ -1,20 +1,24 @@
 import styled from 'styled-components';
 
-export const Button = styled.button`
+type TButton = {
+	bgColor?: string;
+	actionBgColor?: string;
+}
+
+export const Button = styled.button<TButton>`
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	height: 48px;
 	padding: 0 2rem;
 	border-radius: 1rem;
-	background-color: ${props => props.theme.colors.primary};
-	color: ${props => props.theme.colors.text};
+	background-color: ${props => props.bgColor};
 	font-weight: ${props => props.theme.font.medium};
+	color: ${props => props.theme.colors.text};
 	transition: .3s;
 	
 	&:hover, &:focus {
-		background-color: ${props => props.theme.colors.secondary};
-		color: #FFF;
+		background-color: ${props => props.actionBgColor};
 	}
 
 	&:active:not(&:disabled) {

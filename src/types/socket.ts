@@ -8,6 +8,7 @@ export type TCallUserData = {
 }
 
 export type TAcceptCallData = {
+	from: TUser;
 	to: string;
 	meetName: string;
 	signal: SimplePeer.SignalData;
@@ -20,5 +21,6 @@ export type TRequestConnectionData = {
 
 export type TCallAccepted = {
 	meetName: string;
+	from: TUser;
 	signal: SimplePeer.SignalData;
 };

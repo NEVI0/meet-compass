@@ -25,8 +25,8 @@ const handler = (_: any, response: any) => {
 			});
 
 			socket.on('accept-call', (data: TAcceptCallData) => {
-				const { to, signal, meetName } = data;
-				io.to(to).emit('call-accepted', { signal, meetName });
+				const { from, to, signal, meetName } = data;
+				io.to(to).emit('call-accepted', { from, signal, meetName });
 			});
 		});		
 	}
