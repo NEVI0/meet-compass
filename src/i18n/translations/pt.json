@@ -1,0 +1,56 @@
+{
+	"page": {
+		"home": {
+			"title": "Bem-vindo ao Meet Compass",
+			"subtitle": "Fusce ultricies diam ut lectus scelerisque, non blandit velit accumsan.",
+			"button": "Começar nova chamada",
+			"or": "ou",
+			"joinMeet": "Apenas entre na chamada de um amigo ",
+			"joinMeetLink": "clicando aqui!"
+		},
+		"meet": {
+			"title": "Chamada",
+			"toastMessage": "O ID da chamada foi copiado!",
+			"calling": {
+				"title"	: "Chamando {{ user }}...",
+				"message": "cancelar a chamada.",
+				"messageLink": "Click aqui para "
+			},
+			"empty": {
+				"title": "Não tem ninguém aqui!",
+				"message": "Tente convidar um amigo seu para essa chamada ",
+				"messageLink": "clicando aqui."
+			},
+			"tooltip": {
+				"microphone": {
+					"enable": "Ativar microfone",
+					"disable": "Desativar microfone"
+				},
+				"video": {
+					"enable": "Ativar meu video",
+					"disable": "Desativar meu video"
+				},
+				"shareScreen": {
+					"start": "Começar compartilhamento de tela",
+					"stop": "Parar compartilhamento de tela"
+				},
+				"left": "Sair da chamada"
+			}			
+		}
+	},
+	"joinMeetModal": {
+		"title": "Entrar em uma chamada",
+		"button": "Entrar"
+	},
+	"receivingCallModal": {
+		"title": "{{ user }} está chamando você...",
+		"decline": "Recusar",
+		"accept": "Aceitar"
+	},
+	"inputPlaceholder": {
+		"userName": "Seu nome",
+		"email": "E-mail",
+		"meetName": "Nome da chamada",
+		"meetId": "ID da chamada"
+	}
+}
