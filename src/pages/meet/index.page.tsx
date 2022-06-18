@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, BiChat, BiPhoneOff, BiMove, BiUndo, BiDotsVerticalRounded } from 'react-icons/bi';
 import Lottie from 'react-lottie';
+import {
+	BiMenu,
+	BiVideo,
+	BiVideoOff,
+	BiMicrophone,
+	BiMicrophoneOff,
+	BiDesktop,
+	BiPhoneOff,
+	BiMove,
+	BiUndo,
+	BiDotsVerticalRounded
+} from 'react-icons/bi';
 
+import moment from 'moment';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-
-import moment from 'moment';
 
 import { ReceivingCallModal } from '../../components';
 import useAppContext from '../../contexts/AppContext';
@@ -32,6 +42,10 @@ const Meet: NextPage = () => {
 	const [ isSharingScreen, setIsSharingScreen ] = useState<boolean>(false);
 	const [ isUsingVideo, setIsUsingVideo ] = useState<boolean>(false);
 	const [ isUsingMicrophone, setIsUsingMicrophone ] = useState<boolean>(false);
+
+	const handleCopyMeetId = () => {
+		navigator.clipboard.writeText(userData.id);
+	}
 
 	const handleDisplayHour = () => {
 		const hour = moment().hours();
@@ -131,150 +145,163 @@ const Meet: NextPage = () => {
 	return (
 		<S.MeetContainer isSharingScreen={ isSharingScreen } isUsingVideo={ isUsingVideo }>
 			<Head>
-				<title>Call - Meet Compass</title>
+				<title>Meet Compass - Metting</title>
 			</Head>
 
-			<div className="meet">
-				<main className="meet__content">
-					{
-						(meetRequestAccepted && !isEmpty(otherUserData)) ? (
-							<div className="guest">
-								<video
-									playsInline
-									autoPlay
-									ref={ otherUserVideoRef }
-									className="guest__video"
-									id="guest-video"
-								></video>
+			<header className="header">
+				<h2 className="header__title">
+					{ meetName || 'Meet name' }
+				</h2>
 
-								<div className="guest__data">
-									<span className="guest__id">
-										{ otherUserData.name }
-									</span>
-								</div>
-							</div>
-						) : (
-							<div className="empty">
-								<Lottie
-									width={ 550 }
-									height={ 230 }
-									isStopped={ false }
-									isPaused={ false }
-									options={{
-										loop: true,
-										autoplay: true, 
-										animationData: emptyAnimation,
-										rendererSettings: {
-											preserveAspectRatio: 'xMidYMid slice'
-										}
-									}}
-								/>
+				<button className="header__menu">
+					<BiMenu />
+				</button>
+			</header>
 
-								<div>
-									<h2 className="empty__title">
-										There is nobody here!
-									</h2>
+			<aside className="user" id="user-video-container">
+				<video
+					muted
+					playsInline
+					autoPlay
+					ref={ userVideoRef }
+					className="user__video"
+					id="user-video"
+				></video>
 
-									<p className="empty__message">
-										Try to invite some friend of yours to have a call with you.
-									</p>
-								</div>
-							</div>
-						)
-					}
-				</main>
+				<div className="user__options" id="user-video-options">
+					<button className="option option-grab" id="user-move-button">
+						<BiMove />
+					</button>
 
-				<aside className="user" id="user-video-container">
+					<button className="option" id="reset-position-button">
+						<BiUndo />
+					</button>
+				</div>
+			</aside>
+
+			<main className="meet">
+				{/* <div className="otheruser" id="other-user-container">
 					<video
 						muted
 						playsInline
 						autoPlay
-						ref={ userVideoRef }
-						className="user__video"
-						id="user-video"
+						ref={ otherUserVideoRef }
+						className="otheruser__video"
+						id="otheruser-video"
 					></video>
 
-					<div className="user__options" id="user-video-options">
-						<button className="option option-grab" id="user-move-button">
-							<BiMove />
-						</button>
-
-						<button className="option" id="reset-position-button">
-							<BiUndo />
-						</button>
-					</div>
-				</aside>
-
-				<footer className="meet__footer">
-					<div className="meet__data">
-						<h3 className="meet__time">{ handleDisplayHour() }</h3>
-						<div className="meet__data-divider" />
-						<span className="meet__name">{ meetName || 'Meet name' }</span>
-					</div>
-					
-					<section className="meet__actions">
-						<div className="action">
-							<button className="action__button" onClick={ handleUpdateUserAudioState }>
-								{ isUsingMicrophone ? <BiMicrophone className="action__button-icon" /> : <BiMicrophoneOff className="action__button-icon" /> }
-							</button>
-
-							<div className="action__tooltip">
-								{ isUsingMicrophone ? 'Disable ' : 'Enable ' } microphone
-							</div>
-						</div>
-
-						<div className="action">
-							<button className="action__button" onClick={ () => setIsUsingVideo(!isUsingVideo) }>
-								{ isUsingVideo ? <BiVideo className="action__button-icon" /> : <BiVideoOff className="action__button-icon" /> }
-							</button>
-
-							<div className="action__tooltip">
-								{ isUsingVideo ? 'Disable ' : 'Enable ' } your video
-							</div>
-						</div>
-
-						<div className="action">
-							<button className="action__button action__button-sharing" onClick={ () => setIsSharingScreen(!isSharingScreen) }>
-								<BiDesktop className="action__button-icon" />
-							</button>
-
-							<div className="action__tooltip">
-								{ isSharingScreen ? 'Stop ' : 'Start ' } sharing your screen
-							</div>
-						</div>
-
-						{/* <div className="action">
-							<button className="action__button">
-								<BiChat className="action__button-icon" />
-							</button>
-
-							<div className="action__tooltip">
-								Open chat
-							</div>
-						</div> */}
-
-						<div className="action">
-							<button className="action__button action__button-hangup" onClick={ handleHangUp }>
-								<BiPhoneOff className="action__button-icon" />
-							</button>
-
-							<div className="action__tooltip">
-								Left meeting
-							</div>
-						</div>
-					</section>
-
-					<div className="meet__options">
-						<span className="meet__id">
-							{ userData.id }
+					<div className="otheruser__data">
+						<span className="otheruser__name">
+							{ otherUserData.name || 'My friend' }
 						</span>
-
-						<button className="meet__option">
-							<BiDotsVerticalRounded className="meet__option-icon" />
-						</button>
 					</div>
-				</footer>
-			</div>
+				</div> */}
+				<div className="empty">
+					<Lottie
+						width={ 550 / 2 }
+						height={ 230 / 2 }
+						isStopped={ false }
+						isPaused={ false }
+						isClickToPauseDisabled={ true }
+						options={{
+							loop: true,
+							autoplay: true, 
+							animationData: emptyAnimation,
+							rendererSettings: {
+								preserveAspectRatio: 'xMidYMid slice'
+							}
+						}}
+					/>
+
+					<div>
+						<h2 className="empty__title">
+							There is nobody here!
+						</h2>
+
+						<p className="empty__message">
+							Try to invite a friend of you to have a meet <a onClick={ handleCopyMeetId }>clicking here.</a>
+						</p>
+					</div>
+				</div>
+			</main>
+
+			<footer className="footer">
+				<div className="footer__data">
+					<h3 className="footer__time">
+						{ handleDisplayHour() }
+					</h3>
+					
+					<div className="footer__data-divider" />
+					
+					<span className="footer__name">
+						{ meetName || 'Meet name' }
+					</span>
+				</div>
+				
+				<section className="footer__actions">
+					<S.ActionButton>
+						<button
+							className="action__button"
+							onClick={ handleUpdateUserAudioState }
+						>
+							{ isUsingMicrophone ? <BiMicrophone className="action__button-icon" /> : <BiMicrophoneOff className="action__button-icon" /> }
+						</button>
+
+						<div className="action__tooltip">
+							{ isUsingMicrophone ? 'Disable ' : 'Enable ' } microphone
+						</div>
+					</S.ActionButton>
+
+					<S.ActionButton>
+						<button
+							className="action__button"
+							onClick={ () => setIsUsingVideo(!isUsingVideo) }
+						>
+							{ isUsingVideo ? <BiVideo className="action__button-icon" /> : <BiVideoOff className="action__button-icon" /> }
+						</button>
+
+						<div className="action__tooltip">
+							{ isUsingVideo ? 'Disable ' : 'Enable ' } your video
+						</div>
+					</S.ActionButton>
+
+					<S.ActionButton>
+						<button
+							className={`action__button ${isSharingScreen && 'action__button-sharing'}`}
+							onClick={ () => setIsSharingScreen(!isSharingScreen) }
+						>
+							<BiDesktop className="action__button-icon" />
+						</button>
+
+						<div className="action__tooltip">
+							{ isSharingScreen ? 'Stop ' : 'Start ' } sharing your screen
+						</div>
+					</S.ActionButton>
+
+					<S.ActionButton>
+						<button
+							className="action__button action__button-hangup"
+							onClick={ handleHangUp }
+						>
+							<BiPhoneOff className="action__button-icon" />
+						</button>
+
+						<div className="action__tooltip">
+							Left meeting
+						</div>
+					</S.ActionButton>
+				</section>
+
+				<div className="footer__options">
+					<span className="footer__meetid">
+						{ userData.id }
+					</span>
+
+					<button className="footer__option">
+						<BiDotsVerticalRounded className="footer__option-icon" />
+					</button>
+				</div>
+			</footer>
 
 			<ReceivingCallModal visible={ isReceivingMeetRequest && !meetRequestAccepted } />
 		</S.MeetContainer>
