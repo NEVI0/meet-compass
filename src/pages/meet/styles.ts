@@ -137,6 +137,33 @@ export const MeetContainer = styled.div<TMeetContainer>`
 		}
 	}
 
+	.calling {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		row-gap: 2rem;
+		text-align: center;
+
+		&__title {
+			margin-bottom: .25rem;
+			font-size: ${props => props.theme.font.h1Size};
+		}
+
+		&__message {
+			color: ${props => props.theme.colors.textLight};
+
+			> a {
+				cursor: pointer;
+				color: ${props => props.theme.colors.red};
+
+				&:hover {
+					color: ${props => darken(.2, props.theme.colors.red)};
+					text-decoration: underline;
+				}
+			}
+		}
+	}
+
 	.empty {
 		display: flex;
 		flex-direction: column;

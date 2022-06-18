@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { BiMenu, BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, BiPhoneOff, BiMove, BiUndo } from 'react-icons/bi';
-import Lottie from 'react-lottie';
+import { MutatingDots } from 'react-loader-spinner';
 import { toast } from 'react-toastify';
+import Lottie from 'react-lottie';
 
 import type { NextPage } from 'next';
 import Head from 'next/head';
@@ -16,6 +17,7 @@ import { LOTTIE_OPTIONS, TOAST_DEFAULT_CONFIG } from '../../utils/constants';
 
 import * as emptyAnimation from '../../../public/assets/animations/empty.json';
 import * as S from './styles';
+import { theme } from '../../styles/theme';
 
 const ANIMATION_DIMENSIONS = {
 	'xsm': { width: 275, height: 115 },
@@ -180,24 +182,27 @@ const Meet: NextPage = () => {
 
 			<main className="meet">
 				{
-					!isEmpty(otherUserData) ? (
-						<div className="otheruser" id="other-user-container">
-							<video
-								muted
-								playsInline
-								autoPlay
-								ref={ otherUserVideoRef }
-								className="otheruser__video"
-								id="otheruser-video"
-							></video>
+					isCallingUser ? (
+						<div className="calling">
+							<MutatingDots
+								ariaLabel="loading-indicator"
+								width={ 100 }
+								height={ 100 }
+								color={ theme.colors.primary }
+								secondaryColor={ theme.colors.secondary }
+							/>
 
-							<div className="otheruser__data">
-								<span className="otheruser__name">
-									{ otherUserData.name || 'My friend' }
-								</span>
+							<div>
+								<h2 className="calling__title">
+									Calling { otherUserData.name }...
+								</h2>
+
+								<p className="calling__message">
+									Tap <a>here to cancel</a> the calling request.
+								</p>
 							</div>
 						</div>
-					) : (
+					) : isEmpty(otherUserData) ? (
 						<div className="empty">
 							<Lottie
 								isPaused={ false }
@@ -217,6 +222,22 @@ const Meet: NextPage = () => {
 								<p className="empty__message">
 									Try to invite a friend of you to have a meet <a onClick={ handleCopyMeetId }>clicking here.</a>
 								</p>
+							</div>
+						</div>
+					) : (
+						<div className="otheruser" id="other-user-container">
+							<video
+								playsInline
+								autoPlay
+								ref={ otherUserVideoRef }
+								className="otheruser__video"
+								id="otheruser-video"
+							></video>
+
+							<div className="otheruser__data">
+								<span className="otheruser__name">
+									{ otherUserData.name || 'My friend' }
+								</span>
 							</div>
 						</div>
 					)
