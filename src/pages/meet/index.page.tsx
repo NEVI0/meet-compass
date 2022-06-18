@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BiMenu, BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, BiPhoneOff, BiMove, BiUndo } from 'react-icons/bi';
 import { MutatingDots } from 'react-loader-spinner';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import Lottie from 'react-lottie';
 
 import type { NextPage } from 'next';
@@ -32,6 +33,7 @@ const Meet: NextPage = () => {
 
 	const router = useRouter();
 	const breakpoint = useWindowBreakpoints();
+	const { t } = useTranslation();
 	const {
 		userVideoRef,
 		otherUserVideoRef,
@@ -50,7 +52,7 @@ const Meet: NextPage = () => {
 
 	const handleCopyMeetId = () => {
 		navigator.clipboard.writeText(userData.id);
-		toast('Meet ID copied to your clipboard!', TOAST_DEFAULT_CONFIG);
+		toast(t('page.meet.toastMessage'), TOAST_DEFAULT_CONFIG);
 	}
 
 	const handleHangUp = async () => { // @ts-ignore
@@ -146,7 +148,7 @@ const Meet: NextPage = () => {
 	return (
 		<S.MeetContainer isSharingScreen={ isSharingScreen } isUsingVideo={ isUsingVideo }>
 			<Head>
-				<title>Meet Compass - Metting</title>
+				<title>Meet Compass - { t('page.meet.title') }</title>
 			</Head>
 
 			<header className="header">
@@ -194,11 +196,11 @@ const Meet: NextPage = () => {
 
 							<div>
 								<h2 className="calling__title">
-									Calling { otherUserData.name }...
+									{ t('page.meet.calling.title', { user: otherUserData.name }) }
 								</h2>
 
 								<p className="calling__message">
-									Tap <a>here to cancel</a> the calling request.
+									<a>{ t('page.meet.calling.messageLink') }</a> { t('page.meet.calling.message') }
 								</p>
 							</div>
 						</div>
@@ -216,11 +218,11 @@ const Meet: NextPage = () => {
 
 							<div>
 								<h2 className="empty__title">
-									There is nobody here!
+									{ t('page.meet.empty.title') }
 								</h2>
 
 								<p className="empty__message">
-									Try to invite a friend of you to have a meet <a onClick={ handleCopyMeetId }>clicking here.</a>
+									{ t('page.meet.empty.message') } <a onClick={ handleCopyMeetId }>{ t('page.meet.empty.messageLink') }</a>
 								</p>
 							</div>
 						</div>
@@ -259,7 +261,9 @@ const Meet: NextPage = () => {
 						</button>
 
 						<div className="action__tooltip">
-							{ isUsingMicrophone ? 'Disable ' : 'Enable ' } microphone
+							{
+								isUsingMicrophone ? t('page.meet.tooltip.microphone.disable') : t('page.meet.tooltip.microphone.enable')
+							}
 						</div>
 					</S.ActionButton>
 
@@ -272,7 +276,9 @@ const Meet: NextPage = () => {
 						</button>
 
 						<div className="action__tooltip">
-							{ isUsingVideo ? 'Disable ' : 'Enable ' } your video
+							{
+								isUsingVideo ? t('page.meet.tooltip.video.disable') : t('page.meet.tooltip.video.enable')
+							}
 						</div>
 					</S.ActionButton>
 
@@ -285,7 +291,9 @@ const Meet: NextPage = () => {
 						</button>
 
 						<div className="action__tooltip">
-							{ isSharingScreen ? 'Stop ' : 'Start ' } sharing your screen
+							{
+								isSharingScreen ? t('page.meet.tooltip.shareScreen.stop') : t('page.meet.tooltip.shareScreen.start')
+							}
 						</div>
 					</S.ActionButton>
 
@@ -298,7 +306,7 @@ const Meet: NextPage = () => {
 						</button>
 
 						<div className="action__tooltip">
-							Left meeting
+							{ t('page.meet.tooltip.left') }
 						</div>
 					</S.ActionButton>
 				</section>

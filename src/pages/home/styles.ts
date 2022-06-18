@@ -69,6 +69,7 @@ export const HomeContainer = styled.div`
 			column-gap: 1rem;
 			font-size: ${props => props.theme.font.smallerSize};
 			color: ${props => props.theme.colors.textLight};
+			text-transform: uppercase;
 
 			&-line {
 				height: 1px;

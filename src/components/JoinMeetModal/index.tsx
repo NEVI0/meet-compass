@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { BiAt, BiEnvelope, BiUser, BiX } from 'react-icons/bi';
-import { Oval } from 'react-loader-spinner';
+import { useTranslation } from 'react-i18next';
 
 import { Input, Button } from '..';
 
 import useAppContext from '../../contexts/AppContext';
-import { theme } from '../../styles/theme';
 import * as S from './styles';
 
 interface JoinMeetModalProps {
@@ -16,6 +15,7 @@ interface JoinMeetModalProps {
 
 const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultMeetId, onClose }) => {
 
+	const { t } = useTranslation();
 	const { meetOtherUser } = useAppContext();
 
 	const [ error, setError ] = useState<string>('');
@@ -51,7 +51,7 @@ const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultMeetId, o
 			<div className="joinmeet">
 				<header className="joinmeet__header">
 					<h2 className="joinmeet__title">
-						Join meet
+						{ t('joinMeetModal.title') }
 					</h2>
 
 					<button className="joinmeet__close" onClick={ handleCloseModal }>
@@ -61,21 +61,21 @@ const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultMeetId, o
 
 				<div className="joinmeet__content">
 					<Input
-						label="Your name"
+						label={ t('inputPlaceholder.userName') }
 						value={ userName }
 						onChangeValue={ setUserName }
 						icon={ <BiUser className="input__icon" /> }
 					/>
 
 					<Input
-						label="E-mail"
+						label={ t('inputPlaceholder.email') }
 						value={ userEmail }
 						onChangeValue={ setUserEmail }
 						icon={ <BiEnvelope className="input__icon" /> }
 					/>
 
 					<Input
-						label="Meet ID"
+						label={ t('inputPlaceholder.meetId') }
 						value={ meetId }
 						onChangeValue={ setMeetId }
 						icon={ <BiAt className="input__icon" /> }
@@ -85,7 +85,7 @@ const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultMeetId, o
 						disabled={ !userName || !userEmail || !meetId || isCalling }
 						onClick={ handleMeetUser }
 					>
-						Join meet
+						{ t('joinMeetModal.button') }
 					</Button>
 				</div>
 

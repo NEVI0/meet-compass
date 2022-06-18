@@ -1,15 +1,17 @@
 import React from 'react';
 import { BiX } from 'react-icons/bi';
+import { useTranslation } from 'react-i18next';
+
 import { darken } from 'polished';
 
 import { Button } from '..';
-
 import useAppContext from '../../contexts/AppContext';
 import { theme } from '../../styles/theme';
 import * as S from './styles';
 
 const ReceivingCallModal: React.FC<{ visible: boolean; }> = ({ visible }) => {
 
+	const { t } = useTranslation();
 	const { otherUserData, acceptMeetRequest, rejectMeetRequest } = useAppContext();
 
 	return (
@@ -17,7 +19,7 @@ const ReceivingCallModal: React.FC<{ visible: boolean; }> = ({ visible }) => {
 			<div className="receivingcall">
 				<header className="receivingcall__header">
 					<h2 className="receivingcall__title">
-						{ otherUserData.name } is calling you
+						{ t('receivingCallModal.title', { user: otherUserData.name }) }
 					</h2>
 
 					<button className="receivingcall__close" onClick={ rejectMeetRequest }>
@@ -31,11 +33,11 @@ const ReceivingCallModal: React.FC<{ visible: boolean; }> = ({ visible }) => {
 						actionBgColor={ darken(.2, theme.colors.red) }
 						onClick={ rejectMeetRequest }
 					>
-						Decline
+						{ t('receivingCallModal.decline') }
 					</Button>
 
 					<Button onClick={ acceptMeetRequest }>
-						Accept
+						{ t('receivingCallModal.accept') }
 					</Button>
 				</div>
 			</div>
