@@ -328,13 +328,13 @@ const Meet: NextPage = () => {
 			<menu className="menu">
 				<section className="menu__header">
 					<div className="menu__data">
-						<h1 className="menu__title">
+						<h2 className="menu__title">
 							{ userData.name }
-						</h1>
-
-						<h2 className="menu__subtitle">
-							{ userData.email }
 						</h2>
+
+						<h3 className="menu__subtitle">
+							{ userData.email }
+						</h3>
 					</div>
 
 					<button className="menu__close" onClick={ () => setIsMenuOpen(false) }>

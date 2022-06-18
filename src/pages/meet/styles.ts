@@ -243,12 +243,12 @@ export const MeetContainer = styled.div<TMeetContainer>`
 	.menu {
 		position: fixed;
 		top: 0;
-		right: -400px;
 		bottom: 0;
+		right: -350px;
+		width: 350px;
 		display: flex;
 		flex-direction: column;
 		z-index: 10;
-		width: 400px;
 		padding: 2rem;
 		row-gap: 2rem;
 		box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.25);
@@ -264,11 +264,11 @@ export const MeetContainer = styled.div<TMeetContainer>`
 		}
 
 		&__title {
-			font-size: ${props => props.theme.font.h1Size};
+			font-size: ${props => props.theme.font.h2Size};
 		}
 
 		&__subtitle {
-			font-size: ${props => props.theme.font.h2Size};
+			font-size: ${props => props.theme.font.h3Size};
 			font-weight: 500;
 			color: ${props => props.theme.colors.textLight};
 		}
@@ -366,6 +366,13 @@ export const MeetContainer = styled.div<TMeetContainer>`
 				height: 30px;
 				border-radius: .5rem;
 			}
+		}
+
+		.menu {
+			right: -400px;
+			width: 400px;
+
+			${props => props.isMenuOpen && 'right: 0;'};
 		}
 	}
 `;
