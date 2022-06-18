@@ -1,17 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { BiMenu, BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, BiPhoneOff, BiMove, BiUndo, BiDotsVerticalRounded } from 'react-icons/bi';
 import Lottie from 'react-lottie';
-import {
-	BiMenu,
-	BiVideo,
-	BiVideoOff,
-	BiMicrophone,
-	BiMicrophoneOff,
-	BiDesktop,
-	BiPhoneOff,
-	BiMove,
-	BiUndo,
-	BiDotsVerticalRounded
-} from 'react-icons/bi';
+import { toast } from 'react-toastify';
 
 import moment from 'moment';
 import type { NextPage } from 'next';
@@ -22,6 +12,8 @@ import { ReceivingCallModal } from '../../components';
 import useAppContext from '../../contexts/AppContext';
 
 import { isEmpty } from '../../utils/functions';
+import { TOAST_DEFAULT_CONFIG } from '../../utils/constants';
+
 import * as emptyAnimation from '../../../public/assets/animations/empty.json';
 import * as S from './styles';
 
@@ -45,6 +37,7 @@ const Meet: NextPage = () => {
 
 	const handleCopyMeetId = () => {
 		navigator.clipboard.writeText(userData.id);
+		toast('Meet ID copied to your clipboard!', TOAST_DEFAULT_CONFIG);
 	}
 
 	const handleDisplayHour = () => {

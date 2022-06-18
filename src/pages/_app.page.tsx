@@ -1,3 +1,6 @@
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+
 import type { AppProps } from 'next/app'
 import { ThemeProvider } from 'styled-components';
 
@@ -11,6 +14,7 @@ const App = ({ Component, pageProps }: AppProps) => {
 		<ThemeProvider theme={ theme }>
 			<AppProvider>
 				<GlobalStyles />
+				<ToastContainer position="top-center" />
 				<Component { ...pageProps } />
 			</AppProvider>
 		</ThemeProvider>
