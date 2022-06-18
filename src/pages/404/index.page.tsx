@@ -4,6 +4,7 @@ import Lottie from 'react-lottie';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 
+import { LOTTIE_OPTIONS } from '../../utils/constants';
 import * as notFoundAnimation from '../../../public/assets/animations/not-found.json';
 import * as S from './styles';
 
@@ -28,14 +29,7 @@ const NotFound: NextPage = () => {
 					isStopped={ false }
 					isPaused={ false }
 					isClickToPauseDisabled={ true }
-					options={{
-						loop: true,
-						autoplay: true, 
-						animationData: notFoundAnimation,
-						rendererSettings: {
-							preserveAspectRatio: 'xMidYMid slice'
-						}
-					}}
+					options={{ ...LOTTIE_OPTIONS, animationData: notFoundAnimation }}
 				/>
 
 				<div>

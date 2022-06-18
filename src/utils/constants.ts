@@ -28,3 +28,12 @@ export const TOAST_DEFAULT_CONFIG: ToastOptions = {
 		backgroundColor: theme.colors.primary
 	}
 };
+
+export const LOTTIE_OPTIONS = {
+	loop: true,
+	autoplay: true, 
+	animationData: '',
+	rendererSettings: {
+		preserveAspectRatio: 'xMidYMid slice'
+	}
+}
