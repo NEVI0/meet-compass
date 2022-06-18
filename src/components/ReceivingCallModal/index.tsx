@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BiX } from 'react-icons/bi';
-import { Oval } from 'react-loader-spinner';
+
+import { Button } from '..';
 
 import useAppContext from '../../contexts/AppContext';
 import * as S from './styles';
@@ -8,13 +9,6 @@ import * as S from './styles';
 const ReceivingCallModal: React.FC<{ visible: boolean; }> = ({ visible }) => {
 
 	const { otherUserData, acceptMeetRequest, rejectMeetRequest } = useAppContext();
-	const [ isAcceptingRequest, setIsAcceptingRequest ] = useState<boolean>(false);
-
-	const handleAcceptMeetRequest = () => {
-		setIsAcceptingRequest(true);
-		acceptMeetRequest();
-		setIsAcceptingRequest(false);
-	}
 
 	return (
 		<S.ReceivingCallModal visible={ visible }>
@@ -30,32 +24,13 @@ const ReceivingCallModal: React.FC<{ visible: boolean; }> = ({ visible }) => {
 				</header>
 
 				<div className="receivingcall__content">
-					<button
-						className="receivingcall__button receivingcall__button-default"
-						onClick={ rejectMeetRequest }
-					>
+					<Button onClick={ rejectMeetRequest }>
 						Decline
-					</button>
+					</Button>
 
-					<button
-						className="receivingcall__button receivingcall__button-primary"
-						disabled={ isAcceptingRequest }
-						onClick={ handleAcceptMeetRequest }
-					>
-						{
-							isAcceptingRequest ? (
-								<Oval
-									ariaLabel="loading-indicator"
-									height={ 20 }
-									width={ 20 }
-									strokeWidth={ 5 }
-									strokeWidthSecondary={ 5 }
-									color="#fff"
-									secondaryColor="transparent"
-								/>
-							) : 'Accept'
-						}
-					</button>
+					<Button onClick={ acceptMeetRequest }>
+						Accept
+					</Button>
 				</div>
 			</div>
 		</S.ReceivingCallModal>
