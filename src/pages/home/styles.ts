@@ -95,6 +95,34 @@ export const HomeContainer = styled.div`
 		}
 	}
 
+	.language {
+		position: fixed;
+		top: 2rem;
+		right: 2rem;
+		display: flex;
+		align-items: center;
+		column-gap: .5rem;
+		padding: .5rem;
+		border-radius: 50px;
+		background-color: ${props => props.theme.colors.primary};
+		transition: .3s;
+
+		&__icon {
+			width: 24px;
+		}
+
+		&__initials {
+			text-transform: uppercase;
+			color: ${props => props.theme.colors.text};
+			font-size: ${props => props.theme.font.smallSize};
+			font-weight: 500;
+		}
+
+		&:hover, &:focus {
+			background-color: ${props => props.theme.colors.secondary};
+		}
+	}
+
 	@media screen and (min-width: 576px) {
 		.home {
 			padding: 0 6rem;

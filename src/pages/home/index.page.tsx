@@ -15,7 +15,7 @@ const Home: NextPage = () => {
 
 	const router = useRouter();
 	const { t } = useTranslation();
-	const { startNewMeet } = useAppContext();
+	const { selectedLanguage, startNewMeet, changeSelectedLanguage } = useAppContext();
 
 	const [ userName, setUserName ] = useState<string>('');
 	const [ userEmail, setUserEmail ] = useState<string>('');
@@ -100,6 +100,18 @@ const Home: NextPage = () => {
 					{ t('page.home.joinMeet') } <a onClick={ () => setIsJoinMeetModalVisible(true) }>{ t('page.home.joinMeetLink') }</a>
 				</span>
 			</main>
+
+			<button className="language" onClick={ changeSelectedLanguage }>
+				<img
+					src={ selectedLanguage === 'en' ? 'assets/images/usa-icon.png' : 'assets/images/brazil-icon.png' }
+					alt={ selectedLanguage === 'en' ? 'United States flag' : 'Brazil flag' }
+					className="language__icon"
+				/>
+
+				<span className="language__initials">
+					{ selectedLanguage }
+				</span>
+			</button>
 
 			<JoinMeetModal
 				visible={ isJoinMeetModalVisible }

@@ -4,10 +4,13 @@ import { useRouter } from 'next/router';
 
 import SimplePeer from 'simple-peer';
 import { io } from 'socket.io-client';
+import i18n from '../i18n';
 
 import { PEER_CONFIGS } from '../utils/constants';
 import { TCallAccepted, TRequestConnectionData } from '../types/socket';
 import { TUser } from '../types/user';
+
+type TLanguage = 'en' | 'pt';
 
 interface AppContextProps {
 	socketRef: React.MutableRefObject<any>;
@@ -17,6 +20,7 @@ interface AppContextProps {
 	meetName: string;
 	userData: TUser;
 	otherUserData: TUser;
+	selectedLanguage: TLanguage;
 	
 	userStream?: MediaStream;
 	otherUserSignal?: SimplePeer.SignalData;
@@ -25,6 +29,7 @@ interface AppContextProps {
 	meetRequestAccepted: boolean;
 	isReceivingMeetRequest: boolean;
 
+	changeSelectedLanguage: () => void;
 	getUserStream: () => void;
 	startNewMeet: (userName: string, userEmail: string, meetName: string) => void;
 	meetOtherUser: (userName: string, userEmail: string, userToCallId: string) => void;
@@ -45,6 +50,7 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 	const [ meetName, setMeetName ] = useState<string>('');
 	const [ userData, setUserData ] = useState<TUser>({} as TUser);
 	const [ otherUserData, setOtherUserData ] = useState<TUser>({} as TUser);
+	const [ selectedLanguage, setSelectedLanguage ] = useState<TLanguage>('en');
 	
 	const [ userStream, setUserStream ] = useState<MediaStream>();
   	const [ otherUserSignal, setOtherUserSignal ] = useState<SimplePeer.SignalData>();
@@ -52,6 +58,17 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 	const [ isCallingUser, setIsCallingUser ] = useState<boolean>(false);
 	const [ meetRequestAccepted, setMeetRequestAccepted ] = useState<boolean>(false);
 	const [ isReceivingMeetRequest, setIsReceivingMeetRequest ] = useState<boolean>(false);
+
+	const changeSelectedLanguage = () => {
+		try {
+			const languageToSet = selectedLanguage === 'en' ? 'pt' : 'en';
+			localStorage.setItem('@MEET_COMPASS:language', languageToSet);
+			setSelectedLanguage(languageToSet);
+			i18n.changeLanguage(languageToSet);
+		} catch (error) {
+			console.log('Error: ', error);
+		}
+	}
 
 	const getUserStream = async () => {
 		try {
@@ -173,12 +190,19 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 			}
 		}
 
+		const setDefaultLaguage = () => {
+			const language = localStorage.getItem('@MEET_COMPASS:language'); // @ts-ignore
+			setSelectedLanguage(language || 'en');
+			i18n.changeLanguage(language || 'en');
+		}
+
 		initSocketConnection();
+		setDefaultLaguage();
 	}, []);
 
 	return (
 		<AppContext.Provider
-			value={{ 
+			value={{
 				socketRef,
 				userVideoRef,
 				otherUserVideoRef,
@@ -186,6 +210,7 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 				meetName,
 				userData,
 				otherUserData,
+				selectedLanguage,
 				
 				userStream,
 				otherUserSignal,
@@ -194,6 +219,7 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 				meetRequestAccepted,
 				isReceivingMeetRequest,
 				
+				changeSelectedLanguage,
 				startNewMeet,
 				getUserStream,
 				meetOtherUser,
