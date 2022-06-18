@@ -1,9 +1,11 @@
 import React from 'react';
 import { BiX } from 'react-icons/bi';
+import { darken } from 'polished';
 
 import { Button } from '..';
 
 import useAppContext from '../../contexts/AppContext';
+import { theme } from '../../styles/theme';
 import * as S from './styles';
 
 const ReceivingCallModal: React.FC<{ visible: boolean; }> = ({ visible }) => {
@@ -24,7 +26,11 @@ const ReceivingCallModal: React.FC<{ visible: boolean; }> = ({ visible }) => {
 				</header>
 
 				<div className="receivingcall__content">
-					<Button onClick={ rejectMeetRequest }>
+					<Button
+						bgColor={ theme.colors.red }
+						actionBgColor={ darken(.2, theme.colors.red) }
+						onClick={ rejectMeetRequest }
+					>
 						Decline
 					</Button>
 
