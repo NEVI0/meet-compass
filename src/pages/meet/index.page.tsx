@@ -3,7 +3,6 @@ import { BiMenu, BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, 
 import Lottie from 'react-lottie';
 import { toast } from 'react-toastify';
 
-import moment from 'moment';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -49,11 +48,6 @@ const Meet: NextPage = () => {
 	const handleCopyMeetId = () => {
 		navigator.clipboard.writeText(userData.id);
 		toast('Meet ID copied to your clipboard!', TOAST_DEFAULT_CONFIG);
-	}
-
-	const handleDisplayHour = () => {
-		const hour = moment().hours();
-		return moment().format(`HH:mm [${hour >= 12 ? 'PM' : 'AM'}]`);
 	}
 
 	const handleHangUp = async () => { // @ts-ignore
@@ -184,57 +178,54 @@ const Meet: NextPage = () => {
 			</aside>
 
 			<main className="meet">
-				{/* <div className="otheruser" id="other-user-container">
-					<video
-						muted
-						playsInline
-						autoPlay
-						ref={ otherUserVideoRef }
-						className="otheruser__video"
-						id="otheruser-video"
-					></video>
+				{
+					!isEmpty(otherUserData) ? (
+						<div className="otheruser" id="other-user-container">
+							<video
+								muted
+								playsInline
+								autoPlay
+								ref={ otherUserVideoRef }
+								className="otheruser__video"
+								id="otheruser-video"
+							></video>
 
-					<div className="otheruser__data">
-						<span className="otheruser__name">
-							{ otherUserData.name || 'My friend' }
-						</span>
-					</div>
-				</div> */}
-				<div className="empty">
-					<Lottie
-						isPaused={ false }
-						isStopped={ false }
-						isClickToPauseDisabled={ true }
-						style={{ transition: '.3s' }}
-						width={ ANIMATION_DIMENSIONS[breakpoint].width }
-						height={ ANIMATION_DIMENSIONS[breakpoint].height }
-						options={{ ...LOTTIE_OPTIONS, animationData: emptyAnimation }}
-					/>
+							<div className="otheruser__data">
+								<span className="otheruser__name">
+									{ otherUserData.name || 'My friend' }
+								</span>
+							</div>
+						</div>
+					) : (
+						<div className="empty">
+							<Lottie
+								isPaused={ false }
+								isStopped={ false }
+								isClickToPauseDisabled={ true }
+								style={{ transition: '.3s' }}
+								width={ ANIMATION_DIMENSIONS[breakpoint].width }
+								height={ ANIMATION_DIMENSIONS[breakpoint].height }
+								options={{ ...LOTTIE_OPTIONS, animationData: emptyAnimation }}
+							/>
 
-					<div>
-						<h2 className="empty__title">
-							There is nobody here!
-						</h2>
+							<div>
+								<h2 className="empty__title">
+									There is nobody here!
+								</h2>
 
-						<p className="empty__message">
-							Try to invite a friend of you to have a meet <a onClick={ handleCopyMeetId }>clicking here.</a>
-						</p>
-					</div>
-				</div>
+								<p className="empty__message">
+									Try to invite a friend of you to have a meet <a onClick={ handleCopyMeetId }>clicking here.</a>
+								</p>
+							</div>
+						</div>
+					)
+				}
 			</main>
 
 			<footer className="footer">
-				<div className="footer__data">
-					<h3 className="footer__time">
-						{ handleDisplayHour() }
-					</h3>
-					
-					<div className="footer__data-divider" />
-					
-					<span className="footer__name">
-						{ meetName || 'Meet name' }
-					</span>
-				</div>
+				<h2 className="footer__title">
+					{ meetName || 'Meet name' }
+				</h2>
 				
 				<section className="footer__actions">
 					<S.ActionButton>
@@ -290,13 +281,13 @@ const Meet: NextPage = () => {
 					</S.ActionButton>
 				</section>
 
-				<div className="footer__options">
+				<div className="footer__more">
 					<span className="footer__meetid">
 						{ userData.id }
 					</span>
 
-					<button className="footer__option">
-						<BiDotsVerticalRounded className="footer__option-icon" />
+					<button className="footer__menu">
+						<BiMenu />
 					</button>
 				</div>
 			</footer>

@@ -13,13 +13,16 @@ export const MeetContainer = styled.div<TMeetContainer>`
 	overflow: hidden;
 
 	.header {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		height: 60px;
 		padding: 0 2rem;
 		background-color: ${props => props.theme.colors.container};
-		z-index: 5;
 		transition: .3s;
 
 		&__title {
@@ -92,10 +95,12 @@ export const MeetContainer = styled.div<TMeetContainer>`
 
 	.meet {
 		flex: 1;
+		margin-top: 60px;
 		padding: 2rem;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		transition: .3s;
 	}
 
 	.otheruser {
@@ -109,6 +114,11 @@ export const MeetContainer = styled.div<TMeetContainer>`
 		border: 3px solid ${props => props.theme.colors.container};
 		background-color: transparent;
 		position: relative;
+
+		&__video {
+			width: auto;
+			height: 650px;
+		}
 
 		&__data {
 			display: flex;
@@ -163,23 +173,9 @@ export const MeetContainer = styled.div<TMeetContainer>`
 		z-index: 5;
 		transition: .3s;
 
-		&__data {
-			display: flex;
-			align-items: center;
-			column-gap: 1rem;
+		&__title {
 			display: none;
-
-			&-divider {
-				height: 15px;
-				width: 1px;
-				background-color: ${props => props.theme.colors.textLight};
-				border-radius: 1rem;
-			}
-		}
-
-		&__name {
-			font-weight: ${props => props.theme.font.semiBold};
- 			font-size: ${props => props.theme.font.h3Size};
+ 			font-size: ${props => props.theme.font.h2Size};
 		}
 
 		&__actions {
@@ -191,14 +187,14 @@ export const MeetContainer = styled.div<TMeetContainer>`
  			transform: translateX(-50%);
 		}
 
-		&__options {
+		&__more {
 			display: flex;
 			align-items: center;
 			column-gap: 1rem;
 			display: none;
 		}
 
-		&__option {
+		&__menu {
  			width: 40px;
  			height: 40px;
  			display: flex;
@@ -216,29 +212,44 @@ export const MeetContainer = styled.div<TMeetContainer>`
 		}
 	}
 
-	/* @media screen and (min-width: 576px) {
+	@media screen and (min-width: 768px) {
+		.header {
+			top: -80px;
+		}
+
 		.meet {
-			background-color: red;
+			margin-top: 0;
+		}
+
+		.otheruser {
+			align-self: center;
+			width: auto;
+			height: auto;
+
+			&__video {
+				width: 1000px;
+				height: auto;
+			}
+		}
+
+		.footer {
+			&__title {
+				display: block;
+			}
+
+			&__more {
+				display: flex;
+				align-items: center;
+				column-gap: 1rem;
+			}
+
+			&__menu {
+				width: 30px;
+				height: 30px;
+				border-radius: .5rem;
+			}
 		}
 	}
-
-	@media screen and (min-width: 767px) {
-		.meet {
-			background-color: green;
-		}
-	}
-
-	@media screen and (min-width: 1120px) {
-		.meet {
-			background-color: blue;
-		}
-	}
-
-	@media screen and (min-width: 1490px) {
-		.meet {
-			background-color: orange;
-		}
-	} */
 `;
 
 export const ActionButton = styled.div`
