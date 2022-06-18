@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { transparentize, darken } from 'polished';
 
 type TMeetContainer = {
+	isMenuOpen: boolean;
 	isSharingScreen: boolean;
 	isUsingVideo: boolean;
 };
@@ -239,6 +240,96 @@ export const MeetContainer = styled.div<TMeetContainer>`
 		}
 	}
 
+	.menu {
+		position: fixed;
+		top: 0;
+		right: -400px;
+		bottom: 0;
+		display: flex;
+		flex-direction: column;
+		z-index: 10;
+		width: 400px;
+		padding: 2rem;
+		row-gap: 2rem;
+		box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.25);
+		background-color: ${props => props.theme.colors.container};
+		transition: .3s;
+
+		${props => props.isMenuOpen && 'right: 0;'};
+
+		&__header {
+			display: flex;
+			align-items: flex-start;
+			justify-content: space-between;
+		}
+
+		&__title {
+			font-size: ${props => props.theme.font.h1Size};
+		}
+
+		&__subtitle {
+			font-size: ${props => props.theme.font.h2Size};
+			font-weight: 500;
+			color: ${props => props.theme.colors.textLight};
+		}
+
+		&__close {
+			width: 30px;
+ 			height: 30px;
+ 			display: flex;
+ 			align-items: center;
+ 			justify-content: center;
+ 			border-radius: .5rem;
+ 			color: ${props => props.theme.colors.text};
+ 			background-color: ${props => props.theme.colors.body};
+ 			font-size: ${props => props.theme.font.iconSize};
+		}
+
+		&__divider {
+			height: 1px;
+			border-radius: 1rem;
+			background-color: ${props => props.theme.colors.textLight};
+		}
+
+		&__items {
+			display: flex;
+			flex-direction: column;
+			row-gap: 1rem;
+		}
+
+		&__footer {
+			flex: 1;
+			display: flex;
+			align-items: flex-end;
+			justify-content: flex-end;
+		}
+	}
+
+	.language {
+		display: flex;
+		align-items: center;
+		column-gap: .5rem;
+		padding: .5rem;
+		border-radius: 50px;
+		background-color: ${props => props.theme.colors.primary};
+		transition: .3s;
+
+		&__icon {
+			width: 24px;
+		}
+
+		&__initials {
+			text-transform: uppercase;
+			color: ${props => props.theme.colors.text};
+			font-size: ${props => props.theme.font.smallSize};
+			font-weight: 500;
+		}
+
+		&:hover, &:focus {
+			background-color: ${props => props.theme.colors.secondary};
+		}
+	}
+
 	@media screen and (min-width: 768px) {
 		.header {
 			top: -80px;
@@ -276,6 +367,25 @@ export const MeetContainer = styled.div<TMeetContainer>`
 				border-radius: .5rem;
 			}
 		}
+	}
+`;
+
+export const MenuItem = styled.a`
+	display: flex;
+	align-items: center;
+	column-gap: 1rem;
+	padding: .5rem 0;
+	color: ${props => props.theme.colors.textLight};
+	cursor: pointer;
+	transition: .3s;
+
+	.menuitem__icon {
+		color: ${props => props.theme.colors.primary};
+		font-size: 1.5rem;
+	}
+
+	&:hover, &:focus {
+		color: ${props => props.theme.colors.text};
 	}
 `;
 

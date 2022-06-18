@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BiMenu, BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, BiPhoneOff, BiMove, BiUndo } from 'react-icons/bi';
+import { BiMenu, BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, BiPhoneOff, BiMove, BiUndo, BiEdit, BiUserX, BiEnvelope, BiCopy, BiX } from 'react-icons/bi';
 import { MutatingDots } from 'react-loader-spinner';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
@@ -35,6 +35,7 @@ const Meet: NextPage = () => {
 	const breakpoint = useWindowBreakpoints();
 	const { t } = useTranslation();
 	const {
+		selectedLanguage,
 		userVideoRef,
 		otherUserVideoRef,
 		meetName,
@@ -43,9 +44,11 @@ const Meet: NextPage = () => {
 		meetRequestAccepted,
 		isReceivingMeetRequest,
 		getUserStream,
-		isCallingUser
+		isCallingUser,
+		changeSelectedLanguage
 	} = useAppContext();
 
+	const [ isMenuOpen, setIsMenuOpen ] = useState<boolean>(false);
 	const [ isSharingScreen, setIsSharingScreen ] = useState<boolean>(false);
 	const [ isUsingVideo, setIsUsingVideo ] = useState<boolean>(false);
 	const [ isUsingMicrophone, setIsUsingMicrophone ] = useState<boolean>(false);
@@ -146,7 +149,7 @@ const Meet: NextPage = () => {
 	}, []);
 
 	return (
-		<S.MeetContainer isSharingScreen={ isSharingScreen } isUsingVideo={ isUsingVideo }>
+		<S.MeetContainer isMenuOpen={ isMenuOpen } isSharingScreen={ isSharingScreen } isUsingVideo={ isUsingVideo }>
 			<Head>
 				<title>Meet Compass - { t('page.meet.title') }</title>
 			</Head>
@@ -156,7 +159,7 @@ const Meet: NextPage = () => {
 					{ meetName || 'Meet name' }
 				</h2>
 
-				<button className="header__menu">
+				<button className="header__menu" onClick={ () => setIsMenuOpen(true) }>
 					<BiMenu />
 				</button>
 			</header>
@@ -316,11 +319,83 @@ const Meet: NextPage = () => {
 						{ userData.id }
 					</span>
 
-					<button className="footer__menu">
+					<button className="footer__menu" onClick={ () => setIsMenuOpen(true) }>
 						<BiMenu />
 					</button>
 				</div>
 			</footer>
+
+			<menu className="menu">
+				<section className="menu__header">
+					<div className="menu__data">
+						<h1 className="menu__title">
+							{ userData.name }
+						</h1>
+
+						<h2 className="menu__subtitle">
+							{ userData.email }
+						</h2>
+					</div>
+
+					<button className="menu__close" onClick={ () => setIsMenuOpen(false) }>
+						<BiX />
+					</button>
+				</section>
+
+				<hr className="menu__divider" />
+
+				<div className="menu__items">
+					<S.MenuItem>
+						<BiEdit className="menuitem__icon" />
+
+						<p className="menuitem__description">
+							{ t('page.home.menu.editName') }
+						</p>
+					</S.MenuItem>
+
+					<S.MenuItem onClick={ handleCopyMeetId }>
+						<BiCopy className="menuitem__icon" />
+
+						<p className="menuitem__description">
+							{ t('page.home.menu.copyId') }
+						</p>
+					</S.MenuItem>
+
+					{
+						!isEmpty(otherUserData) && <>
+							<S.MenuItem>
+								<BiEnvelope className="menuitem__icon" />
+
+								<p className="menuitem__description">
+									{ t('page.home.menu.sendEmail', { user: otherUserData.name }) }
+								</p>
+							</S.MenuItem>
+
+							<S.MenuItem>
+								<BiUserX className="menuitem__icon" />
+
+								<p className="menuitem__description">
+									{ t('page.home.menu.removeUser', { user: otherUserData.name }) }
+								</p>
+							</S.MenuItem>
+						</>
+					}
+				</div>
+
+				<div className="menu__footer">
+					<button className="language" onClick={ changeSelectedLanguage }>
+						<img
+							src={ selectedLanguage === 'en' ? 'assets/images/usa-icon.png' : 'assets/images/brazil-icon.png' }
+							alt={ selectedLanguage === 'en' ? 'United States flag' : 'Brazil flag' }
+							className="language__icon"
+						/>
+
+						<span className="language__initials">
+							{ selectedLanguage }
+						</span>
+					</button>
+				</div>
+			</menu>
 
 			<ReceivingCallModal visible={ isReceivingMeetRequest && !meetRequestAccepted } />
 		</S.MeetContainer>

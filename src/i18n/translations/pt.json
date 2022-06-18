@@ -6,7 +6,13 @@
 			"button": "Começar nova chamada",
 			"or": "ou",
 			"joinMeet": "Apenas entre na chamada de um amigo ",
-			"joinMeetLink": "clicando aqui!"
+			"joinMeetLink": "clicando aqui!",
+			"menu": {
+				"editName": "Editar nome da chamada",
+				"copyId": "Copiar ID da chamada",
+				"sendEmail": "Enviar e-mail para {{ user }}",
+				"removeUser": "Remover {{ user }} da chamada"
+			}
 		},
 		"meet": {
 			"title": "Chamada",

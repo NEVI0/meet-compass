@@ -6,7 +6,13 @@
 			"button": "Start new meet",
 			"or": "or",
 			"joinMeet": "Just enter in a friend meet ",
-			"joinMeetLink": "clicking here!"
+			"joinMeetLink": "clicking here!",
+			"menu": {
+				"editName": "Edit meet name",
+				"copyId": "Copy meet ID",
+				"sendEmail": "Send email to {{ user }}",
+				"removeUser": "Remove {{ user }} from meet"
+			}
 		},
 		"meet": {
 			"title": "Metting",
