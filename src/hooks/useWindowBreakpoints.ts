@@ -4,7 +4,7 @@ import { getWindowDimensions } from '../utils/functions';
 import { TBreakpoint } from '../types/window';
 
 const useWindowBreakpoints = () => {
-	const [ breakpoint, setBreakpoint ] = useState<TBreakpoint>('sm');
+	const [ breakpoint, setBreakpoint ] = useState<TBreakpoint>('md');
 
 	useEffect(() => {
 		const handleResize = () => {
