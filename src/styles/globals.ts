@@ -3,6 +3,7 @@ import { createGlobalStyle } from 'styled-components';
 export const GlobalStyles = createGlobalStyle`
 	:root {
 		--toastify-toast-width: 490px;
+		--toastify-color-dark: ${props => props.theme.colors.container};
 	}
 
 	* {
@@ -32,7 +33,6 @@ export const GlobalStyles = createGlobalStyle`
 	body {
 		background-color: ${props => props.theme.colors.body};
 		color: ${props => props.theme.colors.text};
-		transition: .3s; /*For animation dark mode*/
 	}
 
 	button {
@@ -72,3 +72,12 @@ export const GlobalStyles = createGlobalStyle`
 		-moz-appearance: textfield;
 	}
 `;
+
+/*
+Breakpoints
+
+@media screen and (min-width: 576px) {}
+@media screen and (min-width: 768px) {}
+@media screen and (min-width: 992px) {}
+@media screen and (min-width: 1200px) {}
+*/
