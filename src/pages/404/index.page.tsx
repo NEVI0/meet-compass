@@ -27,6 +27,7 @@ const NotFound: NextPage = () => {
 					height={ 250 }
 					isStopped={ false }
 					isPaused={ false }
+					isClickToPauseDisabled={ true }
 					options={{
 						loop: true,
 						autoplay: true, 
