@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BiMenu, BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, BiPhoneOff, BiMove, BiUndo, BiDotsVerticalRounded } from 'react-icons/bi';
+import { BiMenu, BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, BiPhoneOff, BiMove, BiUndo } from 'react-icons/bi';
 import Lottie from 'react-lottie';
 import { toast } from 'react-toastify';
 
@@ -38,7 +38,8 @@ const Meet: NextPage = () => {
 		otherUserData,
 		meetRequestAccepted,
 		isReceivingMeetRequest,
-		getUserStream
+		getUserStream,
+		isCallingUser
 	} = useAppContext();
 
 	const [ isSharingScreen, setIsSharingScreen ] = useState<boolean>(false);
