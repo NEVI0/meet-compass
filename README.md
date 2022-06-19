@@ -3,7 +3,7 @@
 <br />
 
 <div align="center">
-  <a href="https://github.com/NEVI0/meet-compass/tree/main/public/assets/images/meet-compass-logo-purple.png">
+  <a href="https://github.com/NEVI0/meet-compass/blob/development/public/assets/images/meet-compass-logo-purple.png">
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
@@ -18,7 +18,7 @@
   </p>
 </div>
 
-## :video: About The Project
+## :video_camera: About The Project
 
 There are many great README templates available on GitHub; however, I didn't find one that really suited my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
 
