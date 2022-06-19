@@ -16,7 +16,11 @@
 		},
 		"meet": {
 			"title": "Chamada",
-			"toastMessage": "O ID da chamada foi copiado!",
+			"toast": {
+				"copyId": "O ID da chamada foi copiado!",
+				"userLeft": "{{ user }} foi disconectado!",
+				"userRemoved": "Você foi removido da chamada!"
+			},
 			"calling": {
 				"title"	: "Chamando {{ user }}...",
 				"message": "cancelar a chamada.",

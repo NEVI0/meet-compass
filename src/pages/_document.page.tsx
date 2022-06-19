@@ -5,7 +5,7 @@ const Document = () => {
 		<Html lang='en'>
 			<Head>
 				<meta charSet="utf-8" />
-				{/* <link rel="shortcut icon" href="/images/favicon.png" /> */}
+				<link rel="shortcut icon" href="assets/images/meet-compass-logo.png" />
 
 				<link rel="preconnect" href="https://fonts.googleapis.com" />
 				<link rel="preconnect" href="https://fonts.gstatic.com" />

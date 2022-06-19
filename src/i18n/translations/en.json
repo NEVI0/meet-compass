@@ -16,7 +16,11 @@
 		},
 		"meet": {
 			"title": "Metting",
-			"toastMessage": "Meet ID copied to your clipboard!",
+			"toast": {
+				"copyId": "Meet ID copied to your clipboard!",
+				"userLeft": "{{ user }} have been disconnected!",
+				"userRemoved": "You have been removed from the meet!"
+			},
 			"calling": {
 				"title"	: "Calling {{ user }}...",
 				"message": "the calling request.",

@@ -16,9 +16,9 @@ import { isEmpty } from '../../utils/functions';
 import { useWindowBreakpoints } from '../../hooks';
 import { LOTTIE_OPTIONS, TOAST_DEFAULT_CONFIG } from '../../utils/constants';
 
+import { theme } from '../../styles/theme';
 import * as emptyAnimation from '../../../public/assets/animations/empty.json';
 import * as S from './styles';
-import { theme } from '../../styles/theme';
 
 const ANIMATION_DIMENSIONS = {
 	'xsm': { width: 275, height: 115 },
@@ -45,7 +45,8 @@ const Meet: NextPage = () => {
 		isReceivingMeetRequest,
 		getUserStream,
 		isCallingUser,
-		changeSelectedLanguage
+		changeSelectedLanguage,
+		removeOtherUserFromMeet
 	} = useAppContext();
 
 	const [ isMenuOpen, setIsMenuOpen ] = useState<boolean>(false);
@@ -55,7 +56,7 @@ const Meet: NextPage = () => {
 
 	const handleCopyMeetId = () => {
 		navigator.clipboard.writeText(userData.id);
-		toast(t('page.meet.toastMessage'), TOAST_DEFAULT_CONFIG);
+		toast(t('page.meet.toast.copyId'), TOAST_DEFAULT_CONFIG);
 	}
 
 	const handleHangUp = async () => { // @ts-ignore
@@ -363,7 +364,7 @@ const Meet: NextPage = () => {
 
 					{
 						!isEmpty(otherUserData) && <>
-							<S.MenuItem>
+							<S.MenuItem href={`mailto:${otherUserData.email}`}>
 								<BiEnvelope className="menuitem__icon" />
 
 								<p className="menuitem__description">
@@ -371,7 +372,7 @@ const Meet: NextPage = () => {
 								</p>
 							</S.MenuItem>
 
-							<S.MenuItem>
+							<S.MenuItem onClick={ removeOtherUserFromMeet }>
 								<BiUserX className="menuitem__icon" />
 
 								<p className="menuitem__description">
