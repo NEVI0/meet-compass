@@ -18,7 +18,8 @@
 			"title": "Chamada",
 			"toast": {
 				"copyId": "O ID da chamada foi copiado!",
-				"userLeft": "{{ user }} foi disconectado!"
+				"userLeft": "{{ user }} foi disconectado!",
+				"userRemoved": "Você foi removido da chamada!"
 			},
 			"calling": {
 				"title"	: "Chamando {{ user }}...",

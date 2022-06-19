@@ -1,7 +1,7 @@
 import { Server } from 'socket.io';
 
 import { TUser } from '../../types/user';
-import { TCallUserData, TAcceptCallData } from '../../types/socket';
+import { TCallUserData, TAcceptCallData, TRemoveUser } from '../../types/socket';
 
 const handler = (_: any, response: any) => {
 	if (!response.socket.server.io) {
@@ -18,6 +18,11 @@ const handler = (_: any, response: any) => {
 			socket.on('disconnect', () => {
 				socket.broadcast.emit('user-left', { user: users[socket.id] });
 				delete users[socket.id];
+			});
+
+			socket.on('remove-user', (data: TRemoveUser) => {
+				const { userToRemove } = data;
+				io.to(userToRemove.id).emit('removed-from-meet');
 			});
 
 			socket.on('call-user', (data: TCallUserData) => {

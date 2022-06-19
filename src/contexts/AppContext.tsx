@@ -37,6 +37,7 @@ interface AppContextProps {
 	meetOtherUser: (userName: string, userEmail: string, userToCallId: string) => void;
 	acceptMeetRequest: () => void;
 	rejectMeetRequest: () => void;
+	removeOtherUserFromMeet: () => void;
 }
 
 const AppContext: React.Context<AppContextProps> = createContext({} as AppContextProps);
@@ -171,6 +172,17 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 		setMeetRequestAccepted(false);
 	}
 
+	const removeOtherUserFromMeet = () => {
+		socketRef.current.emit('remove-user', { userToRemove: otherUserData });
+
+		setOtherUserData({} as TUser);
+		setOtherUserSignal(undefined);
+
+		setIsCallingUser(false);
+		setMeetRequestAccepted(false);
+		setIsReceivingMeetRequest(false);
+	}
+
 	useEffect(() => {
 		const language = localStorage.getItem('@MEET_COMPASS:language'); // @ts-ignore
 		setSelectedLanguage(language || 'en');
@@ -199,7 +211,7 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 				});
 
 				socketRef.current.on('user-left', (data: TUserLeft) => {
-					toast(t('page.meet.toast.userLeft', { user: data.user.name }), TOAST_DEFAULT_CONFIG);
+					toast(t('page.meet.toast.userLeft', { user: data.user.name || 'User' }), TOAST_DEFAULT_CONFIG);
 
 					setOtherUserData({} as TUser);
 					setOtherUserSignal(undefined);
@@ -210,6 +222,11 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 
 					peerRef.current.destroy();
 				});
+
+				socketRef.current.on('removed-from-meet', () => {
+					router.push('/');
+					toast(t('page.meet.toast.userRemoved'), TOAST_DEFAULT_CONFIG);
+				})
 			} catch (error) {
 				console.log('Could not init socket connection! ', error);
 			}
@@ -242,7 +259,8 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 				getUserStream,
 				meetOtherUser,
 				acceptMeetRequest,
-				rejectMeetRequest
+				rejectMeetRequest,
+				removeOtherUserFromMeet
 			}}
 		>
 			{ children }

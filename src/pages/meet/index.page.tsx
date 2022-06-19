@@ -45,7 +45,8 @@ const Meet: NextPage = () => {
 		isReceivingMeetRequest,
 		getUserStream,
 		isCallingUser,
-		changeSelectedLanguage
+		changeSelectedLanguage,
+		removeOtherUserFromMeet
 	} = useAppContext();
 
 	const [ isMenuOpen, setIsMenuOpen ] = useState<boolean>(false);
@@ -147,8 +148,6 @@ const Meet: NextPage = () => {
 			document.removeEventListener('mousemove', onMouseMove, true);
 		}
 	}, []);
-
-	console.log(useAppContext());
 
 	return (
 		<S.MeetContainer isMenuOpen={ isMenuOpen } isSharingScreen={ isSharingScreen } isUsingVideo={ isUsingVideo }>
@@ -373,7 +372,7 @@ const Meet: NextPage = () => {
 								</p>
 							</S.MenuItem>
 
-							<S.MenuItem>
+							<S.MenuItem onClick={ removeOtherUserFromMeet }>
 								<BiUserX className="menuitem__icon" />
 
 								<p className="menuitem__description">

@@ -25,6 +25,10 @@ export type TCallAccepted = {
 	signal: SimplePeer.SignalData;
 }
 
+export type TRemoveUser = {
+	userToRemove: TUser;
+}
+
 export type TUserLeft = {
 	user: TUser;
 }
