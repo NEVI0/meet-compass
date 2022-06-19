@@ -16,6 +16,7 @@ const handler = (_: any, response: any) => {
 			});
 
 			socket.on('disconnect', () => {
+				socket.broadcast.emit('user-left', { user: users[socket.id] });
 				delete users[socket.id];
 			});
 

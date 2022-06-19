@@ -1,4 +1,6 @@
 import React, { useRef, useState, useEffect, useContext, createContext } from 'react';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 import { useRouter } from 'next/router';
 
@@ -6,8 +8,8 @@ import SimplePeer from 'simple-peer';
 import { io } from 'socket.io-client';
 import i18n from '../i18n';
 
-import { PEER_CONFIGS } from '../utils/constants';
-import { TCallAccepted, TRequestConnectionData } from '../types/socket';
+import { PEER_CONFIGS, TOAST_DEFAULT_CONFIG } from '../utils/constants';
+import { TCallAccepted, TRequestConnectionData, TUserLeft } from '../types/socket';
 import { TUser } from '../types/user';
 
 type TLanguage = 'en' | 'pt';
@@ -42,7 +44,9 @@ const AppContext: React.Context<AppContextProps> = createContext({} as AppContex
 export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 
 	const router = useRouter();
-
+	const { t } = useTranslation();
+	
+	const peerRef = useRef<any>(null);
 	const socketRef = useRef<any>(null);
 	const userVideoRef = useRef<HTMLVideoElement>(null);
 	const otherUserVideoRef = useRef<HTMLVideoElement>(null);
@@ -88,13 +92,7 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 			socketRef.current.emit('save-user-data', user);
 			
 			setUserData(user);
-			setMeetName(meet);
-
-			socketRef.current.on('request-connection', (data: TRequestConnectionData) => {
-				setIsReceivingMeetRequest(true);
-				setOtherUserData(data.from);
-				setOtherUserSignal(data.signal);
-			});			
+			setMeetName(meet);		
 
 			router.push('/meet');
 		} catch (error) {
@@ -129,16 +127,8 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 			peer.on('stream', stream => { 
 				if (otherUserVideoRef.current) otherUserVideoRef.current.srcObject = stream;
 			});
-		
-			socketRef.current.on('call-accepted', (data: TCallAccepted) => {
-				setIsCallingUser(false);
-				setMeetRequestAccepted(true);
-				setMeetName(data.meetName);
-				setOtherUserData(data.from);
 
-				peer.signal(data.signal);
-			});
-
+			peerRef.current = peer;
 			router.push('/meet');
 		} catch (error) {
 			console.log('Error: ', error);
@@ -167,8 +157,9 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 
 			peer.on('stream', stream => { 
 				if (otherUserVideoRef.current) otherUserVideoRef.current.srcObject = stream;
-			}); // @ts-ignore
+			});
 
+			peerRef.current = peer;  // @ts-ignore
 			peer.signal(otherUserSignal);
 		} catch (error) {
 			console.log('Error: ', error);
@@ -181,23 +172,50 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 	}
 
 	useEffect(() => {
-		const initSocketConnection = async () => {
+		const language = localStorage.getItem('@MEET_COMPASS:language'); // @ts-ignore
+		setSelectedLanguage(language || 'en');
+		i18n.changeLanguage(language || 'en');
+	}, []);
+
+	useEffect(() => {
+		const handleSocketConnection = async () => {
 			try {
 				await fetch('/api/socket');
 				socketRef.current = io();
+
+				socketRef.current.on('request-connection', (data: TRequestConnectionData) => {
+					setIsReceivingMeetRequest(true);
+					setOtherUserData(data.from);
+					setOtherUserSignal(data.signal);
+				});
+
+				socketRef.current.on('call-accepted', (data: TCallAccepted) => {
+					setIsCallingUser(false);
+					setMeetRequestAccepted(true);
+					setMeetName(data.meetName);
+					setOtherUserData(data.from);
+	
+					peerRef.current.signal(data.signal);
+				});
+
+				socketRef.current.on('user-left', (data: TUserLeft) => {
+					toast(t('page.meet.toast.userLeft', { user: data.user.name }), TOAST_DEFAULT_CONFIG);
+
+					setOtherUserData({} as TUser);
+					setOtherUserSignal(undefined);
+
+					setIsCallingUser(false);
+					setMeetRequestAccepted(false);
+					setIsReceivingMeetRequest(false);
+
+					peerRef.current.destroy();
+				});
 			} catch (error) {
 				console.log('Could not init socket connection! ', error);
 			}
 		}
 
-		const setDefaultLaguage = () => {
-			const language = localStorage.getItem('@MEET_COMPASS:language'); // @ts-ignore
-			setSelectedLanguage(language || 'en');
-			i18n.changeLanguage(language || 'en');
-		}
-
-		initSocketConnection();
-		setDefaultLaguage();
+		handleSocketConnection();
 	}, []);
 
 	return (

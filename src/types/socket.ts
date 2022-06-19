@@ -23,4 +23,8 @@ export type TCallAccepted = {
 	meetName: string;
 	from: TUser;
 	signal: SimplePeer.SignalData;
-};
+}
+
+export type TUserLeft = {
+	user: TUser;
+}
