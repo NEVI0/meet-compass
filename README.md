@@ -3,7 +3,7 @@
 <br />
 
 <div align="center">
-  <a href="https://github.com/NEVI0/meet-compass/blob/development/public/assets/images/meet-compass-logo-purple.png">
+  <a href="https://user-images.githubusercontent.com/45011343/174501665-8be30f33-7850-4c97-90ac-633debe2dedc.png">
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
@@ -32,9 +32,11 @@ Of course, no one template will serve all projects since your needs may be diffe
 ## :electric_plug: How it works
 
 This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps. There are many great README templates available on GitHub; however, I didn't find one that really suited my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
+To get a local copy up and running follow these simple example steps.
 
-### :hammer_and_wrench: How to run
+There are many great README templates available on GitHub; however, I didn't find one that really suited my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
+
+## :hammer_and_wrench: How to run
 
 - First, clone the repository
 ```
@@ -63,10 +65,6 @@ Don't forget to give the project a star! Thanks again!
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
-
-## :page_facing_up: License
-
-Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 ## :iphone: Contact
 
