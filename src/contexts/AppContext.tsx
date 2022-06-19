@@ -11,6 +11,7 @@ import i18n from '../i18n';
 import { PEER_CONFIGS, TOAST_DEFAULT_CONFIG } from '../utils/constants';
 import { TCallAccepted, TRequestConnectionData, TUserLeft } from '../types/socket';
 import { TUser } from '../types/user';
+import { isEmpty } from '../utils/functions';
 
 type TLanguage = 'en' | 'pt';
 
@@ -211,7 +212,10 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 				});
 
 				socketRef.current.on('user-left', (data: TUserLeft) => {
-					toast(t('page.meet.toast.userLeft', { user: data.user.name || 'User' }), TOAST_DEFAULT_CONFIG);
+					const isOtherUserDisconnected = !otherUserSignal || isEmpty(otherUserData);
+					if (isOtherUserDisconnected) return;
+
+					toast(t('page.meet.toast.userLeft', { user: data.user.name }), TOAST_DEFAULT_CONFIG);
 
 					setOtherUserData({} as TUser);
 					setOtherUserSignal(undefined);
@@ -226,7 +230,7 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 				socketRef.current.on('removed-from-meet', () => {
 					router.push('/');
 					toast(t('page.meet.toast.userRemoved'), TOAST_DEFAULT_CONFIG);
-				})
+				});
 			} catch (error) {
 				console.log('Could not init socket connection! ', error);
 			}
