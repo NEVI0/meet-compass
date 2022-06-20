@@ -46,7 +46,8 @@ const Meet: NextPage = () => {
 		getUserStream,
 		isCallingUser,
 		changeSelectedLanguage,
-		removeOtherUserFromMeet
+		removeOtherUserFromMeet,
+		leftMeet
 	} = useAppContext();
 
 	const [ isMenuOpen, setIsMenuOpen ] = useState<boolean>(false);
@@ -66,7 +67,7 @@ const Meet: NextPage = () => {
 		setIsUsingVideo(false);
 		setIsUsingMicrophone(false);
 
-		router.push('/home');
+		leftMeet();
 	}
 
 	const handleUpdateUserAudioState = () => {

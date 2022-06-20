@@ -20,7 +20,8 @@
 				"copyId": "Meet ID copied to your clipboard!",
 				"userLeft": "{{ user }} have been disconnected!",
 				"userRemoved": "You have been removed from the meet!",
-				"requestDeclined": "Your meet request have been declined!"
+				"requestDeclined": "Your meet request have been declined!",
+				"otherUserLeft": "{{ user }} left the meet!"
 			},
 			"calling": {
 				"title"	: "Calling {{ user }}...",

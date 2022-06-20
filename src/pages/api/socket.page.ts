@@ -39,6 +39,11 @@ const handler = (_: any, response: any) => {
 				const { to } = data;
 				io.to(to).emit('call-rejected');
 			});
+
+			socket.on('left-meet', (data: any) => {
+				const { to } = data;
+				io.to(to).emit('other-user-left-meet');
+			});
 		});		
 	}
 

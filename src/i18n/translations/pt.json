@@ -20,7 +20,8 @@
 				"copyId": "O ID da chamada foi copiado!",
 				"userLeft": "{{ user }} foi disconectado!",
 				"userRemoved": "Você foi removido da chamada!",
-				"requestDeclined": "Sua requisição para uma chamada foi recusada!"
+				"requestDeclined": "Sua requisição para uma chamada foi recusada!",
+				"otherUserLeft": "{{ user }} saiu da chamada!"
 			},
 			"calling": {
 				"title"	: "Chamando {{ user }}...",

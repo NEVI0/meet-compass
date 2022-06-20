@@ -39,6 +39,7 @@ interface AppContextProps {
 	acceptMeetRequest: () => void;
 	rejectMeetRequest: () => void;
 	removeOtherUserFromMeet: () => void;
+	leftMeet: () => void;
 }
 
 const AppContext: React.Context<AppContextProps> = createContext({} as AppContextProps);
@@ -182,9 +183,24 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 		resetMeetData();
 	}
 
+	const cancelMeetRequest = () => {
+		socketRef.current.emit('reject-call', { to: otherUserData.id });
+		resetMeetData();
+	}
+
 	const removeOtherUserFromMeet = () => {
 		socketRef.current.emit('remove-user', { userToRemove: otherUserData });
 		resetMeetData();
+	}
+
+	const leftMeet = () => {
+		socketRef.current.emit('left-meet', { to: otherUserData.id });
+		peerRef.current.destroy();
+
+		resetMeetData();
+		setMeetName('');
+
+		router.push('/home');
 	}
 
 	useEffect(() => {
@@ -216,6 +232,7 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 
 				socketRef.current.on('call-rejected', () => {
 					resetMeetData();
+					peerRef.current.destroy();
 					toast(t('page.meet.toast.requestDeclined'), TOAST_DEFAULT_CONFIG);
 				});
 
@@ -230,9 +247,19 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 				});
 
 				socketRef.current.on('removed-from-meet', () => {
-					router.push('/');
-					setMeetName('');
 					toast(t('page.meet.toast.userRemoved'), TOAST_DEFAULT_CONFIG);
+
+					setMeetName('');
+					peerRef.current.destroy();
+
+					router.push('/home');
+				});
+
+				socketRef.current.on('other-user-left-meet', () => {
+					toast(t('page.meet.toast.otherUserLeft', { user: otherUserData.name }), TOAST_DEFAULT_CONFIG);
+					resetMeetData();
+					setMeetName('');
+					peerRef.current.destroy();
 				});
 			} catch (error) {
 				console.log('Could not init socket connection! ', error);
@@ -267,7 +294,8 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 				meetOtherUser,
 				acceptMeetRequest,
 				rejectMeetRequest,
-				removeOtherUserFromMeet
+				removeOtherUserFromMeet,
+				leftMeet
 			}}
 		>
 			{ children }
