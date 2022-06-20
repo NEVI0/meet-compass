@@ -34,6 +34,11 @@ const handler = (_: any, response: any) => {
 				const { from, to, signal, meetName } = data;
 				io.to(to).emit('call-accepted', { from, signal, meetName });
 			});
+
+			socket.on('reject-call', (data: any) => {
+				const { to } = data;
+				io.to(to).emit('call-rejected');
+			});
 		});		
 	}
 

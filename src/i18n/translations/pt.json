@@ -19,7 +19,8 @@
 			"toast": {
 				"copyId": "O ID da chamada foi copiado!",
 				"userLeft": "{{ user }} foi disconectado!",
-				"userRemoved": "Você foi removido da chamada!"
+				"userRemoved": "Você foi removido da chamada!",
+				"requestDeclined": "Sua requisição para uma chamada foi recusada!"
 			},
 			"calling": {
 				"title"	: "Chamando {{ user }}...",

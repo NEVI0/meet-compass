@@ -76,6 +76,15 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 		}
 	}
 
+	const resetMeetData = () => {
+		setOtherUserData({} as TUser);
+		setOtherUserSignal(undefined);
+
+		setIsCallingUser(false);
+		setMeetRequestAccepted(false);
+		setIsReceivingMeetRequest(false);
+	}
+
 	const getUserStream = async () => {
 		try {
 			const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true }); 
@@ -169,19 +178,13 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 	}
 
 	const rejectMeetRequest = () => {
-		setIsReceivingMeetRequest(false);
-		setMeetRequestAccepted(false);
+		socketRef.current.emit('reject-call', { to: otherUserData.id });
+		resetMeetData();
 	}
 
 	const removeOtherUserFromMeet = () => {
 		socketRef.current.emit('remove-user', { userToRemove: otherUserData });
-
-		setOtherUserData({} as TUser);
-		setOtherUserSignal(undefined);
-
-		setIsCallingUser(false);
-		setMeetRequestAccepted(false);
-		setIsReceivingMeetRequest(false);
+		resetMeetData();
 	}
 
 	useEffect(() => {
@@ -211,24 +214,24 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 					peerRef.current.signal(data.signal);
 				});
 
+				socketRef.current.on('call-rejected', () => {
+					resetMeetData();
+					toast(t('page.meet.toast.requestDeclined'), TOAST_DEFAULT_CONFIG);
+				});
+
 				socketRef.current.on('user-left', (data: TUserLeft) => {
 					const isOtherUserDisconnected = !otherUserSignal || isEmpty(otherUserData);
 					if (isOtherUserDisconnected) return;
 
 					toast(t('page.meet.toast.userLeft', { user: data.user.name }), TOAST_DEFAULT_CONFIG);
-
-					setOtherUserData({} as TUser);
-					setOtherUserSignal(undefined);
-
-					setIsCallingUser(false);
-					setMeetRequestAccepted(false);
-					setIsReceivingMeetRequest(false);
+					resetMeetData();
 
 					peerRef.current.destroy();
 				});
 
 				socketRef.current.on('removed-from-meet', () => {
 					router.push('/');
+					setMeetName('');
 					toast(t('page.meet.toast.userRemoved'), TOAST_DEFAULT_CONFIG);
 				});
 			} catch (error) {
