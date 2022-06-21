@@ -21,7 +21,8 @@
 				"userLeft": "{{ user }} foi disconectado!",
 				"userRemoved": "Você foi removido da chamada!",
 				"requestDeclined": "Sua requisição para uma chamada foi recusada!",
-				"otherUserLeft": "{{ user }} saiu da chamada!"
+				"otherUserLeft": "{{ user }} saiu da chamada!",
+				"meetNameUpdated": "O nome da chamada mudou!"
 			},
 			"calling": {
 				"title"	: "Chamando {{ user }}...",
@@ -59,10 +60,15 @@
 		"decline": "Recusar",
 		"accept": "Aceitar"
 	},
+	"renameMeetModal": {
+		"title": "Renomear chamada",
+		"rename": "Renomear"
+	},
 	"inputPlaceholder": {
 		"userName": "Seu nome",
 		"email": "E-mail",
 		"meetName": "Nome da chamada",
-		"meetId": "ID da chamada"
+		"meetId": "ID da chamada",
+		"newMeetName": "Novo nome"
 	}
 }

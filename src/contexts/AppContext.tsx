@@ -40,6 +40,7 @@ interface AppContextProps {
 	rejectMeetRequest: () => void;
 	removeOtherUserFromMeet: () => void;
 	leftMeet: () => void;
+	renameMeet: (newMeetName: string) => void;
 }
 
 const AppContext: React.Context<AppContextProps> = createContext({} as AppContextProps);
@@ -145,6 +146,11 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 		} catch (error) {
 			console.log('Error: ', error);
 		}
+	}
+
+	const renameMeet = (newMeetName: string) => {
+		setMeetName(newMeetName);
+		socketRef.current.emit('meet-new-name', { to: otherUserData.id, newMeetName });
 	}
 
 	const acceptMeetRequest = async () => {
@@ -261,6 +267,11 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 					setMeetName('');
 					peerRef.current.destroy();
 				});
+
+				socketRef.current.on('update-meet-name', (newMeetName: string) => {
+					setMeetName(newMeetName);
+					toast(t('page.meet.toast.meetNameUpdated'), TOAST_DEFAULT_CONFIG);
+				});
 			} catch (error) {
 				console.log('Could not init socket connection! ', error);
 			}
@@ -295,7 +306,8 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 				acceptMeetRequest,
 				rejectMeetRequest,
 				removeOtherUserFromMeet,
-				leftMeet
+				leftMeet,
+				renameMeet
 			}}
 		>
 			{ children }
