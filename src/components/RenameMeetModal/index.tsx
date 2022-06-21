@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { BiX, BiAt } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
 
-import { Button, Input } from '..';
+import { Input, Button, IconButton } from '..';
 import useAppContext from '../../contexts/AppContext';
 
 import * as S from './styles';
@@ -27,9 +27,10 @@ const RenameMeetModal: React.FC<{ visible: boolean; onClose: () => void; }> = ({
 						{ t('renameMeetModal.title') }
 					</h2>
 
-					<button className="renamemeet__close" onClick={ onClose }>
-						<BiX />
-					</button>
+					<IconButton
+						icon={ <BiX /> }
+						onClick={ onClose }
+					/>
 				</header>
 
 				<div className="renamemeet__content">

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { darken } from 'polished';
 
-import { Button } from '..';
+import { Button, IconButton } from '..';
 import useAppContext from '../../contexts/AppContext';
 import { theme } from '../../styles/theme';
 import * as S from './styles';
@@ -22,9 +22,10 @@ const ReceivingCallModal: React.FC<{ visible: boolean; }> = ({ visible }) => {
 						{ t('receivingCallModal.title', { user: otherUserData.name }) }
 					</h2>
 
-					<button className="receivingcall__close" onClick={ rejectMeetRequest }>
-						<BiX />
-					</button>
+					<IconButton
+						icon={ <BiX /> }
+						onClick={ rejectMeetRequest }
+					/>
 				</header>
 
 				<div className="receivingcall__content">

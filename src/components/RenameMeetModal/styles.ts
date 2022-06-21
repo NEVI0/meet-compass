@@ -38,19 +38,7 @@ export const RenameMeetModal = styled.div<{ visible: boolean; }>`
  			font-size: ${props => props.theme.font.h2Size};
  		}
 
- 		&__close {
- 			width: 30px;
- 			height: 30px;
- 			display: flex;
- 			align-items: center;
- 			justify-content: center;
- 			border-radius: .5rem;
- 			background-color: ${props => props.theme.colors.body};
- 			font-size: ${props => props.theme.font.iconSize};
- 			color: ${props => props.theme.colors.text};
- 		}
-
- 		&__content {
+		&__content {
 			display: flex;
 			flex-direction: column;
 			row-gap: .75rem;
