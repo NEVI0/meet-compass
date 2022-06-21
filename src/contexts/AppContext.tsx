@@ -40,6 +40,7 @@ interface AppContextProps {
 	rejectMeetRequest: () => void;
 	removeOtherUserFromMeet: () => void;
 	leftMeet: () => void;
+	cancelMeetRequest: () => void;
 	renameMeet: (newMeetName: string) => void;
 }
 
@@ -190,7 +191,7 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 	}
 
 	const cancelMeetRequest = () => {
-		socketRef.current.emit('reject-call', { to: otherUserData.id });
+		peerRef.current.destroy();
 		resetMeetData();
 	}
 
@@ -307,6 +308,7 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 				rejectMeetRequest,
 				removeOtherUserFromMeet,
 				leftMeet,
+				cancelMeetRequest,
 				renameMeet
 			}}
 		>

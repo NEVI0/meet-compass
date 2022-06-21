@@ -47,7 +47,8 @@ const Meet: NextPage = () => {
 		isCallingUser,
 		changeSelectedLanguage,
 		removeOtherUserFromMeet,
-		leftMeet
+		leftMeet,
+		cancelMeetRequest
 	} = useAppContext();
 
 	const [ isMenuOpen, setIsMenuOpen ] = useState<boolean>(false);
@@ -55,7 +56,6 @@ const Meet: NextPage = () => {
 	const [ isSharingScreen, setIsSharingScreen ] = useState<boolean>(false);
 	const [ isUsingMicrophone, setIsUsingMicrophone ] = useState<boolean>(false);
 	const [ isRenameMeetModalVisible, setIsRenameMeetModalVisible ] = useState<boolean>(false);
-
 
 	const handleCopyMeetId = () => {
 		navigator.clipboard.writeText(userData.id);
@@ -207,7 +207,7 @@ const Meet: NextPage = () => {
 								</h2>
 
 								<p className="calling__message">
-									<a>{ t('page.meet.calling.messageLink') }</a> { t('page.meet.calling.message') }
+									<a onClick={ cancelMeetRequest }>{ t('page.meet.calling.messageLink') }</a> { t('page.meet.calling.message') }
 								</p>
 							</div>
 						</div>
