@@ -44,6 +44,11 @@ const handler = (_: any, response: any) => {
 				const { to } = data;
 				io.to(to).emit('other-user-left-meet');
 			});
+
+			socket.on('meet-new-name', (data: any) => {
+				const { to, newMeetName } = data;
+				io.to(to).emit('update-meet-name', newMeetName);
+			});
 		});		
 	}
 
