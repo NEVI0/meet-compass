@@ -9,7 +9,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
-import { ReceivingCallModal } from '../../components';
+import { ReceivingCallModal, RenameMeetModal } from '../../components';
 import useAppContext from '../../contexts/AppContext';
 
 import { isEmpty } from '../../utils/functions';
@@ -46,13 +46,16 @@ const Meet: NextPage = () => {
 		getUserStream,
 		isCallingUser,
 		changeSelectedLanguage,
-		removeOtherUserFromMeet
+		removeOtherUserFromMeet,
+		leftMeet,
+		cancelMeetRequest
 	} = useAppContext();
 
 	const [ isMenuOpen, setIsMenuOpen ] = useState<boolean>(false);
-	const [ isSharingScreen, setIsSharingScreen ] = useState<boolean>(false);
 	const [ isUsingVideo, setIsUsingVideo ] = useState<boolean>(false);
+	const [ isSharingScreen, setIsSharingScreen ] = useState<boolean>(false);
 	const [ isUsingMicrophone, setIsUsingMicrophone ] = useState<boolean>(false);
+	const [ isRenameMeetModalVisible, setIsRenameMeetModalVisible ] = useState<boolean>(false);
 
 	const handleCopyMeetId = () => {
 		navigator.clipboard.writeText(userData.id);
@@ -66,7 +69,7 @@ const Meet: NextPage = () => {
 		setIsUsingVideo(false);
 		setIsUsingMicrophone(false);
 
-		router.push('/home');
+		leftMeet();
 	}
 
 	const handleUpdateUserAudioState = () => {
@@ -204,7 +207,7 @@ const Meet: NextPage = () => {
 								</h2>
 
 								<p className="calling__message">
-									<a>{ t('page.meet.calling.messageLink') }</a> { t('page.meet.calling.message') }
+									<a onClick={ cancelMeetRequest }>{ t('page.meet.calling.messageLink') }</a> { t('page.meet.calling.message') }
 								</p>
 							</div>
 						</div>
@@ -346,7 +349,10 @@ const Meet: NextPage = () => {
 				<hr className="menu__divider" />
 
 				<div className="menu__items">
-					<S.MenuItem>
+					<S.MenuItem onClick={ () => {
+						setIsMenuOpen(false);
+						setIsRenameMeetModalVisible(true);
+					} }>
 						<BiEdit className="menuitem__icon" />
 
 						<p className="menuitem__description">
@@ -398,6 +404,7 @@ const Meet: NextPage = () => {
 				</div>
 			</menu>
 
+			<RenameMeetModal visible={ isRenameMeetModalVisible } onClose={ () => setIsRenameMeetModalVisible(false) } />
 			<ReceivingCallModal visible={ isReceivingMeetRequest && !meetRequestAccepted } />
 		</S.MeetContainer>
 	);

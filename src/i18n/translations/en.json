@@ -19,7 +19,10 @@
 			"toast": {
 				"copyId": "Meet ID copied to your clipboard!",
 				"userLeft": "{{ user }} have been disconnected!",
-				"userRemoved": "You have been removed from the meet!"
+				"userRemoved": "You have been removed from the meet!",
+				"requestDeclined": "Your meet request have been declined!",
+				"otherUserLeft": "{{ user }} left the meet!",
+				"meetNameUpdated": "The meet name have been changed!"
 			},
 			"calling": {
 				"title"	: "Calling {{ user }}...",
@@ -57,10 +60,15 @@
 		"decline": "Decline",
 		"accept": "Accept"
 	},
+	"renameMeetModal": {
+		"title": "Rename meet",
+		"rename": "Rename"
+	},
 	"inputPlaceholder": {
 		"userName": "Your name",
 		"email": "E-mail",
 		"meetName": "Meet name",
-		"meetId": "Meet ID"
+		"meetId": "Meet ID",
+		"newMeetName": "New meet name"
 	}
 }

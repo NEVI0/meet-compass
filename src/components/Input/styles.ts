@@ -18,11 +18,11 @@ export const Input = styled.div<{ disabled?: boolean; }>`
 
 	.input__field {
 		flex: 1;
+		height: 100%;
 		background-color: transparent;
 		border: none;
 		outline: none;
 		color: ${props => props.disabled ? props.theme.colors.textLight : props.theme.colors.text};
-		transition: .3s;
 	}
 
 	@media screen and (min-width: 767px) {

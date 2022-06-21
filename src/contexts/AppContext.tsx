@@ -39,6 +39,9 @@ interface AppContextProps {
 	acceptMeetRequest: () => void;
 	rejectMeetRequest: () => void;
 	removeOtherUserFromMeet: () => void;
+	leftMeet: () => void;
+	cancelMeetRequest: () => void;
+	renameMeet: (newMeetName: string) => void;
 }
 
 const AppContext: React.Context<AppContextProps> = createContext({} as AppContextProps);
@@ -74,6 +77,15 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 		} catch (error) {
 			console.log('Error: ', error);
 		}
+	}
+
+	const resetMeetData = () => {
+		setOtherUserData({} as TUser);
+		setOtherUserSignal(undefined);
+
+		setIsCallingUser(false);
+		setMeetRequestAccepted(false);
+		setIsReceivingMeetRequest(false);
 	}
 
 	const getUserStream = async () => {
@@ -137,6 +149,11 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 		}
 	}
 
+	const renameMeet = (newMeetName: string) => {
+		setMeetName(newMeetName);
+		socketRef.current.emit('meet-new-name', { to: otherUserData.id, newMeetName });
+	}
+
 	const acceptMeetRequest = async () => {
 		try {
 			setMeetRequestAccepted(true);
@@ -169,19 +186,28 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 	}
 
 	const rejectMeetRequest = () => {
-		setIsReceivingMeetRequest(false);
-		setMeetRequestAccepted(false);
+		socketRef.current.emit('reject-call', { to: otherUserData.id });
+		resetMeetData();
+	}
+
+	const cancelMeetRequest = () => {
+		peerRef.current.destroy();
+		resetMeetData();
 	}
 
 	const removeOtherUserFromMeet = () => {
 		socketRef.current.emit('remove-user', { userToRemove: otherUserData });
+		resetMeetData();
+	}
 
-		setOtherUserData({} as TUser);
-		setOtherUserSignal(undefined);
+	const leftMeet = () => {
+		socketRef.current.emit('left-meet', { to: otherUserData.id });
+		peerRef.current.destroy();
 
-		setIsCallingUser(false);
-		setMeetRequestAccepted(false);
-		setIsReceivingMeetRequest(false);
+		resetMeetData();
+		setMeetName('');
+
+		router.push('/home');
 	}
 
 	useEffect(() => {
@@ -211,25 +237,41 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 					peerRef.current.signal(data.signal);
 				});
 
+				socketRef.current.on('call-rejected', () => {
+					resetMeetData();
+					peerRef.current.destroy();
+					toast(t('page.meet.toast.requestDeclined'), TOAST_DEFAULT_CONFIG);
+				});
+
 				socketRef.current.on('user-left', (data: TUserLeft) => {
 					const isOtherUserDisconnected = !otherUserSignal || isEmpty(otherUserData);
 					if (isOtherUserDisconnected) return;
 
 					toast(t('page.meet.toast.userLeft', { user: data.user.name }), TOAST_DEFAULT_CONFIG);
-
-					setOtherUserData({} as TUser);
-					setOtherUserSignal(undefined);
-
-					setIsCallingUser(false);
-					setMeetRequestAccepted(false);
-					setIsReceivingMeetRequest(false);
+					resetMeetData();
 
 					peerRef.current.destroy();
 				});
 
 				socketRef.current.on('removed-from-meet', () => {
-					router.push('/');
 					toast(t('page.meet.toast.userRemoved'), TOAST_DEFAULT_CONFIG);
+
+					setMeetName('');
+					peerRef.current.destroy();
+
+					router.push('/home');
+				});
+
+				socketRef.current.on('other-user-left-meet', () => {
+					toast(t('page.meet.toast.otherUserLeft', { user: otherUserData.name }), TOAST_DEFAULT_CONFIG);
+					resetMeetData();
+					setMeetName('');
+					peerRef.current.destroy();
+				});
+
+				socketRef.current.on('update-meet-name', (newMeetName: string) => {
+					setMeetName(newMeetName);
+					toast(t('page.meet.toast.meetNameUpdated'), TOAST_DEFAULT_CONFIG);
 				});
 			} catch (error) {
 				console.log('Could not init socket connection! ', error);
@@ -264,7 +306,10 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 				meetOtherUser,
 				acceptMeetRequest,
 				rejectMeetRequest,
-				removeOtherUserFromMeet
+				removeOtherUserFromMeet,
+				leftMeet,
+				cancelMeetRequest,
+				renameMeet
 			}}
 		>
 			{ children }

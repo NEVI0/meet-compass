@@ -1,11 +1,6 @@
-import { darken } from 'polished';
 import styled, { css } from 'styled-components';
 
-type TReceivingCallModal = { 
-	visible: boolean;
-}
-
-export const ReceivingCallModal = styled.div<TReceivingCallModal>`
+export const RenameMeetModal = styled.div<{ visible: boolean; }>`
  	position: fixed;
  	inset: 0;
  	display: flex;
@@ -22,7 +17,7 @@ export const ReceivingCallModal = styled.div<TReceivingCallModal>`
  		opacity: 1;
  	`};
 
- 	.receivingcall {
+ 	.renamemeet {
  		display: flex;
  		flex-direction: column;
  		row-gap: 1rem;
@@ -43,19 +38,15 @@ export const ReceivingCallModal = styled.div<TReceivingCallModal>`
  			font-size: ${props => props.theme.font.h2Size};
  		}
 
- 		&__content {
- 			display: flex;
-			align-items: center;
- 			column-gap: .75rem;
-
-			> button {
-				flex: 1;
-			}
+		&__content {
+			display: flex;
+			flex-direction: column;
+			row-gap: .75rem;
  		}
  	}
 
  	@media screen and (min-width: 576px) {
- 		.receivingcall {
+ 		.renamemeet {
  			width: 450px;
  		}
  	}

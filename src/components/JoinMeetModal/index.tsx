@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { BiAt, BiEnvelope, BiUser, BiX } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
 
-import { Input, Button } from '..';
+import { Input, Button, IconButton } from '..';
 
 import useAppContext from '../../contexts/AppContext';
 import * as S from './styles';
@@ -54,9 +54,10 @@ const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultMeetId, o
 						{ t('joinMeetModal.title') }
 					</h2>
 
-					<button className="joinmeet__close" onClick={ handleCloseModal }>
-						<BiX />
-					</button>
+					<IconButton
+						icon={ <BiX /> }
+						onClick={ handleCloseModal }
+					/>
 				</header>
 
 				<div className="joinmeet__content">
