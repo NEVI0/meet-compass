@@ -3,14 +3,14 @@ import { BiX, BiAt } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
 
 import { Input, Button, IconButton } from '..';
-import useAppContext from '../../contexts/AppContext';
+import useMeetContext from '../../contexts/MeetContext';
 
 import * as S from './styles';
 
 const RenameMeetModal: React.FC<{ visible: boolean; onClose: () => void; }> = ({ visible, onClose }) => {
 
 	const { t } = useTranslation();
-	const { renameMeet } = useAppContext();
+	const { renameMeet } = useMeetContext();
 
 	const [ newMeetName, setNewMeetName ] = useState<string>('');
 

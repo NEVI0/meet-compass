@@ -12,16 +12,12 @@ import { PEER_CONFIGS, TOAST_DEFAULT_CONFIG } from '../utils/constants';
 import { isEmpty } from '../utils/functions';
 
 interface MeetContextProps {
-	socketRef: React.MutableRefObject<any>;
 	userVideoRef: React.RefObject<HTMLVideoElement>;
 	otherUserVideoRef: React.RefObject<HTMLVideoElement>;
 
 	meetName: string;
 	userData: TUser;
 	otherUserData: TUser;
-
-	userStream?: MediaStream;
-	otherUserSignal?: SimplePeer.SignalData;
 
 	isCallingUser: boolean;
 	meetRequestAccepted: boolean;
@@ -256,16 +252,12 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 	return (
 		<MeetContext.Provider
 			value={{
-				socketRef,
 				userVideoRef,
 				otherUserVideoRef,
 
 				meetName,
 				userData,
 				otherUserData,
-
-				userStream,
-				otherUserSignal,
 
 				isCallingUser,
 				meetRequestAccepted,

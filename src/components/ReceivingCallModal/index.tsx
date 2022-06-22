@@ -5,14 +5,15 @@ import { useTranslation } from 'react-i18next';
 import { darken } from 'polished';
 
 import { Button, IconButton } from '..';
-import useAppContext from '../../contexts/AppContext';
+import useMeetContext from '../../contexts/MeetContext';
+
 import { theme } from '../../styles/theme';
 import * as S from './styles';
 
 const ReceivingCallModal: React.FC<{ visible: boolean; }> = ({ visible }) => {
 
 	const { t } = useTranslation();
-	const { otherUserData, acceptMeetRequest, rejectMeetRequest } = useAppContext();
+	const { otherUserData, acceptMeetRequest, rejectMeetRequest } = useMeetContext();
 
 	return (
 		<S.ReceivingCallModal visible={ visible }>

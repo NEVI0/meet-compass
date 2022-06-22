@@ -11,6 +11,7 @@ import { useRouter } from 'next/router';
 
 import { ReceivingCallModal, RenameMeetModal } from '../../components';
 import useAppContext from '../../contexts/AppContext';
+import useMeetContext from '../../contexts/MeetContext';
 
 import { isEmpty } from '../../utils/functions';
 import { useWindowBreakpoints } from '../../hooks';
@@ -34,22 +35,24 @@ const Meet: NextPage = () => {
 	const router = useRouter();
 	const breakpoint = useWindowBreakpoints();
 	const { t } = useTranslation();
+	const { selectedLanguage, changeSelectedLanguage } = useAppContext();
 	const {
-		selectedLanguage,
 		userVideoRef,
 		otherUserVideoRef,
+
 		meetName,
 		userData,
 		otherUserData,
+
+		isCallingUser,
 		meetRequestAccepted,
 		isReceivingMeetRequest,
+
 		getUserStream,
-		isCallingUser,
-		changeSelectedLanguage,
+		cancelMeetRequest,
 		removeOtherUserFromMeet,
-		leftMeet,
-		cancelMeetRequest
-	} = useAppContext();
+		leftMeet
+	} = useMeetContext();
 
 	const [ isMenuOpen, setIsMenuOpen ] = useState<boolean>(false);
 	const [ isUsingVideo, setIsUsingVideo ] = useState<boolean>(false);

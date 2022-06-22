@@ -11,6 +11,7 @@ import { useFormik } from 'formik';
 
 import { Input, Button, JoinMeetModal } from '../../components';
 import useAppContext from '../../contexts/AppContext';
+import useMeetContext from '../../contexts/MeetContext';
 
 import { TOAST_DEFAULT_CONFIG } from '../../utils/constants';
 import { formValidations } from './formValidations';
@@ -28,7 +29,8 @@ const Home: NextPage = () => {
 
 	const router = useRouter();
 	const { t } = useTranslation();
-	const { selectedLanguage, startNewMeet, changeSelectedLanguage } = useAppContext();
+	const { startNewMeet } = useMeetContext();
+	const { selectedLanguage, changeSelectedLanguage } = useAppContext();
 	
 	const [ defaultMeetId, setDefaultMeetId ] = useState<string>('');
 	const [ isJoinMeetModalVisible, setIsJoinMeetModalVisible ] = useState<boolean>(false);
