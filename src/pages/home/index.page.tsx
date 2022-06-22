@@ -69,7 +69,7 @@ const Home: NextPage = () => {
 	}, []);
  
 	return (
-		<S.HomeContainer id="home-container">
+		<S.HomeContainer>
 			<Head>
 				<title>Meet Compass</title>
 			</Head>

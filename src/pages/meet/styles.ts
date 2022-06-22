@@ -64,33 +64,6 @@ export const MeetContainer = styled.div<TMeetContainer>`
 			object-fit: cover;
 		}
 
-		&__options {
-			display: flex;
-			flex-direction: column;
-			row-gap: 1rem;
-			position: absolute;
-			top: 1rem;
-			right: 1rem;
-			display: none;
-			
-			.option {
-				width: 30px;
-				height: 30px;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				border-radius: .5rem;
-				background-color: ${props => transparentize(.5, props.theme.colors.body)};
-				color: ${props => props.theme.colors.container};
-				font-size: ${props => props.theme.font.iconSize};
-				color: ${props => props.theme.colors.text};
-				
-				&-grab {
-					cursor: grab;
-				}
-			}
-		}
-
 		${props => !props.isUsingVideo && 'transition: .3s ease all; opacity: 0'};
 	}
 
@@ -333,6 +306,11 @@ export const MeetContainer = styled.div<TMeetContainer>`
 	@media screen and (min-width: 768px) {
 		.header {
 			top: -80px;
+		}
+
+		.user {
+			width: 300px;
+			height: 175px;
 		}
 
 		.meet {

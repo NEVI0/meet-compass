@@ -90,71 +90,6 @@ const Meet: NextPage = () => {
 		getUserStream();
 	}, []);
 
-	useEffect(() => {
-		const userVideoContainer = document.getElementById('user-video-container');
-		const resetPositionButton = document.getElementById('reset-position-button');
-		const moveButton = document.getElementById('user-move-button');
-
-		if (!userVideoContainer || !resetPositionButton || !moveButton) return;
-		
-		const initialPosition = {
-			x: userVideoContainer.offsetLeft,
-			y: userVideoContainer.offsetTop
-		}
-
-		let mousePosition;
-		let calculedPosition = { x: 0, y: 0 };
-		let isPressed = false;
-
-		const onResetPosition = () => {
-			userVideoContainer.style.left = initialPosition.x + 'px';
-			userVideoContainer.style.top = initialPosition.y + 'px';
-		}
-
-		const onMouseDown = (event: MouseEvent) => {
-			isPressed = true;
-
-			calculedPosition.x = userVideoContainer.offsetLeft - event.clientX;
-			calculedPosition.y = userVideoContainer.offsetTop - event.clientY;
-		}
-
-		const onMouseUp = () => {
-			isPressed = false;
-		}
-
-		const onMouseMove = (event: MouseEvent) => {
-			event.preventDefault();
-
-			if (!isPressed) return;
-			mousePosition = { x : event.clientX, y : event.clientY };
-
-			const newPosition = {
-				x: mousePosition.x + calculedPosition.x,
-				y: mousePosition.y + calculedPosition.y
-			}
-
-			if (newPosition.x > 16 && newPosition.x < initialPosition.x) {
-				userVideoContainer.style.left = newPosition.x + 'px';
-			}
-
-			if (newPosition.y > 16 && newPosition.y < initialPosition.y) {
-				userVideoContainer.style.top = newPosition.y + 'px';
-			}
-		}
-
-		resetPositionButton.addEventListener('click', onResetPosition, true);
-		moveButton.addEventListener('mousedown', onMouseDown, true);
-		document.addEventListener('mouseup', onMouseUp, true);
-		document.addEventListener('mousemove', onMouseMove, true);
-
-		return () => {
-			resetPositionButton.removeEventListener('click', onResetPosition, true);
-			moveButton.removeEventListener('mousedown', onMouseDown, true);
-			document.removeEventListener('mouseup', onMouseUp, true);
-			document.removeEventListener('mousemove', onMouseMove, true);
-		}
-	}, []);
-
 	return (
 		<S.MeetContainer isMenuOpen={ isMenuOpen } isSharingScreen={ isSharingScreen } isUsingVideo={ isUsingVideo }>
 			<Head>
@@ -171,7 +106,7 @@ const Meet: NextPage = () => {
 				</button>
 			</header>
 
-			<aside className="user" id="user-video-container">
+			<aside className="user">
 				<video
 					muted
 					playsInline
@@ -180,16 +115,6 @@ const Meet: NextPage = () => {
 					className="user__video"
 					id="user-video"
 				></video>
-
-				<div className="user__options" id="user-video-options">
-					<button className="option option-grab" id="user-move-button">
-						<BiMove />
-					</button>
-
-					<button className="option" id="reset-position-button">
-						<BiUndo />
-					</button>
-				</div>
 			</aside>
 
 			<main className="meet">
@@ -237,13 +162,12 @@ const Meet: NextPage = () => {
 							</div>
 						</div>
 					) : (
-						<div className="otheruser" id="other-user-container">
+						<div className="otheruser">
 							<video
 								playsInline
 								autoPlay
 								ref={ otherUserVideoRef }
 								className="otheruser__video"
-								id="otheruser-video"
 							></video>
 
 							<div className="otheruser__data">
