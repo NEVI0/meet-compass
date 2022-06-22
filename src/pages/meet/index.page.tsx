@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BiMenu, BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, BiPhoneOff, BiMove, BiUndo, BiEdit, BiUserX, BiEnvelope, BiCopy, BiX } from 'react-icons/bi';
+import { BiMenu, BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, BiPhoneOff, BiEdit, BiUserX, BiEnvelope, BiCopy, BiX } from 'react-icons/bi';
 import { MutatingDots } from 'react-loader-spinner';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
@@ -77,8 +77,8 @@ const Meet: NextPage = () => {
 
 	const handleUpdateUserAudioState = () => {
 		try {
-			const userVideo = document.getElementById('user-video'); // @ts-ignore
-			if (userVideo) userVideo.muted = isUsingMicrophone;
+			// const userVideo = document.getElementById('user-video'); // @ts-ignore
+			// if (userVideo) userVideo.muted = isUsingMicrophone;
 			setIsUsingMicrophone(!isUsingMicrophone);
 		} catch (error) {
 			console.log('Could not change user audio! ', error);

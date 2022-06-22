@@ -212,11 +212,12 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				});
 
 				socketRef.current.on('user-left', (data: TUserLeft) => {
+					clearMeetData();
+					
 					const isOtherUserDisconnected = !otherUserSignal || isEmpty(otherUserData);
 					if (isOtherUserDisconnected) return;
 
 					toast(t('page.meet.toast.userLeft', { user: data.user.name }), TOAST_DEFAULT_CONFIG);
-					clearMeetData();
 
 					peerRef.current.destroy();
 				});
