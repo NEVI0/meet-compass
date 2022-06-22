@@ -16,6 +16,7 @@ const RenameMeetModal: React.FC<{ visible: boolean; onClose: () => void; }> = ({
 
 	const handleRenameMeet = () => {
 		renameMeet(newMeetName);
+		setNewMeetName('');
 		onClose();
 	}
 
