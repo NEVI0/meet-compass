@@ -7,11 +7,8 @@
 			"or": "or",
 			"joinMeet": "Just enter in a friend meet ",
 			"joinMeetLink": "clicking here!",
-			"menu": {
-				"editName": "Edit meet name",
-				"copyId": "Copy meet ID",
-				"sendEmail": "Send email to {{ user }}",
-				"removeUser": "Remove {{ user }} from meet"
+			"toast": {
+				"errorInStartingMeet": "Could not start your meet, please try again!"
 			}
 		},
 		"meet": {
@@ -48,7 +45,13 @@
 					"stop": "Stop sharing your screen"
 				},
 				"left": "Left meeting"
-			}			
+			},
+			"menu": {
+				"editName": "Edit meet name",
+				"copyId": "Copy meet ID",
+				"sendEmail": "Send email to {{ user }}",
+				"removeUser": "Remove {{ user }} from meet"
+			}		
 		}
 	},
 	"joinMeetModal": {

@@ -7,11 +7,8 @@
 			"or": "ou",
 			"joinMeet": "Apenas entre na chamada de um amigo ",
 			"joinMeetLink": "clicando aqui!",
-			"menu": {
-				"editName": "Editar nome da chamada",
-				"copyId": "Copiar ID da chamada",
-				"sendEmail": "Enviar e-mail para {{ user }}",
-				"removeUser": "Remover {{ user }} da chamada"
+			"toast": {
+				"errorInStartingMeet": "Não foi póssível criar a chamada, tente novamente!"
 			}
 		},
 		"meet": {
@@ -48,7 +45,13 @@
 					"stop": "Parar compartilhamento de tela"
 				},
 				"left": "Sair da chamada"
-			}			
+			},
+			"menu": {
+				"editName": "Editar nome da chamada",
+				"copyId": "Copiar ID da chamada",
+				"sendEmail": "Enviar e-mail para {{ user }}",
+				"removeUser": "Remover {{ user }} da chamada"
+			}		
 		}
 	},
 	"joinMeetModal": {

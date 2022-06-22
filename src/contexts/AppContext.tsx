@@ -34,7 +34,7 @@ interface AppContextProps {
 
 	changeSelectedLanguage: () => void;
 	getUserStream: () => void;
-	startNewMeet: (userName: string, userEmail: string, meetName: string) => void;
+	startNewMeet: (userName: string, userEmail: string, meetName: string) => boolean;
 	meetOtherUser: (userName: string, userEmail: string, userToCallId: string) => void;
 	acceptMeetRequest: () => void;
 	rejectMeetRequest: () => void;
@@ -100,17 +100,20 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 		}
 	}
 
-	const startNewMeet = async (userName: string, userEmail: string, meet: string) => {
+	const startNewMeet = (userName: string, userEmail: string, meet: string) => {
 		try {
+			return false;
+
 			const user = { id: socketRef.current.id, name: userName, email: userEmail };
 			socketRef.current.emit('save-user-data', user);
 			
 			setUserData(user);
 			setMeetName(meet);		
 
-			router.push('/meet');
+			return true;
 		} catch (error) {
 			console.log('Error: ', error);
+			return false;
 		}
 	}
 
@@ -202,7 +205,7 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 
 	const leftMeet = () => {
 		socketRef.current.emit('left-meet', { to: otherUserData.id });
-		peerRef.current.destroy();
+		if (peerRef.current) peerRef.current.destroy();
 
 		resetMeetData();
 		setMeetName('');

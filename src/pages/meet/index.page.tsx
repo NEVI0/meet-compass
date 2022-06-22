@@ -356,7 +356,7 @@ const Meet: NextPage = () => {
 						<BiEdit className="menuitem__icon" />
 
 						<p className="menuitem__description">
-							{ t('page.home.menu.editName') }
+							{ t('page.meet.menu.editName') }
 						</p>
 					</S.MenuItem>
 
@@ -364,7 +364,7 @@ const Meet: NextPage = () => {
 						<BiCopy className="menuitem__icon" />
 
 						<p className="menuitem__description">
-							{ t('page.home.menu.copyId') }
+							{ t('page.meet.menu.copyId') }
 						</p>
 					</S.MenuItem>
 
@@ -374,7 +374,7 @@ const Meet: NextPage = () => {
 								<BiEnvelope className="menuitem__icon" />
 
 								<p className="menuitem__description">
-									{ t('page.home.menu.sendEmail', { user: otherUserData.name }) }
+									{ t('page.meet.menu.sendEmail', { user: otherUserData.name }) }
 								</p>
 							</S.MenuItem>
 
@@ -382,7 +382,7 @@ const Meet: NextPage = () => {
 								<BiUserX className="menuitem__icon" />
 
 								<p className="menuitem__description">
-									{ t('page.home.menu.removeUser', { user: otherUserData.name }) }
+									{ t('page.meet.menu.removeUser', { user: otherUserData.name }) }
 								</p>
 							</S.MenuItem>
 						</>

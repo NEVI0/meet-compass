@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { BiCompass, BiUser, BiEnvelope, BiAt } from 'react-icons/bi';
+import { Oval } from 'react-loader-spinner';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 import type { NextPage } from 'next';
 import Head from 'next/head';
@@ -9,6 +11,8 @@ import { useRouter } from 'next/router';
 import { Input, Button, JoinMeetModal } from '../../components';
 import useAppContext from '../../contexts/AppContext';
 
+import { TOAST_DEFAULT_CONFIG } from '../../utils/constants';
+import { theme } from '../../styles/theme';
 import * as S from './styles';
 
 const Home: NextPage = () => {
@@ -22,7 +26,20 @@ const Home: NextPage = () => {
 	const [ meetName, setMeetName ] = useState<string>('');
 	const [ defaultMeetId, setDefaultMeetId ] = useState<string>('');
 
+	const [ isLoading, setIsLoading ] = useState<boolean>(false);
 	const [ isJoinMeetModalVisible, setIsJoinMeetModalVisible ] = useState<boolean>(false);
+
+	const handleSubmitForm = (event: Event) => {
+		event.preventDefault();
+
+		setIsLoading(true);
+		const hadSuccess = startNewMeet(userName, userEmail, meetName);
+
+		setIsLoading(false);
+		if (!hadSuccess) return toast(t('page.home.toast.errorInStartingMeet'), TOAST_DEFAULT_CONFIG);
+		
+		router.push('/meet');
+	}
 
 	useEffect(() => {
 		const { meetId } = router.query;
@@ -60,7 +77,7 @@ const Home: NextPage = () => {
 					</div>
 				</header>
 
-				<div className="home__content">
+				<form className="home__content">
 					<Input
 						name="name"
 						placeholder={ t('inputPlaceholder.userName') }
@@ -86,12 +103,23 @@ const Home: NextPage = () => {
 					/>
 
 					<Button
-						disabled={ !userName || !userEmail || !meetName }
-						onClick={ () => startNewMeet(userName, userEmail, meetName) }
+						disabled={ !userName || !userEmail || !meetName || isLoading } // @ts-ignore
+						onClick={ handleSubmitForm }
 					>
-						{ t('page.home.button') }
+						{
+							isLoading ? (
+								<Oval
+									ariaLabel="loading-indicator"
+									height={ 20 }
+									width={ 20 }
+									strokeWidth={ 5 }
+									color={ theme.colors.primary }
+									secondaryColor="transparent"
+								/>
+							) : t('page.home.button')
+						}
 					</Button>
-				</div>
+				</form>
 
 				<div className="home__divider">
 					<div className="home__divider-line" />
