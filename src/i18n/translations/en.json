@@ -9,6 +9,22 @@
 			"joinMeetLink": "clicking here!",
 			"toast": {
 				"errorInStartingMeet": "Could not start your meet, please try again!"
+			},
+			"form": {
+				"userName": {
+					"toShort": "Your name is to short!",
+					"toLong": "Your name is to long!",
+					"required": "Your need to provide your name!"
+				},
+				"email": {
+					"invalid": "The e-mail provided is invalid!",
+					"required": "Your need to provide your e-mail!"
+				},
+				"meetName": {
+					"toShort": "The meet name is to short!",
+					"toLong": "The meet name is to long!",
+					"required": "Your need to provide the meet name!"
+				}
 			}
 		},
 		"meet": {
