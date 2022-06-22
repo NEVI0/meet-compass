@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 import { getWindowDimensions } from '../utils/functions';
-import { TBreakpoint } from '../types/window';
+import { TBreakpoint } from '../utils/types';
 
 const useWindowBreakpoints = () => {
 	const [ breakpoint, setBreakpoint ] = useState<TBreakpoint>('md');

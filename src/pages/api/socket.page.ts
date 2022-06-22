@@ -1,7 +1,6 @@
 import { Server } from 'socket.io';
 
-import { TUser } from '../../types/user';
-import { TCallUserData, TAcceptCallData, TRemoveUser } from '../../types/socket';
+import { TUser, TCallUserData, TAcceptCallData, TRemoveUser } from '../../utils/types';
 
 const handler = (_: any, response: any) => {
 	if (!response.socket.server.io) {
