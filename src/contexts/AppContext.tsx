@@ -102,8 +102,6 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 
 	const startNewMeet = (userName: string, userEmail: string, meet: string) => {
 		try {
-			return false;
-
 			const user = { id: socketRef.current.id, name: userName, email: userEmail };
 			socketRef.current.emit('save-user-data', user);
 			
