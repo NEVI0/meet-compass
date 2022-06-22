@@ -7,39 +7,55 @@ import { toast } from 'react-toastify';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { useFormik } from 'formik';
 
 import { Input, Button, JoinMeetModal } from '../../components';
 import useAppContext from '../../contexts/AppContext';
 
 import { TOAST_DEFAULT_CONFIG } from '../../utils/constants';
+import { formValidations } from './formValidations';
+
 import { theme } from '../../styles/theme';
 import * as S from './styles';
+
+type TFormValues = {
+	userName: string;
+	userEmail: string;
+	meetName: string;
+}
 
 const Home: NextPage = () => {
 
 	const router = useRouter();
 	const { t } = useTranslation();
 	const { selectedLanguage, startNewMeet, changeSelectedLanguage } = useAppContext();
-
-	const [ userName, setUserName ] = useState<string>('');
-	const [ userEmail, setUserEmail ] = useState<string>('');
-	const [ meetName, setMeetName ] = useState<string>('');
+	
 	const [ defaultMeetId, setDefaultMeetId ] = useState<string>('');
-
-	const [ isLoading, setIsLoading ] = useState<boolean>(false);
 	const [ isJoinMeetModalVisible, setIsJoinMeetModalVisible ] = useState<boolean>(false);
 
-	const handleSubmitForm = (event: Event) => {
-		event.preventDefault();
+	const handleSubmitForm = (values: TFormValues) => {
+		const { userName, userEmail, meetName } = values;
 
-		setIsLoading(true);
+		form.setSubmitting(true);
 		const hadSuccess = startNewMeet(userName, userEmail, meetName);
 
-		setIsLoading(false);
+		form.setSubmitting(false);
 		if (!hadSuccess) return toast(t('page.home.toast.errorInStartingMeet'), TOAST_DEFAULT_CONFIG);
 		
 		router.push('/meet');
 	}
+
+	const form = useFormik({
+		initialValues: {
+			userName: '',
+			userEmail: '',
+			meetName: ''
+		},
+		validationSchema: formValidations,
+		onSubmit: (values) => {
+			handleSubmitForm(values);
+		}
+	});
 
 	useEffect(() => {
 		const { meetId } = router.query;
@@ -77,37 +93,41 @@ const Home: NextPage = () => {
 					</div>
 				</header>
 
-				<form className="home__content">
+				<form className="home__content" onSubmit={ form.handleSubmit }>
 					<Input
-						name="name"
-						placeholder={ t('inputPlaceholder.userName') }
-						value={ userName }
-						onChangeValue={ setUserName }
+						name="userName"
+						placeholder={ t('inputPlaceholder.userName') } // @ts-ignore
+						error={ (form.errors.userName && form.touched.userName) && t(form.errors.userName) }
+						value={ form.values.userName }
+						onBlur={ form.handleBlur }
+						onChangeValue={ value => form.setFieldValue('userName', value) }
 						icon={ <BiUser className="input__icon" /> }
 					/>
 
 					<Input
-						name="email"
-						placeholder={ t('inputPlaceholder.email') }
-						value={ userEmail }
-						onChangeValue={ setUserEmail }
+						name="userEmail"
+						type="email"
+						placeholder={ t('inputPlaceholder.email') } // @ts-ignore
+						error={ (form.errors.userEmail && form.touched.userEmail) && t(form.errors.userEmail) }
+						value={ form.values.userEmail }
+						onBlur={ form.handleBlur }
+						onChangeValue={ value => form.setFieldValue('userEmail', value) }
 						icon={ <BiEnvelope className="input__icon" /> }
 					/>
 
 					<Input
-						name="meet-name"
-						placeholder={ t('inputPlaceholder.meetName') }
-						value={ meetName }
-						onChangeValue={ setMeetName }
+						name="meetName"
+						placeholder={ t('inputPlaceholder.meetName') } // @ts-ignore
+						error={ (form.errors.meetName && form.touched.meetName) && t(form.errors.meetName) }
+						value={ form.values.meetName }
+						onBlur={ form.handleBlur }
+						onChangeValue={ value => form.setFieldValue('meetName', value) }
 						icon={ <BiAt className="input__icon" /> }
 					/>
 
-					<Button
-						disabled={ !userName || !userEmail || !meetName || isLoading } // @ts-ignore
-						onClick={ handleSubmitForm }
-					>
+					<Button disabled={ !form.isValid || form.isSubmitting }>
 						{
-							isLoading ? (
+							form.isSubmitting ? (
 								<Oval
 									ariaLabel="loading-indicator"
 									height={ 20 }
