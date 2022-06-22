@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BiMenu, BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, BiPhoneOff, BiMove, BiUndo, BiEdit, BiUserX, BiEnvelope, BiCopy, BiX } from 'react-icons/bi';
+import { BiMenu, BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, BiPhoneOff, BiEdit, BiUserX, BiEnvelope, BiCopy, BiX } from 'react-icons/bi';
 import { MutatingDots } from 'react-loader-spinner';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +11,7 @@ import { useRouter } from 'next/router';
 
 import { ReceivingCallModal, RenameMeetModal } from '../../components';
 import useAppContext from '../../contexts/AppContext';
+import useMeetContext from '../../contexts/MeetContext';
 
 import { isEmpty } from '../../utils/functions';
 import { useWindowBreakpoints } from '../../hooks';
@@ -34,22 +35,24 @@ const Meet: NextPage = () => {
 	const router = useRouter();
 	const breakpoint = useWindowBreakpoints();
 	const { t } = useTranslation();
+	const { selectedLanguage, changeSelectedLanguage } = useAppContext();
 	const {
-		selectedLanguage,
 		userVideoRef,
 		otherUserVideoRef,
+
 		meetName,
 		userData,
 		otherUserData,
+
+		isCallingUser,
 		meetRequestAccepted,
 		isReceivingMeetRequest,
+
 		getUserStream,
-		isCallingUser,
-		changeSelectedLanguage,
+		cancelMeetRequest,
 		removeOtherUserFromMeet,
-		leftMeet,
-		cancelMeetRequest
-	} = useAppContext();
+		leftMeet
+	} = useMeetContext();
 
 	const [ isMenuOpen, setIsMenuOpen ] = useState<boolean>(false);
 	const [ isUsingVideo, setIsUsingVideo ] = useState<boolean>(false);
@@ -74,8 +77,8 @@ const Meet: NextPage = () => {
 
 	const handleUpdateUserAudioState = () => {
 		try {
-			const userVideo = document.getElementById('user-video'); // @ts-ignore
-			if (userVideo) userVideo.muted = isUsingMicrophone;
+			// const userVideo = document.getElementById('user-video'); // @ts-ignore
+			// if (userVideo) userVideo.muted = isUsingMicrophone;
 			setIsUsingMicrophone(!isUsingMicrophone);
 		} catch (error) {
 			console.log('Could not change user audio! ', error);
@@ -85,71 +88,6 @@ const Meet: NextPage = () => {
 	useEffect(() => {
 		if (isEmpty(userData)) router.push('/home');
 		getUserStream();
-	}, []);
-
-	useEffect(() => {
-		const userVideoContainer = document.getElementById('user-video-container');
-		const resetPositionButton = document.getElementById('reset-position-button');
-		const moveButton = document.getElementById('user-move-button');
-
-		if (!userVideoContainer || !resetPositionButton || !moveButton) return;
-		
-		const initialPosition = {
-			x: userVideoContainer.offsetLeft,
-			y: userVideoContainer.offsetTop
-		}
-
-		let mousePosition;
-		let calculedPosition = { x: 0, y: 0 };
-		let isPressed = false;
-
-		const onResetPosition = () => {
-			userVideoContainer.style.left = initialPosition.x + 'px';
-			userVideoContainer.style.top = initialPosition.y + 'px';
-		}
-
-		const onMouseDown = (event: MouseEvent) => {
-			isPressed = true;
-
-			calculedPosition.x = userVideoContainer.offsetLeft - event.clientX;
-			calculedPosition.y = userVideoContainer.offsetTop - event.clientY;
-		}
-
-		const onMouseUp = () => {
-			isPressed = false;
-		}
-
-		const onMouseMove = (event: MouseEvent) => {
-			event.preventDefault();
-
-			if (!isPressed) return;
-			mousePosition = { x : event.clientX, y : event.clientY };
-
-			const newPosition = {
-				x: mousePosition.x + calculedPosition.x,
-				y: mousePosition.y + calculedPosition.y
-			}
-
-			if (newPosition.x > 16 && newPosition.x < initialPosition.x) {
-				userVideoContainer.style.left = newPosition.x + 'px';
-			}
-
-			if (newPosition.y > 16 && newPosition.y < initialPosition.y) {
-				userVideoContainer.style.top = newPosition.y + 'px';
-			}
-		}
-
-		resetPositionButton.addEventListener('click', onResetPosition, true);
-		moveButton.addEventListener('mousedown', onMouseDown, true);
-		document.addEventListener('mouseup', onMouseUp, true);
-		document.addEventListener('mousemove', onMouseMove, true);
-
-		return () => {
-			resetPositionButton.removeEventListener('click', onResetPosition, true);
-			moveButton.removeEventListener('mousedown', onMouseDown, true);
-			document.removeEventListener('mouseup', onMouseUp, true);
-			document.removeEventListener('mousemove', onMouseMove, true);
-		}
 	}, []);
 
 	return (
@@ -168,7 +106,7 @@ const Meet: NextPage = () => {
 				</button>
 			</header>
 
-			<aside className="user" id="user-video-container">
+			<aside className="user">
 				<video
 					muted
 					playsInline
@@ -177,16 +115,6 @@ const Meet: NextPage = () => {
 					className="user__video"
 					id="user-video"
 				></video>
-
-				<div className="user__options" id="user-video-options">
-					<button className="option option-grab" id="user-move-button">
-						<BiMove />
-					</button>
-
-					<button className="option" id="reset-position-button">
-						<BiUndo />
-					</button>
-				</div>
 			</aside>
 
 			<main className="meet">
@@ -234,13 +162,12 @@ const Meet: NextPage = () => {
 							</div>
 						</div>
 					) : (
-						<div className="otheruser" id="other-user-container">
+						<div className="otheruser">
 							<video
 								playsInline
 								autoPlay
 								ref={ otherUserVideoRef }
 								className="otheruser__video"
-								id="otheruser-video"
 							></video>
 
 							<div className="otheruser__data">
@@ -356,7 +283,7 @@ const Meet: NextPage = () => {
 						<BiEdit className="menuitem__icon" />
 
 						<p className="menuitem__description">
-							{ t('page.home.menu.editName') }
+							{ t('page.meet.menu.editName') }
 						</p>
 					</S.MenuItem>
 
@@ -364,7 +291,7 @@ const Meet: NextPage = () => {
 						<BiCopy className="menuitem__icon" />
 
 						<p className="menuitem__description">
-							{ t('page.home.menu.copyId') }
+							{ t('page.meet.menu.copyId') }
 						</p>
 					</S.MenuItem>
 
@@ -374,7 +301,7 @@ const Meet: NextPage = () => {
 								<BiEnvelope className="menuitem__icon" />
 
 								<p className="menuitem__description">
-									{ t('page.home.menu.sendEmail', { user: otherUserData.name }) }
+									{ t('page.meet.menu.sendEmail', { user: otherUserData.name }) }
 								</p>
 							</S.MenuItem>
 
@@ -382,7 +309,7 @@ const Meet: NextPage = () => {
 								<BiUserX className="menuitem__icon" />
 
 								<p className="menuitem__description">
-									{ t('page.home.menu.removeUser', { user: otherUserData.name }) }
+									{ t('page.meet.menu.removeUser', { user: otherUserData.name }) }
 								</p>
 							</S.MenuItem>
 						</>

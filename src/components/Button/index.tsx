@@ -8,7 +8,7 @@ interface ButtonProps {
 	bgColor?: string;
 	actionBgColor?: string;
 	disabled?: boolean;
-	onClick: () => void;
+	onClick?: () => void;
 }
 
 const Button: React.FC<ButtonProps> = ({

@@ -7,24 +7,41 @@ interface InputProps {
 	type?: string;
 	disabled?: boolean;
 	value: string;
+	error?: string;
 	onChangeValue: (value: string) => void;
+	onBlur?: (event: any) => void;
 	icon: any;
 }
 
-const Input: React.FC<InputProps> = ({ name, placeholder, type = 'text', disabled = false, value, onChangeValue, icon }) => {
+const Input: React.FC<InputProps> = ({
+	name,
+	placeholder,
+	type = 'text',
+	disabled = false,
+	value,
+	error = '',
+	onChangeValue,
+	onBlur,
+	icon
+}) => {
 	return (
-		<S.Input disabled={ disabled }>
-			{ icon }
+		<S.Input disabled={ disabled } hasError={ !!error }>
+			<div className="input">
+				{ icon }
 
-			<input
-				name={ name }
-				type={ type }
-				disabled={ disabled }
-				placeholder={ placeholder }
-				value={ value }
-				onChange={ event => onChangeValue(event.target.value) }
-				className="input__field"
-			/>
+				<input
+					name={ name }
+					type={ type }
+					disabled={ disabled }
+					placeholder={ placeholder }
+					value={ value }
+					onChange={ event => onChangeValue(event.target.value) }
+					onBlur={ onBlur }
+					className="input__field"
+				/>
+			</div>
+
+			{ error && <small className="error">{ error }</small> }
 		</S.Input>
 	);
 }
