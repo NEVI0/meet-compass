@@ -1,5 +1,12 @@
 import SimplePeer from 'simple-peer';
-import { TUser } from './user';
+
+export type TBreakpoint = 'xsm' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
+
+export type TUser = {
+	id: string;
+	name: string;
+	email: string;
+}
 
 export type TCallUserData = {
 	to: string;
