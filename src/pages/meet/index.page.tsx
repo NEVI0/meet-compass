@@ -9,7 +9,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
-import { ReceivingCallModal, RenameMeetModal } from '../../components';
+import { IconButton, ReceivingCallModal, RenameMeetModal } from '../../components';
 import useAppContext from '../../contexts/AppContext';
 import useMeetContext from '../../contexts/MeetContext';
 
@@ -61,7 +61,8 @@ const Meet: NextPage = () => {
 	const [ isRenameMeetModalVisible, setIsRenameMeetModalVisible ] = useState<boolean>(false);
 
 	const handleCopyMeetId = () => {
-		navigator.clipboard.writeText(userData.id);
+		setIsMenuOpen(false);
+		navigator.clipboard.writeText(`${window.origin}/home?meetId=${userData.id}`);
 		toast(t('page.meet.toast.copyId'), TOAST_DEFAULT_CONFIG);
 	}
 
@@ -101,9 +102,10 @@ const Meet: NextPage = () => {
 					{ meetName || 'Meet name' }
 				</h2>
 
-				<button className="header__menu" onClick={ () => setIsMenuOpen(true) }>
-					<BiMenu />
-				</button>
+				<IconButton
+					onClick={ () => setIsMenuOpen(true) }
+					icon={ <BiMenu /> }
+				/>
 			</header>
 
 			<aside className="user">
@@ -250,9 +252,10 @@ const Meet: NextPage = () => {
 						{ userData.id }
 					</span>
 
-					<button className="footer__menu" onClick={ () => setIsMenuOpen(true) }>
-						<BiMenu />
-					</button>
+					<IconButton
+						onClick={ () => setIsMenuOpen(true) }
+						icon={ <BiMenu /> }
+					/>
 				</div>
 			</footer>
 
@@ -268,9 +271,10 @@ const Meet: NextPage = () => {
 						</h3>
 					</div>
 
-					<button className="menu__close" onClick={ () => setIsMenuOpen(false) }>
-						<BiX />
-					</button>
+					<IconButton
+						onClick={ () => setIsMenuOpen(false) }
+						icon={ <BiX /> }
+					/>
 				</section>
 
 				<hr className="menu__divider" />

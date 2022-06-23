@@ -29,18 +29,6 @@ export const MeetContainer = styled.div<TMeetContainer>`
 		&__title {
  			font-size: ${props => props.theme.font.h2Size};
 		}
-
-		&__menu {
- 			width: 30px;
- 			height: 30px;
- 			display: flex;
- 			align-items: center;
- 			justify-content: center;
- 			border-radius: .5rem;
- 			color: ${props => props.theme.colors.text};
- 			background-color: ${props => props.theme.colors.body};
- 			font-size: ${props => props.theme.font.iconSize};
-		}
 	}
 
 	.user {
@@ -195,18 +183,6 @@ export const MeetContainer = styled.div<TMeetContainer>`
 			display: none;
 		}
 
-		&__menu {
- 			width: 40px;
- 			height: 40px;
- 			display: flex;
- 			align-items: center;
- 			justify-content: center;
- 			border-radius: .75rem;
- 			color: ${props => props.theme.colors.text};
- 			background-color: ${props => props.theme.colors.body};
- 			font-size: ${props => props.theme.font.iconSize};
-		}
-
 		&__meetid {
  			color: ${props => props.theme.colors.textLight};
  			font-size: ${props => props.theme.font.smallSize};
@@ -244,18 +220,6 @@ export const MeetContainer = styled.div<TMeetContainer>`
 			font-size: ${props => props.theme.font.h3Size};
 			font-weight: 500;
 			color: ${props => props.theme.colors.textLight};
-		}
-
-		&__close {
-			width: 30px;
- 			height: 30px;
- 			display: flex;
- 			align-items: center;
- 			justify-content: center;
- 			border-radius: .5rem;
- 			color: ${props => props.theme.colors.text};
- 			background-color: ${props => props.theme.colors.body};
- 			font-size: ${props => props.theme.font.iconSize};
 		}
 
 		&__divider {

@@ -30,7 +30,7 @@
 		"meet": {
 			"title": "Chamada",
 			"toast": {
-				"copyId": "O ID da chamada foi copiado!",
+				"copyId": "O link da chamada foi copiado!",
 				"userLeft": "{{ user }} foi disconectado!",
 				"userRemoved": "Você foi removido da chamada!",
 				"requestDeclined": "Sua requisição para uma chamada foi recusada!",
@@ -64,7 +64,7 @@
 			},
 			"menu": {
 				"editName": "Editar nome da chamada",
-				"copyId": "Copiar ID da chamada",
+				"copyId": "Copiar link da chamada",
 				"sendEmail": "Enviar e-mail para {{ user }}",
 				"removeUser": "Remover {{ user }} da chamada"
 			}		
