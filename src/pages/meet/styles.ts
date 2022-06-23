@@ -79,7 +79,7 @@ export const MeetContainer = styled.div<TMeetContainer>`
 
 		&__video {
 			width: auto;
-			height: 650px;
+			height: calc(100vh - 60px - 80px - 4rem);
 		}
 
 		&__data {
@@ -287,8 +287,8 @@ export const MeetContainer = styled.div<TMeetContainer>`
 			height: auto;
 
 			&__video {
-				width: 1000px;
-				height: auto;
+				width: auto;
+				height: calc(100vh - 80px - 4rem);
 			}
 		}
 
