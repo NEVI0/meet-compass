@@ -30,7 +30,7 @@
 		"meet": {
 			"title": "Metting",
 			"toast": {
-				"copyId": "Meet ID copied to your clipboard!",
+				"copyId": "Meet link copied to your clipboard!",
 				"userLeft": "{{ user }} have been disconnected!",
 				"userRemoved": "You have been removed from the meet!",
 				"requestDeclined": "Your meet request have been declined!",
@@ -64,7 +64,7 @@
 			},
 			"menu": {
 				"editName": "Edit meet name",
-				"copyId": "Copy meet ID",
+				"copyId": "Copy meet link",
 				"sendEmail": "Send email to {{ user }}",
 				"removeUser": "Remove {{ user }} from meet"
 			}		

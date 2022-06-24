@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BiAt, BiEnvelope, BiUser, BiX } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
 
@@ -21,7 +21,7 @@ const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultMeetId, o
 	const [ error, setError ] = useState<string>('');
 	const [ userName, setUserName ] = useState<string>('');
 	const [ userEmail, setUserEmail ] = useState<string>('');
-	const [ meetId, setMeetId ] = useState<string>(defaultMeetId || '');
+	const [ meetId, setMeetId ] = useState<string>('');
 
 	const [ isCalling, setIsCalling ] = useState<boolean>(false);
 
@@ -45,6 +45,10 @@ const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultMeetId, o
 
 		onClose();
 	}
+
+	useEffect(() => {
+		if (defaultMeetId) setMeetId(defaultMeetId)
+	}, [defaultMeetId]);
 
 	return (
 		<S.JoinMeetModal visible={ visible } isCalling={ isCalling }>

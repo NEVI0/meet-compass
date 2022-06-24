@@ -66,8 +66,8 @@ const Home: NextPage = () => {
 			setIsJoinMeetModalVisible(true); // @ts-ignore
 			setDefaultMeetId(meetId);
 		}
-	}, []);
- 
+	}, [router.query]);
+
 	return (
 		<S.HomeContainer>
 			<Head>

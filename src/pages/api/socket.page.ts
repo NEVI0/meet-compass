@@ -48,6 +48,16 @@ const handler = (_: any, response: any) => {
 				const { to, newMeetName } = data;
 				io.to(to).emit('update-meet-name', newMeetName);
 			});
+
+			socket.on('handle-user-audio', (data: any) => {
+				const { to, shouldMute } = data;
+				io.to(to).emit('handle-other-user-audio', shouldMute);
+			});
+
+			socket.on('handle-user-video', (data: any) => {
+				const { to, shouldStop } = data;
+				io.to(to).emit('handle-other-user-video', shouldStop);
+			});
 		});		
 	}
 

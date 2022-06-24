@@ -5,6 +5,7 @@ type TMeetContainer = {
 	isMenuOpen: boolean;
 	isSharingScreen: boolean;
 	isUsingVideo: boolean;
+	isOtherUserVideoStopped: boolean;
 };
 
 export const MeetContainer = styled.div<TMeetContainer>`
@@ -28,18 +29,6 @@ export const MeetContainer = styled.div<TMeetContainer>`
 
 		&__title {
  			font-size: ${props => props.theme.font.h2Size};
-		}
-
-		&__menu {
- 			width: 30px;
- 			height: 30px;
- 			display: flex;
- 			align-items: center;
- 			justify-content: center;
- 			border-radius: .5rem;
- 			color: ${props => props.theme.colors.text};
- 			background-color: ${props => props.theme.colors.body};
- 			font-size: ${props => props.theme.font.iconSize};
 		}
 	}
 
@@ -91,7 +80,10 @@ export const MeetContainer = styled.div<TMeetContainer>`
 
 		&__video {
 			width: auto;
-			height: 650px;
+			height: calc(100vh - 60px - 80px - 4rem);
+			opacity: 1;
+
+			${props => props.isOtherUserVideoStopped && 'opacity: 0;'};
 		}
 
 		&__data {
@@ -102,12 +94,23 @@ export const MeetContainer = styled.div<TMeetContainer>`
 			bottom: 1rem;
 			left: 1rem;
 			padding: .5rem;
+			column-gap: .5rem;
 			border-radius: .5rem;
 			background-color: ${props => transparentize(.5, props.theme.colors.body)};
 		}
 
 		&__name {
 			font-size: ${props => props.theme.font.smallSize};
+		}
+
+		&__user-icon {
+			font-size: 8rem;
+			color: ${props => props.theme.colors.primary};
+			position: absolute;
+		}
+
+		&__mic-icon {
+			color: ${props => props.theme.colors.text};
 		}
 	}
 
@@ -195,18 +198,6 @@ export const MeetContainer = styled.div<TMeetContainer>`
 			display: none;
 		}
 
-		&__menu {
- 			width: 40px;
- 			height: 40px;
- 			display: flex;
- 			align-items: center;
- 			justify-content: center;
- 			border-radius: .75rem;
- 			color: ${props => props.theme.colors.text};
- 			background-color: ${props => props.theme.colors.body};
- 			font-size: ${props => props.theme.font.iconSize};
-		}
-
 		&__meetid {
  			color: ${props => props.theme.colors.textLight};
  			font-size: ${props => props.theme.font.smallSize};
@@ -244,18 +235,6 @@ export const MeetContainer = styled.div<TMeetContainer>`
 			font-size: ${props => props.theme.font.h3Size};
 			font-weight: 500;
 			color: ${props => props.theme.colors.textLight};
-		}
-
-		&__close {
-			width: 30px;
- 			height: 30px;
- 			display: flex;
- 			align-items: center;
- 			justify-content: center;
- 			border-radius: .5rem;
- 			color: ${props => props.theme.colors.text};
- 			background-color: ${props => props.theme.colors.body};
- 			font-size: ${props => props.theme.font.iconSize};
 		}
 
 		&__divider {
@@ -323,8 +302,8 @@ export const MeetContainer = styled.div<TMeetContainer>`
 			height: auto;
 
 			&__video {
-				width: 1000px;
-				height: auto;
+				width: auto;
+				height: calc(100vh - 80px - 4rem);
 			}
 		}
 

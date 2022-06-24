@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BiMenu, BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, BiPhoneOff, BiEdit, BiUserX, BiEnvelope, BiCopy, BiX } from 'react-icons/bi';
+import { BiUserCircle, BiMenu, BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, BiPhoneOff, BiEdit, BiUserX, BiEnvelope, BiCopy, BiX } from 'react-icons/bi';
 import { MutatingDots } from 'react-loader-spinner';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
@@ -9,7 +9,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
-import { ReceivingCallModal, RenameMeetModal } from '../../components';
+import { IconButton, ReceivingCallModal, RenameMeetModal } from '../../components';
 import useAppContext from '../../contexts/AppContext';
 import useMeetContext from '../../contexts/MeetContext';
 
@@ -44,6 +44,9 @@ const Meet: NextPage = () => {
 		userData,
 		otherUserData,
 
+		isOtherUserMuted,
+		isOtherUserVideoStopped,
+
 		isCallingUser,
 		meetRequestAccepted,
 		isReceivingMeetRequest,
@@ -51,17 +54,21 @@ const Meet: NextPage = () => {
 		getUserStream,
 		cancelMeetRequest,
 		removeOtherUserFromMeet,
-		leftMeet
+		leftMeet,
+		updateStreamAudio,
+		updateStreamVideo
 	} = useMeetContext();
 
 	const [ isMenuOpen, setIsMenuOpen ] = useState<boolean>(false);
-	const [ isUsingVideo, setIsUsingVideo ] = useState<boolean>(false);
 	const [ isSharingScreen, setIsSharingScreen ] = useState<boolean>(false);
-	const [ isUsingMicrophone, setIsUsingMicrophone ] = useState<boolean>(false);
 	const [ isRenameMeetModalVisible, setIsRenameMeetModalVisible ] = useState<boolean>(false);
 
+	const [ isUsingVideo, setIsUsingVideo ] = useState<boolean>(true);
+	const [ isUsingMicrophone, setIsUsingMicrophone ] = useState<boolean>(true);
+
 	const handleCopyMeetId = () => {
-		navigator.clipboard.writeText(userData.id);
+		setIsMenuOpen(false);
+		navigator.clipboard.writeText(`${window.origin}/home?meetId=${userData.id}`);
 		toast(t('page.meet.toast.copyId'), TOAST_DEFAULT_CONFIG);
 	}
 
@@ -76,13 +83,13 @@ const Meet: NextPage = () => {
 	}
 
 	const handleUpdateUserAudioState = () => {
-		try {
-			// const userVideo = document.getElementById('user-video'); // @ts-ignore
-			// if (userVideo) userVideo.muted = isUsingMicrophone;
-			setIsUsingMicrophone(!isUsingMicrophone);
-		} catch (error) {
-			console.log('Could not change user audio! ', error);
-		}
+		setIsUsingMicrophone(!isUsingMicrophone);
+		updateStreamAudio(isUsingMicrophone);
+	}
+
+	const handleUpdateUserVideoState = () => {
+		setIsUsingVideo(!isUsingVideo);
+		updateStreamVideo(isUsingVideo);
 	}
 
 	useEffect(() => {
@@ -91,7 +98,12 @@ const Meet: NextPage = () => {
 	}, []);
 
 	return (
-		<S.MeetContainer isMenuOpen={ isMenuOpen } isSharingScreen={ isSharingScreen } isUsingVideo={ isUsingVideo }>
+		<S.MeetContainer
+			isMenuOpen={ isMenuOpen }
+			isSharingScreen={ isSharingScreen }
+			isUsingVideo={ isUsingVideo }
+			isOtherUserVideoStopped={ isOtherUserVideoStopped }
+		>
 			<Head>
 				<title>Meet Compass - { t('page.meet.title') }</title>
 			</Head>
@@ -101,9 +113,10 @@ const Meet: NextPage = () => {
 					{ meetName || 'Meet name' }
 				</h2>
 
-				<button className="header__menu" onClick={ () => setIsMenuOpen(true) }>
-					<BiMenu />
-				</button>
+				<IconButton
+					onClick={ () => setIsMenuOpen(true) }
+					icon={ <BiMenu /> }
+				/>
 			</header>
 
 			<aside className="user">
@@ -162,7 +175,7 @@ const Meet: NextPage = () => {
 							</div>
 						</div>
 					) : (
-						<div className="otheruser">
+						<div className="otheruser">							
 							<video
 								playsInline
 								autoPlay
@@ -170,10 +183,24 @@ const Meet: NextPage = () => {
 								className="otheruser__video"
 							></video>
 
+							{
+								isOtherUserVideoStopped && (
+									<BiUserCircle className="otheruser__user-icon" />
+								)
+							}
+							
 							<div className="otheruser__data">
 								<span className="otheruser__name">
 									{ otherUserData.name || 'My friend' }
 								</span>
+
+								{
+									isOtherUserMuted ? (
+										<BiMicrophoneOff className="otheruser__mic-icon" />
+									) : (
+										<BiMicrophone className="otheruser__mic-icon" />
+									)
+								}
 							</div>
 						</div>
 					)
@@ -204,7 +231,7 @@ const Meet: NextPage = () => {
 					<S.ActionButton>
 						<button
 							className="action__button"
-							onClick={ () => setIsUsingVideo(!isUsingVideo) }
+							onClick={ handleUpdateUserVideoState }
 						>
 							{ isUsingVideo ? <BiVideo className="action__button-icon" /> : <BiVideoOff className="action__button-icon" /> }
 						</button>
@@ -250,9 +277,10 @@ const Meet: NextPage = () => {
 						{ userData.id }
 					</span>
 
-					<button className="footer__menu" onClick={ () => setIsMenuOpen(true) }>
-						<BiMenu />
-					</button>
+					<IconButton
+						onClick={ () => setIsMenuOpen(true) }
+						icon={ <BiMenu /> }
+					/>
 				</div>
 			</footer>
 
@@ -268,9 +296,10 @@ const Meet: NextPage = () => {
 						</h3>
 					</div>
 
-					<button className="menu__close" onClick={ () => setIsMenuOpen(false) }>
-						<BiX />
-					</button>
+					<IconButton
+						onClick={ () => setIsMenuOpen(false) }
+						icon={ <BiX /> }
+					/>
 				</section>
 
 				<hr className="menu__divider" />
