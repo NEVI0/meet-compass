@@ -19,6 +19,9 @@ interface MeetContextProps {
 	userData: TUser;
 	otherUserData: TUser;
 
+	isOtherUserMuted: boolean;
+	isOtherUserVideoStopped: boolean;
+
 	isCallingUser: boolean;
 	meetRequestAccepted: boolean;
 	isReceivingMeetRequest: boolean;
@@ -32,6 +35,8 @@ interface MeetContextProps {
 	renameMeet: (newMeetName: string) => void;
 	removeOtherUserFromMeet: () => void;
 	leftMeet: () => void;
+	updateStreamAudio: (shouldMute: boolean) => void;
+	updateStreamVideo: (shouldStop: boolean) => void;
 }
 
 const MeetContext: React.Context<MeetContextProps> = createContext({} as MeetContextProps);
@@ -50,12 +55,16 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 	const [ userData, setUserData ] = useState<TUser>({} as TUser);
 	const [ otherUserData, setOtherUserData ] = useState<TUser>({} as TUser);
 	
+	const [ isOtherUserMuted, setIsOtherUserMuted ] = useState<boolean>(false);
+	const [ isOtherUserVideoStopped, setIsOtherUserVideoStopped ] = useState<boolean>(false);
+
 	const [ userStream, setUserStream ] = useState<MediaStream>();
   	const [ otherUserSignal, setOtherUserSignal ] = useState<SimplePeer.SignalData>();
 
 	const [ isCallingUser, setIsCallingUser ] = useState<boolean>(false);
 	const [ meetRequestAccepted, setMeetRequestAccepted ] = useState<boolean>(false);
 	const [ isReceivingMeetRequest, setIsReceivingMeetRequest ] = useState<boolean>(false);
+
 
 	const clearMeetData = () => {
 		setOtherUserData({} as TUser);
@@ -184,6 +193,14 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 		router.push('/home');
 	}
 
+	const updateStreamAudio = (shouldMute: boolean) => {
+		socketRef.current.emit('handle-user-audio', { to: otherUserData.id, shouldMute });
+	}
+
+	const updateStreamVideo = (shouldStop: boolean) => {
+		socketRef.current.emit('handle-user-video', { to: otherUserData.id, shouldStop });
+	}
+
 	useEffect(() => {
 		const handleSocketConnection = async () => {
 			try {
@@ -242,6 +259,18 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 					setMeetName(newMeetName);
 					toast(t('page.meet.toast.meetNameUpdated'), TOAST_DEFAULT_CONFIG);
 				});
+
+				socketRef.current.on('handle-other-user-audio', (shouldMute: boolean) => {
+					if (otherUserVideoRef.current) {
+						otherUserVideoRef.current.muted = shouldMute;
+						setIsOtherUserMuted(shouldMute);
+					}
+				});
+
+				socketRef.current.on('handle-other-user-video', (shouldStop: boolean) => {
+					console.log('shouldStop: ', shouldStop);
+					setIsOtherUserVideoStopped(shouldStop);
+				});
 			} catch (error) {
 				console.log('Could not init socket connection! ', error);
 			}
@@ -260,6 +289,9 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				userData,
 				otherUserData,
 
+				isOtherUserMuted,
+				isOtherUserVideoStopped,
+
 				isCallingUser,
 				meetRequestAccepted,
 				isReceivingMeetRequest,
@@ -272,7 +304,9 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				cancelMeetRequest,
 				renameMeet,
 				removeOtherUserFromMeet,
-				leftMeet
+				leftMeet,
+				updateStreamAudio,
+				updateStreamVideo
 			}}
 		>
 			{ children }
