@@ -268,7 +268,6 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				});
 
 				socketRef.current.on('handle-other-user-video', (shouldStop: boolean) => {
-					console.log('shouldStop: ', shouldStop);
 					setIsOtherUserVideoStopped(shouldStop);
 				});
 			} catch (error) {
