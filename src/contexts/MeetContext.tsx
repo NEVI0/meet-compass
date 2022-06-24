@@ -234,7 +234,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 					const isOtherUserDisconnected = !otherUserSignal || isEmpty(otherUserData);
 					if (isOtherUserDisconnected) return;
 
-					toast(t('page.meet.toast.userLeft', { user: data.user.name }), TOAST_DEFAULT_CONFIG);
+					toast(t('page.meet.toast.userLeft', { user: data.user.name || 'User' }), TOAST_DEFAULT_CONFIG);
 
 					peerRef.current.destroy();
 				});
