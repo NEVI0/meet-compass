@@ -237,6 +237,9 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				});
 
 				socketRef.current.on('user-left', () => {
+					const isOtherUserDisconnected = !otherUserSignal || isEmpty(otherUserData);
+					if (isOtherUserDisconnected) return;
+
 					clearMeetData();
 					peerRef.current.destroy();
 				});
