@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BiUserCircle, BiMenu, BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, BiPhoneOff, BiEdit, BiUserX, BiEnvelope, BiCopy, BiX } from 'react-icons/bi';
+import { BiUserCircle, BiMenu, BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, BiPhoneOff, BiChat, BiEdit, BiUserX, BiEnvelope, BiCopy } from 'react-icons/bi';
 import { MutatingDots } from 'react-loader-spinner';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
@@ -9,8 +9,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
-import { IconButton, ReceivingCallModal, RenameMeetModal } from '../../components';
-import useAppContext from '../../contexts/AppContext';
+import { IconButton, ReceivingCallModal, RenameMeetModal, Chat, Menu } from '../../components';
 import useMeetContext from '../../contexts/MeetContext';
 
 import { isEmpty } from '../../utils/functions';
@@ -35,7 +34,6 @@ const Meet: NextPage = () => {
 	const router = useRouter();
 	const breakpoint = useWindowBreakpoints();
 	const { t } = useTranslation();
-	const { selectedLanguage, changeSelectedLanguage } = useAppContext();
 	const {
 		userVideoRef,
 		otherUserVideoRef,
@@ -60,6 +58,7 @@ const Meet: NextPage = () => {
 	} = useMeetContext();
 
 	const [ isMenuOpen, setIsMenuOpen ] = useState<boolean>(false);
+	const [ isChatOpen, setIsChatOpen ] = useState<boolean>(false);
 	const [ isSharingScreen, setIsSharingScreen ] = useState<boolean>(false);
 	const [ isRenameMeetModalVisible, setIsRenameMeetModalVisible ] = useState<boolean>(false);
 
@@ -92,6 +91,16 @@ const Meet: NextPage = () => {
 		updateStreamVideo(isUsingVideo);
 	}
 
+	const handleRenameMeet = () => {
+		setIsMenuOpen(false);
+		setIsRenameMeetModalVisible(true);
+	}
+
+	const handleOpenChat = () => {
+		setIsMenuOpen(false);
+		setIsChatOpen(true);
+	}
+
 	useEffect(() => {
 		if (isEmpty(userData)) router.push('/home');
 		getUserStream();
@@ -99,9 +108,8 @@ const Meet: NextPage = () => {
 
 	return (
 		<S.MeetContainer
-			isMenuOpen={ isMenuOpen }
-			isSharingScreen={ isSharingScreen }
 			isUsingVideo={ isUsingVideo }
+			isSharingScreen={ isSharingScreen }
 			isOtherUserVideoStopped={ isOtherUserVideoStopped }
 		>
 			<Head>
@@ -284,81 +292,52 @@ const Meet: NextPage = () => {
 				</div>
 			</footer>
 
-			<menu className="menu">
-				<section className="menu__header">
-					<div className="menu__data">
-						<h2 className="menu__title">
-							{ userData.name }
-						</h2>
+			<Chat visible={ isChatOpen } onClose={ () => setIsChatOpen(false) } />
+			<Menu visible={ isMenuOpen } onClose={ () => setIsMenuOpen(false) }>
+				<S.MenuItem onClick={ handleRenameMeet }>
+					<BiEdit className="menuitem__icon" />
 
-						<h3 className="menu__subtitle">
-							{ userData.email }
-						</h3>
-					</div>
+					<p className="menuitem__description">
+						{ t('page.meet.menu.editName') }
+					</p>
+				</S.MenuItem>
 
-					<IconButton
-						onClick={ () => setIsMenuOpen(false) }
-						icon={ <BiX /> }
-					/>
-				</section>
+				<S.MenuItem onClick={ handleCopyMeetId }>
+					<BiCopy className="menuitem__icon" />
 
-				<hr className="menu__divider" />
+					<p className="menuitem__description">
+						{ t('page.meet.menu.copyId') }
+					</p>
+				</S.MenuItem>
 
-				<div className="menu__items">
-					<S.MenuItem onClick={ () => {
-						setIsMenuOpen(false);
-						setIsRenameMeetModalVisible(true);
-					} }>
-						<BiEdit className="menuitem__icon" />
+				{
+					!isEmpty(otherUserData) && <>
+						<S.MenuItem onClick={ handleOpenChat }>
+							<BiChat className="menuitem__icon" />
 
-						<p className="menuitem__description">
-							{ t('page.meet.menu.editName') }
-						</p>
-					</S.MenuItem>
+							<p className="menuitem__description">
+								{ t('page.meet.menu.openChat') }
+							</p>
+						</S.MenuItem>
+						
+						<S.MenuItem href={`mailto:${otherUserData.email}`}>
+							<BiEnvelope className="menuitem__icon" />
 
-					<S.MenuItem onClick={ handleCopyMeetId }>
-						<BiCopy className="menuitem__icon" />
+							<p className="menuitem__description">
+								{ t('page.meet.menu.sendEmail', { user: otherUserData.name }) }
+							</p>
+						</S.MenuItem>
 
-						<p className="menuitem__description">
-							{ t('page.meet.menu.copyId') }
-						</p>
-					</S.MenuItem>
+						<S.MenuItem onClick={ removeOtherUserFromMeet }>
+							<BiUserX className="menuitem__icon" />
 
-					{
-						!isEmpty(otherUserData) && <>
-							<S.MenuItem href={`mailto:${otherUserData.email}`}>
-								<BiEnvelope className="menuitem__icon" />
-
-								<p className="menuitem__description">
-									{ t('page.meet.menu.sendEmail', { user: otherUserData.name }) }
-								</p>
-							</S.MenuItem>
-
-							<S.MenuItem onClick={ removeOtherUserFromMeet }>
-								<BiUserX className="menuitem__icon" />
-
-								<p className="menuitem__description">
-									{ t('page.meet.menu.removeUser', { user: otherUserData.name }) }
-								</p>
-							</S.MenuItem>
-						</>
-					}
-				</div>
-
-				<div className="menu__footer">
-					<button className="language" onClick={ changeSelectedLanguage }>
-						<img
-							src={ selectedLanguage === 'en' ? 'assets/images/usa-icon.png' : 'assets/images/brazil-icon.png' }
-							alt={ selectedLanguage === 'en' ? 'United States flag' : 'Brazil flag' }
-							className="language__icon"
-						/>
-
-						<span className="language__initials">
-							{ selectedLanguage }
-						</span>
-					</button>
-				</div>
-			</menu>
+							<p className="menuitem__description">
+								{ t('page.meet.menu.removeUser', { user: otherUserData.name }) }
+							</p>
+						</S.MenuItem>
+					</>
+				}
+			</Menu>
 
 			<RenameMeetModal visible={ isRenameMeetModalVisible } onClose={ () => setIsRenameMeetModalVisible(false) } />
 			<ReceivingCallModal visible={ isReceivingMeetRequest && !meetRequestAccepted } />

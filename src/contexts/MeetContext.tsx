@@ -12,6 +12,7 @@ import { PEER_CONFIGS, TOAST_DEFAULT_CONFIG } from '../utils/constants';
 import { isEmpty } from '../utils/functions';
 
 interface MeetContextProps {
+	socketRef: React.RefObject<any>;
 	userVideoRef: React.RefObject<HTMLVideoElement>;
 	otherUserVideoRef: React.RefObject<HTMLVideoElement>;
 
@@ -117,6 +118,8 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 			socketRef.current.emit('save-user-data', user);
 			setUserData(user);
 
+			socketRef.current.emit('user-to-call-exists', userToCallId);
+
 			peer.on('signal', data => {
 				socketRef.current.emit('call-user', {
 					to: userToCallId,
@@ -207,6 +210,11 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				await fetch('/api/socket');
 				socketRef.current = io();
 
+				socketRef.current.on('link-not-available', () => {
+					toast(t('page.meet.toast.linkNotAvailable'), TOAST_DEFAULT_CONFIG);
+					cancelMeetRequest();
+				});
+
 				socketRef.current.on('request-connection', (data: TRequestConnectionData) => {
 					setIsReceivingMeetRequest(true);
 					setOtherUserData(data.from);
@@ -228,14 +236,11 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 					toast(t('page.meet.toast.requestDeclined'), TOAST_DEFAULT_CONFIG);
 				});
 
-				socketRef.current.on('user-left', (data: TUserLeft) => {
-					clearMeetData();
-					
+				socketRef.current.on('user-left', () => {
 					const isOtherUserDisconnected = !otherUserSignal || isEmpty(otherUserData);
 					if (isOtherUserDisconnected) return;
 
-					toast(t('page.meet.toast.userLeft', { user: data.user.name || 'User' }), TOAST_DEFAULT_CONFIG);
-
+					clearMeetData();
 					peerRef.current.destroy();
 				});
 
@@ -249,7 +254,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				});
 
 				socketRef.current.on('other-user-left-meet', () => {
-					toast(t('page.meet.toast.otherUserLeft', { user: otherUserData.name }), TOAST_DEFAULT_CONFIG);
+					toast(t('page.meet.toast.otherUserLeft'), TOAST_DEFAULT_CONFIG);
 					clearMeetData();
 					setMeetName('');
 					peerRef.current.destroy();
@@ -281,6 +286,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 	return (
 		<MeetContext.Provider
 			value={{
+				socketRef,
 				userVideoRef,
 				otherUserVideoRef,
 

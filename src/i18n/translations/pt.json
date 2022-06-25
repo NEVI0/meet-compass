@@ -31,11 +31,11 @@
 			"title": "Chamada",
 			"toast": {
 				"copyId": "O link da chamada foi copiado!",
-				"userLeft": "{{ user }} foi disconectado!",
 				"userRemoved": "Você foi removido da chamada!",
 				"requestDeclined": "Sua requisição para uma chamada foi recusada!",
-				"otherUserLeft": "{{ user }} saiu da chamada!",
-				"meetNameUpdated": "O nome da chamada mudou!"
+				"otherUserLeft": "O usuário saiu da chamada!",
+				"meetNameUpdated": "O nome da chamada mudou!",
+				"linkNotAvailable": "Link indisponível!"
 			},
 			"calling": {
 				"title"	: "Chamando {{ user }}...",
@@ -62,9 +62,13 @@
 				},
 				"left": "Sair da chamada"
 			},
+			"chat": {
+				"title": "Chat da chamada"
+			},
 			"menu": {
 				"editName": "Editar nome da chamada",
 				"copyId": "Copiar link da chamada",
+				"openChat": "Abrir chat",
 				"sendEmail": "Enviar e-mail para {{ user }}",
 				"removeUser": "Remover {{ user }} da chamada"
 			}		
@@ -88,6 +92,7 @@
 		"email": "E-mail",
 		"meetName": "Nome da chamada",
 		"meetId": "ID da chamada",
-		"newMeetName": "Novo nome"
+		"newMeetName": "Novo nome",
+		"sendMessage": "Escreva sua mensagem"
 	}
 }

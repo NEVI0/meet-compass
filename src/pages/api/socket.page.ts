@@ -14,6 +14,12 @@ const handler = (_: any, response: any) => {
 				users[socket.id] = userData;
 			});
 
+			socket.on('user-to-call-exists', (id: string) => {
+				if (!users[id]) {
+					socket.emit('link-not-available');
+				}
+			});
+
 			socket.on('disconnect', () => {
 				socket.broadcast.emit('user-left', { user: users[socket.id] });
 				delete users[socket.id];
@@ -57,6 +63,11 @@ const handler = (_: any, response: any) => {
 			socket.on('handle-user-video', (data: any) => {
 				const { to, shouldStop } = data;
 				io.to(to).emit('handle-other-user-video', shouldStop);
+			});
+
+			socket.on('send-message', (data: any) => {
+				const { to, message } = data;
+				io.to(to).emit('get-message', message);
 			});
 		});		
 	}
