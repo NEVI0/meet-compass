@@ -9,8 +9,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useFormik } from 'formik';
 
-import { Input, Button, JoinMeetModal } from '../../components';
-import useAppContext from '../../contexts/AppContext';
+import { Input, Button, JoinMeetModal, LanguageSwitch } from '../../components';
 import useMeetContext from '../../contexts/MeetContext';
 
 import { TOAST_DEFAULT_CONFIG } from '../../utils/constants';
@@ -30,7 +29,6 @@ const Home: NextPage = () => {
 	const router = useRouter();
 	const { t } = useTranslation();
 	const { startNewMeet } = useMeetContext();
-	const { selectedLanguage, changeSelectedLanguage } = useAppContext();
 	
 	const [ defaultMeetId, setDefaultMeetId ] = useState<string>('');
 	const [ isJoinMeetModalVisible, setIsJoinMeetModalVisible ] = useState<boolean>(false);
@@ -154,17 +152,9 @@ const Home: NextPage = () => {
 				</span>
 			</main>
 
-			<button className="language" onClick={ changeSelectedLanguage }>
-				<img
-					src={ selectedLanguage === 'en' ? 'assets/images/usa-icon.png' : 'assets/images/brazil-icon.png' }
-					alt={ selectedLanguage === 'en' ? 'United States flag' : 'Brazil flag' }
-					className="language__icon"
-				/>
-
-				<span className="language__initials">
-					{ selectedLanguage }
-				</span>
-			</button>
+			<div className="language-switch">
+				<LanguageSwitch />
+			</div>
 
 			<JoinMeetModal
 				visible={ isJoinMeetModalVisible }
