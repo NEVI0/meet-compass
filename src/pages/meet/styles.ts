@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import { transparentize, darken } from 'polished';
 
 type TMeetContainer = {
-	isMenuOpen: boolean;
 	isUsingVideo: boolean;
 	isSharingScreen: boolean;
 	isOtherUserVideoStopped: boolean;
@@ -204,84 +203,6 @@ export const MeetContainer = styled.div<TMeetContainer>`
 		}
 	}
 
-	.menu {
-		position: fixed;
-		top: 0;
-		bottom: 0;
-		right: -350px;
-		width: 350px;
-		display: flex;
-		flex-direction: column;
-		z-index: 10;
-		padding: 2rem;
-		row-gap: 2rem;
-		box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.25);
-		background-color: ${props => props.theme.colors.container};
-		transition: .3s;
-
-		${props => props.isMenuOpen && 'right: 0;'};
-
-		&__header {
-			display: flex;
-			align-items: flex-start;
-			justify-content: space-between;
-		}
-
-		&__title {
-			font-size: ${props => props.theme.font.h2Size};
-		}
-
-		&__subtitle {
-			font-size: ${props => props.theme.font.h3Size};
-			font-weight: 500;
-			color: ${props => props.theme.colors.textLight};
-		}
-
-		&__divider {
-			height: 1px;
-			border-radius: 1rem;
-			background-color: ${props => props.theme.colors.textLight};
-		}
-
-		&__items {
-			display: flex;
-			flex-direction: column;
-			row-gap: 1rem;
-		}
-
-		&__footer {
-			flex: 1;
-			display: flex;
-			align-items: flex-end;
-			justify-content: flex-end;
-		}
-	}
-
-	.language {
-		display: flex;
-		align-items: center;
-		column-gap: .5rem;
-		padding: .5rem;
-		border-radius: 50px;
-		background-color: ${props => props.theme.colors.primary};
-		transition: .3s;
-
-		&__icon {
-			width: 24px;
-		}
-
-		&__initials {
-			text-transform: uppercase;
-			color: ${props => props.theme.colors.text};
-			font-size: ${props => props.theme.font.smallSize};
-			font-weight: 500;
-		}
-
-		&:hover, &:focus {
-			background-color: ${props => props.theme.colors.secondary};
-		}
-	}
-
 	@media screen and (min-width: 768px) {
 		.header {
 			top: -80px;
@@ -323,13 +244,6 @@ export const MeetContainer = styled.div<TMeetContainer>`
 				height: 30px;
 				border-radius: .5rem;
 			}
-		}
-
-		.menu {
-			right: -400px;
-			width: 400px;
-
-			${props => props.isMenuOpen && 'right: 0;'};
 		}
 	}
 `;
