@@ -56,19 +56,19 @@
 					"enable": "Enable your video",
 					"disable": "Disable your video"
 				},
-				"chat": {
-					"open": "Open chat",
-					"close": "Close chat"
-				},
 				"shareScreen": {
 					"start": "Start sharing your screen",
 					"stop": "Stop sharing your screen"
 				},
 				"left": "Left meeting"
 			},
+			"chat": {
+				"title": "Meet chat"
+			},
 			"menu": {
 				"editName": "Edit meet name",
 				"copyId": "Copy meet link",
+				"openChat": "Open chat",
 				"sendEmail": "Send email to {{ user }}",
 				"removeUser": "Remove {{ user }} from meet"
 			}		
@@ -92,6 +92,7 @@
 		"email": "E-mail",
 		"meetName": "Meet name",
 		"meetId": "Meet ID",
-		"newMeetName": "New meet name"
+		"newMeetName": "New meet name",
+		"sendMessage": "Type your message"
 	}
 }

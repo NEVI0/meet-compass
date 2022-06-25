@@ -56,19 +56,19 @@
 					"enable": "Ativar meu video",
 					"disable": "Desativar meu video"
 				},
-				"chat": {
-					"open": "Abrir chat",
-					"close": "Fechar chat"
-				},
 				"shareScreen": {
 					"start": "Começar compartilhamento de tela",
 					"stop": "Parar compartilhamento de tela"
 				},
 				"left": "Sair da chamada"
 			},
+			"chat": {
+				"title": "Chat da chamada"
+			},
 			"menu": {
 				"editName": "Editar nome da chamada",
 				"copyId": "Copiar link da chamada",
+				"openChat": "Abrir chat",
 				"sendEmail": "Enviar e-mail para {{ user }}",
 				"removeUser": "Remover {{ user }} da chamada"
 			}		
@@ -92,6 +92,7 @@
 		"email": "E-mail",
 		"meetName": "Nome da chamada",
 		"meetId": "ID da chamada",
-		"newMeetName": "Novo nome"
+		"newMeetName": "Novo nome",
+		"sendMessage": "Escreva sua mensagem"
 	}
 }

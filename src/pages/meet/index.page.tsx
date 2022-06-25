@@ -9,7 +9,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
-import { IconButton, ReceivingCallModal, RenameMeetModal } from '../../components';
+import { IconButton, ReceivingCallModal, RenameMeetModal, Chat } from '../../components';
 import useAppContext from '../../contexts/AppContext';
 import useMeetContext from '../../contexts/MeetContext';
 
@@ -68,8 +68,6 @@ const Meet: NextPage = () => {
 	const [ isUsingVideo, setIsUsingVideo ] = useState<boolean>(true);
 	const [ isUsingMicrophone, setIsUsingMicrophone ] = useState<boolean>(true);
 
-	const [ chatMessage, setChatMessage ] = useState<string>('');
-
 	const handleCopyMeetId = () => {
 		setIsMenuOpen(false);
 		navigator.clipboard.writeText(`${window.origin}/home?meetId=${userData.id}`);
@@ -96,27 +94,9 @@ const Meet: NextPage = () => {
 		updateStreamVideo(isUsingVideo);
 	}
 
-	const handleSendMessage = () => {
-		try {
-			socketRef.current.emit('send-message', { to: otherUserData.id, message: chatMessage });
-			handleAddMessage(chatMessage, 'right');
-			setChatMessage('');
-		} catch (error) {
-			console.log('Error: ', error);
-		}
-	}
-
-	const handleAddMessage = (message: string, side: 'left' | 'right') => {
-		const chatContent = document.getElementById('chat-content');
-		
-		if (chatContent) {
-			const p = document.createElement('p');
-
-			p.className = `chat__message chat__message-${side}`;
-			p.innerText = message;
-
-			chatContent.append(p);
-		}
+	const handleOpenChat = () => {
+		setIsMenuOpen(false);
+		setIsChatOpen(true);
 	}
 
 	useEffect(() => {
@@ -124,16 +104,9 @@ const Meet: NextPage = () => {
 		getUserStream();
 	}, []);
 
-	useEffect(() => {
-		socketRef.current.on('get-message', (message: string) => {
-			handleAddMessage(message, 'left');
-		});
-	}, []);
-
 	return (
 		<S.MeetContainer
 			isMenuOpen={ isMenuOpen }
-			isChatOpen={ isChatOpen }
 			isUsingVideo={ isUsingVideo }
 			isSharingScreen={ isSharingScreen }
 			isOtherUserVideoStopped={ isOtherUserVideoStopped }
@@ -294,21 +267,6 @@ const Meet: NextPage = () => {
 
 					<S.ActionButton>
 						<button
-							className="action__button"
-							onClick={ () => setIsChatOpen(!isChatOpen) }
-						>
-							<BiChat className="action__button-icon" />
-						</button>
-
-						<div className="action__tooltip">
-							{
-								isChatOpen ? t('page.meet.tooltip.chat.close') : t('page.meet.tooltip.chat.open')
-							}
-						</div>
-					</S.ActionButton>
-
-					<S.ActionButton>
-						<button
 							className="action__button action__button-hangup"
 							onClick={ handleHangUp }
 						>
@@ -332,25 +290,6 @@ const Meet: NextPage = () => {
 					/>
 				</div>
 			</footer>
-
-			<div className="chat">
-				<div className="chat__content" id="chat-content">
-				</div>
-
-				<div className="chat__footer">
-					<input
-						type="text"
-						placeholder="Your message"
-						className="chat__input"
-						value={ chatMessage }
-						onChange={ event => setChatMessage(event.target.value) }
-					/>
-
-					<button className="chat__send" onClick={ handleSendMessage }>
-						<BiSend />
-					</button>
-				</div>
-			</div>
 
 			<menu className="menu">
 				<section className="menu__header">
@@ -394,6 +333,14 @@ const Meet: NextPage = () => {
 
 					{
 						!isEmpty(otherUserData) && <>
+							<S.MenuItem onClick={ handleOpenChat }>
+								<BiChat className="menuitem__icon" />
+
+								<p className="menuitem__description">
+									{ t('page.meet.menu.openChat') }
+								</p>
+							</S.MenuItem>
+							
 							<S.MenuItem href={`mailto:${otherUserData.email}`}>
 								<BiEnvelope className="menuitem__icon" />
 
@@ -428,6 +375,7 @@ const Meet: NextPage = () => {
 				</div>
 			</menu>
 
+			<Chat visible={ isChatOpen } onClose={ () => setIsChatOpen(false) } />
 			<RenameMeetModal visible={ isRenameMeetModalVisible } onClose={ () => setIsRenameMeetModalVisible(false) } />
 			<ReceivingCallModal visible={ isReceivingMeetRequest && !meetRequestAccepted } />
 		</S.MeetContainer>

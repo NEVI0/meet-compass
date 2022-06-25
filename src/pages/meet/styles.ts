@@ -3,7 +3,6 @@ import { transparentize, darken } from 'polished';
 
 type TMeetContainer = {
 	isMenuOpen: boolean;
-	isChatOpen: boolean;
 	isUsingVideo: boolean;
 	isSharingScreen: boolean;
 	isOtherUserVideoStopped: boolean;
@@ -202,84 +201,6 @@ export const MeetContainer = styled.div<TMeetContainer>`
 		&__meetid {
  			color: ${props => props.theme.colors.textLight};
  			font-size: ${props => props.theme.font.smallSize};
-		}
-	}
-
-	.chat {
-		position: fixed;
-		top: 0;
-		bottom: 0;
-		right: -400px;
-		width: 400px;
-		display: flex;
-		flex-direction: column;
-		z-index: 10;
-		box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.25);
-		background-color: ${props => props.theme.colors.container};
-		transition: .3s;
-
-		${props => props.isChatOpen && 'right: 0;'};
-
-		&__content {
-			flex: 1;
-			display: flex;
-			flex-direction: column;
-			justify-content: flex-end;
-			padding: 2rem;
-			row-gap: 2rem;
-		}
-
-		&__message {
-			padding: 1rem;
-			max-width: 90%;
-			border-top-left-radius: 1rem;
-			border-top-right-radius: 1rem;
-			background-color: ${props => props.theme.colors.body};
-
-			&-left {
-				align-self: flex-start;
-				border-bottom-right-radius: 1rem;
-			}
-
-			&-right {
-				align-self: flex-end;
-				border-bottom-left-radius: 1rem;
-			}
-		}
-
-		&__footer {
-			height: 80px;
-			padding: 0 2rem;
-			display: flex;
-			align-items: center;
-			column-gap: 1rem;
-		}
-
-		&__input {
-			border: none;
-			outline: none;
-			flex: 1;
-			height: 48px;
-			padding: 0 1.25rem;
-			border-radius: 1rem;
-			color: ${props => props.theme.colors.text};
-			border: 1px solid ${props => props.theme.colors.body};
-			background-color: ${props => props.theme.colors.body};
-			transition: .3s;
-		}
-
-		&__send {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			width: 48px;
-			height: 48px;
-			border-radius: 1rem;
-			color: ${props => props.theme.colors.text};
-			border: 1px solid ${props => props.theme.colors.primary};
-			background-color: ${props => props.theme.colors.primary};
-			font-size: ${props => props.theme.font.iconSize};
-			transition: .3s;
 		}
 	}
 
