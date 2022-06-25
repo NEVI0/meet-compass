@@ -31,11 +31,11 @@
 			"title": "Chamada",
 			"toast": {
 				"copyId": "O link da chamada foi copiado!",
-				"userLeft": "{{ user }} foi disconectado!",
 				"userRemoved": "Você foi removido da chamada!",
 				"requestDeclined": "Sua requisição para uma chamada foi recusada!",
-				"otherUserLeft": "{{ user }} saiu da chamada!",
-				"meetNameUpdated": "O nome da chamada mudou!"
+				"otherUserLeft": "O usuário saiu da chamada!",
+				"meetNameUpdated": "O nome da chamada mudou!",
+				"linkNotAvailable": "Link indisponível!"
 			},
 			"calling": {
 				"title"	: "Chamando {{ user }}...",

@@ -31,11 +31,11 @@
 			"title": "Metting",
 			"toast": {
 				"copyId": "Meet link copied to your clipboard!",
-				"userLeft": "{{ user }} have been disconnected!",
 				"userRemoved": "You have been removed from the meet!",
 				"requestDeclined": "Your meet request have been declined!",
-				"otherUserLeft": "{{ user }} left the meet!",
-				"meetNameUpdated": "The meet name have been changed!"
+				"otherUserLeft": "The user left the meet!",
+				"meetNameUpdated": "The meet name have been changed!",
+				"linkNotAvailable": "Link not Available!"
 			},
 			"calling": {
 				"title"	: "Calling {{ user }}...",

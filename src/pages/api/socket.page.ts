@@ -14,6 +14,12 @@ const handler = (_: any, response: any) => {
 				users[socket.id] = userData;
 			});
 
+			socket.on('user-to-call-exists', (id: string) => {
+				if (!users[id]) {
+					socket.emit('link-not-available');
+				}
+			});
+
 			socket.on('disconnect', () => {
 				socket.broadcast.emit('user-left', { user: users[socket.id] });
 				delete users[socket.id];
