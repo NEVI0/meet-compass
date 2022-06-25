@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BiUserCircle, BiMenu, BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, BiPhoneOff, BiEdit, BiUserX, BiEnvelope, BiCopy, BiX } from 'react-icons/bi';
+import { BiUserCircle, BiMenu, BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, BiPhoneOff, BiChat, BiEdit, BiUserX, BiEnvelope, BiCopy, BiX, BiSend } from 'react-icons/bi';
 import { MutatingDots } from 'react-loader-spinner';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
@@ -37,6 +37,7 @@ const Meet: NextPage = () => {
 	const { t } = useTranslation();
 	const { selectedLanguage, changeSelectedLanguage } = useAppContext();
 	const {
+		socketRef,
 		userVideoRef,
 		otherUserVideoRef,
 
@@ -60,11 +61,14 @@ const Meet: NextPage = () => {
 	} = useMeetContext();
 
 	const [ isMenuOpen, setIsMenuOpen ] = useState<boolean>(false);
+	const [ isChatOpen, setIsChatOpen ] = useState<boolean>(false);
 	const [ isSharingScreen, setIsSharingScreen ] = useState<boolean>(false);
 	const [ isRenameMeetModalVisible, setIsRenameMeetModalVisible ] = useState<boolean>(false);
 
 	const [ isUsingVideo, setIsUsingVideo ] = useState<boolean>(true);
 	const [ isUsingMicrophone, setIsUsingMicrophone ] = useState<boolean>(true);
+
+	const [ chatMessage, setChatMessage ] = useState<string>('');
 
 	const handleCopyMeetId = () => {
 		setIsMenuOpen(false);
@@ -92,16 +96,46 @@ const Meet: NextPage = () => {
 		updateStreamVideo(isUsingVideo);
 	}
 
+	const handleSendMessage = () => {
+		try {
+			socketRef.current.emit('send-message', { to: otherUserData.id, message: chatMessage });
+			handleAddMessage(chatMessage, 'right');
+			setChatMessage('');
+		} catch (error) {
+			console.log('Error: ', error);
+		}
+	}
+
+	const handleAddMessage = (message: string, side: 'left' | 'right') => {
+		const chatContent = document.getElementById('chat-content');
+		
+		if (chatContent) {
+			const p = document.createElement('p');
+
+			p.className = `chat__message chat__message-${side}`;
+			p.innerText = message;
+
+			chatContent.append(p);
+		}
+	}
+
 	useEffect(() => {
 		if (isEmpty(userData)) router.push('/home');
 		getUserStream();
 	}, []);
 
+	useEffect(() => {
+		socketRef.current.on('get-message', (message: string) => {
+			handleAddMessage(message, 'left');
+		});
+	}, []);
+
 	return (
 		<S.MeetContainer
 			isMenuOpen={ isMenuOpen }
-			isSharingScreen={ isSharingScreen }
+			isChatOpen={ isChatOpen }
 			isUsingVideo={ isUsingVideo }
+			isSharingScreen={ isSharingScreen }
 			isOtherUserVideoStopped={ isOtherUserVideoStopped }
 		>
 			<Head>
@@ -260,6 +294,21 @@ const Meet: NextPage = () => {
 
 					<S.ActionButton>
 						<button
+							className="action__button"
+							onClick={ () => setIsChatOpen(!isChatOpen) }
+						>
+							<BiChat className="action__button-icon" />
+						</button>
+
+						<div className="action__tooltip">
+							{
+								isChatOpen ? t('page.meet.tooltip.chat.close') : t('page.meet.tooltip.chat.open')
+							}
+						</div>
+					</S.ActionButton>
+
+					<S.ActionButton>
+						<button
 							className="action__button action__button-hangup"
 							onClick={ handleHangUp }
 						>
@@ -283,6 +332,25 @@ const Meet: NextPage = () => {
 					/>
 				</div>
 			</footer>
+
+			<div className="chat">
+				<div className="chat__content" id="chat-content">
+				</div>
+
+				<div className="chat__footer">
+					<input
+						type="text"
+						placeholder="Your message"
+						className="chat__input"
+						value={ chatMessage }
+						onChange={ event => setChatMessage(event.target.value) }
+					/>
+
+					<button className="chat__send" onClick={ handleSendMessage }>
+						<BiSend />
+					</button>
+				</div>
+			</div>
 
 			<menu className="menu">
 				<section className="menu__header">

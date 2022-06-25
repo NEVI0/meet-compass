@@ -56,6 +56,10 @@
 					"enable": "Ativar meu video",
 					"disable": "Desativar meu video"
 				},
+				"chat": {
+					"open": "Abrir chat",
+					"close": "Fechar chat"
+				},
 				"shareScreen": {
 					"start": "Começar compartilhamento de tela",
 					"stop": "Parar compartilhamento de tela"

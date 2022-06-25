@@ -56,6 +56,10 @@
 					"enable": "Enable your video",
 					"disable": "Disable your video"
 				},
+				"chat": {
+					"open": "Open chat",
+					"close": "Close chat"
+				},
 				"shareScreen": {
 					"start": "Start sharing your screen",
 					"stop": "Stop sharing your screen"
