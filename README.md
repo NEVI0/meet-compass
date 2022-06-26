@@ -31,10 +31,17 @@ Of course, no one template will serve all projects since your needs may be diffe
 
 ## :electric_plug: How it works
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+You need just to open the site to be able to create a meet or connect to other user meet. This happens because when the sites starts it is opened a web socket connection.
 
-There are many great README templates available on GitHub; however, I didn't find one that really suited my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
+In the home page, you have two choises, **create a meet** or **joing an existing meet**. By creating a new meet you are going to be redirect to the meet page and there you can copy your meet link and share with someone.
+
+Now, to join an existing meet you need to click in **join meet** link right after the **create new meet** button in the home page. When clicked, it is going to open a modal in the middle of the screen. You just need to put your name, e-mail and meet ID that you received and then click **Join meet**.
+
+This are going to happen automatically when the user open a shared meet link.
+
+This projects uses **WebRTC** and the **[simple-peer](https://github.com/feross/simple-peer)** package to create a connection between the users to share the videos and audio. 
+
+Web socket is a plus in this project. It helps to handle the peer connections and a lot of events like send a message to other user.
 
 ## :hammer_and_wrench: How to run
 
