@@ -19,6 +19,7 @@ interface MeetContextProps {
 	meetName: string;
 	userData: TUser;
 	otherUserData: TUser;
+	callingOtherUserData: TUser;
 
 	isOtherUserMuted: boolean;
 	isOtherUserVideoStopped: boolean;
@@ -55,17 +56,18 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 	const [ meetName, setMeetName ] = useState<string>('');
 	const [ userData, setUserData ] = useState<TUser>({} as TUser);
 	const [ otherUserData, setOtherUserData ] = useState<TUser>({} as TUser);
+	const [ callingOtherUserData, setCallingOtherUserData ] = useState<TUser>({} as TUser);
 	
 	const [ isOtherUserMuted, setIsOtherUserMuted ] = useState<boolean>(false);
 	const [ isOtherUserVideoStopped, setIsOtherUserVideoStopped ] = useState<boolean>(false);
 
 	const [ userStream, setUserStream ] = useState<MediaStream>();
   	const [ otherUserSignal, setOtherUserSignal ] = useState<SimplePeer.SignalData>();
+  	const [ callingOtherUserSignal, setCallingOtherUserSignal ] = useState<SimplePeer.SignalData>();
 
 	const [ isCallingUser, setIsCallingUser ] = useState<boolean>(false);
 	const [ meetRequestAccepted, setMeetRequestAccepted ] = useState<boolean>(false);
 	const [ isReceivingMeetRequest, setIsReceivingMeetRequest ] = useState<boolean>(false);
-
 
 	const clearMeetData = () => {
 		setOtherUserData({} as TUser);
@@ -128,7 +130,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				});
 			})
 		
-			peer.on('stream', stream => { 
+			peer.on('stream', stream => {
 				if (otherUserVideoRef.current) otherUserVideoRef.current.srcObject = stream;
 			});
 
@@ -144,12 +146,23 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 			setMeetRequestAccepted(true);
 			setIsReceivingMeetRequest(false);
 
+			const user = {
+				data: callingOtherUserData,
+				signal: callingOtherUserSignal
+			}
+
+			setOtherUserData(user.data);
+			setOtherUserSignal(user.signal);
+
+			setCallingOtherUserData({} as TUser);
+			setCallingOtherUserSignal(undefined);
+
 			const peer = new SimplePeer({ initiator: false, trickle: false, stream: userStream });
 
 			peer.on('signal', data => {
 				socketRef.current.emit('accept-call', {
 					from: userData,
-					to: otherUserData.id,
+					to: user.data.id,
 					signal: data,
 					meetName
 				});
@@ -160,7 +173,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 			});
 
 			peerRef.current = peer;  // @ts-ignore
-			peer.signal(otherUserSignal);
+			peer.signal(user.signal);
 		} catch (error) {
 			console.log('Error: ', error);
 		}
@@ -217,8 +230,13 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 
 				socketRef.current.on('request-connection', (data: TRequestConnectionData) => {
 					setIsReceivingMeetRequest(true);
-					setOtherUserData(data.from);
-					setOtherUserSignal(data.signal);
+					setCallingOtherUserData(data.from);
+					setCallingOtherUserSignal(data.signal);
+				});
+
+				socketRef.current.on('other-user-already-in-meet', () => {
+					cancelMeetRequest();
+					toast('The user you called is already in a meet!', TOAST_DEFAULT_CONFIG);
 				});
 
 				socketRef.current.on('call-accepted', (data: TCallAccepted) => {
@@ -283,6 +301,15 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 		handleSocketConnection();
 	}, []);
 
+	useEffect(() => {
+		if (isReceivingMeetRequest) {
+			const alreadyInMeet = otherUserSignal || !isEmpty(otherUserData);
+			if (alreadyInMeet) socketRef.current.emit('already-in-meet', {
+				to: callingOtherUserData.id
+			});
+		}
+	}, [isReceivingMeetRequest]);
+
 	return (
 		<MeetContext.Provider
 			value={{
@@ -293,6 +320,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				meetName,
 				userData,
 				otherUserData,
+				callingOtherUserData,
 
 				isOtherUserMuted,
 				isOtherUserVideoStopped,

@@ -35,6 +35,10 @@ const handler = (_: any, response: any) => {
 				io.to(to).emit('request-connection', { signal, from });
 			});
 
+			socket.on('already-in-meet', (data: any) => {
+				io.to(data.to).emit('other-user-already-in-meet');
+			});
+
 			socket.on('accept-call', (data: TAcceptCallData) => {
 				const { from, to, signal, meetName } = data;
 				io.to(to).emit('call-accepted', { from, signal, meetName });
