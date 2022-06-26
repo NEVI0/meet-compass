@@ -1,11 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { BiAt, BiEnvelope, BiUser, BiX } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
 
-import { Input, Button, IconButton } from '..';
+import { useFormik } from 'formik';
 
+import { Input, Button, IconButton } from '..';
 import useMeetContext from '../../contexts/MeetContext';
+
+import { formValidations } from './formValidations';
 import * as S from './styles';
+
+type TFormValues = {
+	userName: string;
+	userEmail: string;
+	meetId: string;
+}
 
 interface JoinMeetModalProps {
 	visible: boolean;
@@ -18,40 +27,38 @@ const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultMeetId, o
 	const { t } = useTranslation();
 	const { joinMeet } = useMeetContext();
 
-	const [ error, setError ] = useState<string>('');
-	const [ userName, setUserName ] = useState<string>('');
-	const [ userEmail, setUserEmail ] = useState<string>('');
-	const [ meetId, setMeetId ] = useState<string>('');
+	const handleMeetUser = (values: TFormValues) => {
+		const { userName, userEmail, meetId } = values;
+		
+		form.setSubmitting(true);
+		joinMeet(userName, userEmail, meetId);
 
-	const [ isCalling, setIsCalling ] = useState<boolean>(false);
-
-	const handleMeetUser = () => {
-		try {
-			setError('');
-			setIsCalling(true);
-			joinMeet(userName, userEmail, meetId);
-		} catch (error) {
-			setIsCalling(false);
-			setError('Could not call the user!');
-		}
+		form.setSubmitting(false);
 	}
 
 	const handleCloseModal = () => {
-		setError('');
-		setUserName('');
-		setUserEmail('');
-		setMeetId('');
-		setIsCalling(false);
-
+		form.resetForm();
 		onClose();
 	}
 
+	const form = useFormik({
+		initialValues: {
+			userName: '',
+			userEmail: '',
+			meetId: ''
+		},
+		validationSchema: formValidations,
+		onSubmit: (values) => {
+			handleMeetUser(values);
+		}
+	});
+
 	useEffect(() => {
-		if (defaultMeetId) setMeetId(defaultMeetId)
+		if (defaultMeetId) form.setFieldValue('meetId', defaultMeetId)
 	}, [defaultMeetId]);
 
 	return (
-		<S.JoinMeetModal visible={ visible } isCalling={ isCalling }>
+		<S.JoinMeetModal visible={ visible }>
 			<div className="joinmeet">
 				<header className="joinmeet__header">
 					<h2 className="joinmeet__title">
@@ -64,46 +71,42 @@ const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultMeetId, o
 					/>
 				</header>
 
-				<div className="joinmeet__content">
+				<form className="joinmeet__content" onSubmit={ form.handleSubmit }>
 					<Input
-						name="name"
-						placeholder={ t('inputPlaceholder.userName') }
-						value={ userName }
-						onChangeValue={ setUserName }
+						name="userName"
+						placeholder={ t('inputPlaceholder.userName') } // @ts-ignore
+						error={ (form.errors.userName && form.touched.userName) && t(form.errors.userName) }
+						value={ form.values.userName }
+						onBlur={ form.handleBlur }
+						onChangeValue={ value => form.setFieldValue('userName', value) }
 						icon={ <BiUser className="input__icon" /> }
 					/>
 
 					<Input
-						name="email"
-						placeholder={ t('inputPlaceholder.email') }
-						value={ userEmail }
-						onChangeValue={ setUserEmail }
+						name="userEmail"
+						type="email"
+						placeholder={ t('inputPlaceholder.email') } // @ts-ignore
+						error={ (form.errors.userEmail && form.touched.userEmail) && t(form.errors.userEmail) }
+						value={ form.values.userEmail }
+						onBlur={ form.handleBlur }
+						onChangeValue={ value => form.setFieldValue('userEmail', value) }
 						icon={ <BiEnvelope className="input__icon" /> }
 					/>
 
 					<Input
-						name="meet-id"
-						placeholder={ t('inputPlaceholder.meetId') }
-						value={ meetId }
-						onChangeValue={ setMeetId }
+						name="meetId"
+						placeholder={ t('inputPlaceholder.meetId') } // @ts-ignore
+						error={ (form.errors.meetId && form.touched.meetId) && t(form.errors.meetId) }
+						value={ form.values.meetId }
+						onBlur={ form.handleBlur }
+						onChangeValue={ value => form.setFieldValue('meetId', value) }
 						icon={ <BiAt className="input__icon" /> }
 					/>
 
-					<Button
-						disabled={ !userName || !userEmail || !meetId || isCalling }
-						onClick={ handleMeetUser }
-					>
+					<Button disabled={ !form.isValid || form.isSubmitting }>
 						{ t('joinMeetModal.button') }
 					</Button>
-				</div>
-
-				{
-					error && (
-						<span className="joinmeet__error">
-							{ error }
-						</span>
-					)
-				}
+				</form>
 			</div>
 		</S.JoinMeetModal>
 	);

@@ -1,24 +1,44 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BiX, BiAt } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
+
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 import { Input, Button, IconButton } from '..';
 import useMeetContext from '../../contexts/MeetContext';
 
 import * as S from './styles';
 
+type TFormValues = {
+	newMeetName: string;
+}
+
 const RenameMeetModal: React.FC<{ visible: boolean; onClose: () => void; }> = ({ visible, onClose }) => {
 
 	const { t } = useTranslation();
 	const { renameMeet } = useMeetContext();
 
-	const [ newMeetName, setNewMeetName ] = useState<string>('');
-
-	const handleRenameMeet = () => {
-		renameMeet(newMeetName);
-		setNewMeetName('');
+	const handleRenameMeet = (values: TFormValues) => {
+		renameMeet(values.newMeetName);
+		form.resetForm();
 		onClose();
 	}
+
+	const form = useFormik({
+		initialValues: {
+			newMeetName: ''
+		},
+		validationSchema: Yup.object().shape({
+			newMeetName: Yup.string()
+				.min(3, 'page.home.form.meetName.tooShort')
+				.max(50, 'page.home.form.meetName.tooLong')
+				.required('page.home.form.meetName.required')
+		}),
+		onSubmit: (values) => {
+			handleRenameMeet(values);
+		}
+	});
 
 	return (
 		<S.RenameMeetModal visible={ visible }>
@@ -34,19 +54,21 @@ const RenameMeetModal: React.FC<{ visible: boolean; onClose: () => void; }> = ({
 					/>
 				</header>
 
-				<div className="renamemeet__content">
+				<form className="renamemeet__content" onSubmit={ form.handleSubmit }>
 					<Input
-						name="meet-name"
-						placeholder={ t('inputPlaceholder.newMeetName') }
-						value={ newMeetName }
-						onChangeValue={ setNewMeetName }
+						name="newMeetName"
+						placeholder={ t('inputPlaceholder.newMeetName') } // @ts-ignore
+						error={ (form.errors.newMeetName && form.touched.newMeetName) && t(form.errors.newMeetName) }
+						value={ form.values.newMeetName }
+						onBlur={ form.handleBlur }
+						onChangeValue={ value => form.setFieldValue('newMeetName', value) }
 						icon={ <BiAt className="input__icon" /> }
 					/>
 
-					<Button disabled={ !newMeetName } onClick={ handleRenameMeet }>
+					<Button disabled={ !form.isValid }>
 						{ t('renameMeetModal.rename') }
 					</Button>
-				</div>
+				</form>
 			</div>
 		</S.RenameMeetModal>
 	);
