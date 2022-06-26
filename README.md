@@ -4,7 +4,7 @@
 
 <div align="center">
   <a href="https://user-images.githubusercontent.com/45011343/174501665-8be30f33-7850-4c97-90ac-633debe2dedc.png">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="public/assets/images/meet-compass-logo-purple.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">
