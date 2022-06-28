@@ -226,6 +226,9 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 
 	const updateScreenSharing = async () => {
 		try {
+			const hasNoOtherUser = !otherUserSignal || isEmpty(otherUserData);
+			if (hasNoOtherUser) return toast('You can not share your screen being alone!', TOAST_DEFAULT_CONFIG);
+
 			let stream;
 
 			if (isSharingScreen) {
