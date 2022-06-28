@@ -46,6 +46,7 @@ const Meet: NextPage = () => {
 		isOtherUserVideoStopped,
 
 		isCallingUser,
+		isSharingScreen,
 		meetRequestAccepted,
 		isReceivingMeetRequest,
 
@@ -54,12 +55,12 @@ const Meet: NextPage = () => {
 		removeOtherUserFromMeet,
 		leftMeet,
 		updateStreamAudio,
-		updateStreamVideo
+		updateStreamVideo,
+		updateScreenSharing
 	} = useMeetContext();
 
 	const [ isMenuOpen, setIsMenuOpen ] = useState<boolean>(false);
 	const [ isChatOpen, setIsChatOpen ] = useState<boolean>(false);
-	const [ isSharingScreen, setIsSharingScreen ] = useState<boolean>(false);
 	const [ isRenameMeetModalVisible, setIsRenameMeetModalVisible ] = useState<boolean>(false);
 
 	const [ isUsingVideo, setIsUsingVideo ] = useState<boolean>(true);
@@ -254,7 +255,7 @@ const Meet: NextPage = () => {
 					<S.ActionButton>
 						<button
 							className={`action__button ${isSharingScreen && 'action__button-sharing'}`}
-							onClick={ () => setIsSharingScreen(!isSharingScreen) }
+							onClick={ updateScreenSharing }
 						>
 							<BiDesktop className="action__button-icon" />
 						</button>

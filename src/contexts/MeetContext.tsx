@@ -25,6 +25,7 @@ interface MeetContextProps {
 	isOtherUserVideoStopped: boolean;
 
 	isCallingUser: boolean;
+	isSharingScreen: boolean;
 	meetRequestAccepted: boolean;
 	isReceivingMeetRequest: boolean;
 
@@ -39,6 +40,7 @@ interface MeetContextProps {
 	leftMeet: () => void;
 	updateStreamAudio: (shouldMute: boolean) => void;
 	updateStreamVideo: (shouldStop: boolean) => void;
+	updateScreenSharing: () => void;
 }
 
 const MeetContext: React.Context<MeetContextProps> = createContext({} as MeetContextProps);
@@ -66,8 +68,10 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
   	const [ callingOtherUserSignal, setCallingOtherUserSignal ] = useState<SimplePeer.SignalData>();
 
 	const [ isCallingUser, setIsCallingUser ] = useState<boolean>(false);
+	const [ isSharingScreen, setIsSharingScreen ] = useState<boolean>(false);
 	const [ meetRequestAccepted, setMeetRequestAccepted ] = useState<boolean>(false);
 	const [ isReceivingMeetRequest, setIsReceivingMeetRequest ] = useState<boolean>(false);
+	
 
 	const clearMeetData = () => {
 		setOtherUserData({} as TUser);
@@ -217,6 +221,33 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 		socketRef.current.emit('handle-user-video', { to: otherUserData.id, shouldStop });
 	}
 
+	const updateScreenSharing = async () => {
+		try {
+			let stream;
+
+			if (isSharingScreen) {
+				stream = userStream;
+				setIsSharingScreen(false);
+			} else {
+				stream = await navigator.mediaDevices.getDisplayMedia();
+				setIsSharingScreen(true);
+			}
+
+			const [ oldStream ] = peerRef.current.streams;
+			const [ oldTrack ] = oldStream.getVideoTracks();
+			const [ newTrack ] = stream?.getVideoTracks()!;
+
+			newTrack.onended = () => {
+				const [ userTrack ] = userStream?.getVideoTracks()!;
+				peerRef.current.replaceTrack(oldTrack, userTrack, oldStream);
+			}
+
+			peerRef.current.replaceTrack(oldTrack, newTrack, oldStream);
+		} catch (error) {
+			console.log('Error: ', error);
+		}
+	}
+
 	useEffect(() => {
 		const handleSocketConnection = async () => {
 			try {
@@ -299,6 +330,20 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 		}
 
 		handleSocketConnection();
+
+		return () => {
+			socketRef.current.off('link-not-available');
+			socketRef.current.off('request-connection');
+			socketRef.current.off('other-user-already-in-meet');
+			socketRef.current.off('call-accepted');
+			socketRef.current.off('call-rejected');
+			socketRef.current.off('user-left');
+			socketRef.current.off('removed-from-meet');
+			socketRef.current.off('other-user-left-meet');
+			socketRef.current.off('update-meet-name');
+			socketRef.current.off('handle-other-user-audio');
+			socketRef.current.off('handle-other-user-video');
+		};
 	}, []);
 
 	useEffect(() => {
@@ -326,6 +371,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				isOtherUserVideoStopped,
 
 				isCallingUser,
+				isSharingScreen,
 				meetRequestAccepted,
 				isReceivingMeetRequest,
 
@@ -339,7 +385,8 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				removeOtherUserFromMeet,
 				leftMeet,
 				updateStreamAudio,
-				updateStreamVideo
+				updateStreamVideo,
+				updateScreenSharing
 			}}
 		>
 			{ children }
