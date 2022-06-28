@@ -12,18 +12,21 @@
 			},
 			"form": {
 				"userName": {
-					"toShort": "Your name is to short!",
-					"toLong": "Your name is to long!",
-					"required": "Your need to provide your name!"
+					"tooShort": "Your name is too short!",
+					"tooLong": "Your name is too long!",
+					"required": "You need to provide your name!"
 				},
-				"email": {
+				"userEmail": {
 					"invalid": "The e-mail provided is invalid!",
-					"required": "Your need to provide your e-mail!"
+					"required": "You need to provide your e-mail!"
 				},
 				"meetName": {
-					"toShort": "The meet name is to short!",
-					"toLong": "The meet name is to long!",
-					"required": "Your need to provide the meet name!"
+					"tooShort": "The meet name is too short!",
+					"tooLong": "The meet name is too long!",
+					"required": "You need to provide the meet name!"
+				},
+				"meetId": {
+					"required": "You need to provide the meet ID!"
 				}
 			}
 		},
@@ -35,7 +38,7 @@
 				"requestDeclined": "Your meet request have been declined!",
 				"otherUserLeft": "The user left the meet!",
 				"meetNameUpdated": "The meet name have been changed!",
-				"linkNotAvailable": "Link not Available!"
+				"linkNotAvailable": "Link not available!"
 			},
 			"calling": {
 				"title"	: "Calling {{ user }}...",

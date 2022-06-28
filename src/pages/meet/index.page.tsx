@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BiUserCircle, BiMenu, BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, BiPhoneOff, BiChat, BiEdit, BiUserX, BiEnvelope, BiCopy } from 'react-icons/bi';
+import { BiUserCircle, BiMenu, BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, BiPhoneOff, BiChat, BiEdit, BiUserX, BiEnvelope, BiCopy, BiExpand } from 'react-icons/bi';
 import { MutatingDots } from 'react-loader-spinner';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
@@ -48,18 +48,21 @@ const Meet: NextPage = () => {
 		isCallingUser,
 		meetRequestAccepted,
 		isReceivingMeetRequest,
+		
+		isSharingScreen,
+		isOtherUserSharingScreen,
 
 		getUserStream,
 		cancelMeetRequest,
 		removeOtherUserFromMeet,
 		leftMeet,
 		updateStreamAudio,
-		updateStreamVideo
+		updateStreamVideo,
+		updateScreenSharing
 	} = useMeetContext();
 
 	const [ isMenuOpen, setIsMenuOpen ] = useState<boolean>(false);
 	const [ isChatOpen, setIsChatOpen ] = useState<boolean>(false);
-	const [ isSharingScreen, setIsSharingScreen ] = useState<boolean>(false);
 	const [ isRenameMeetModalVisible, setIsRenameMeetModalVisible ] = useState<boolean>(false);
 
 	const [ isUsingVideo, setIsUsingVideo ] = useState<boolean>(true);
@@ -183,7 +186,7 @@ const Meet: NextPage = () => {
 							</div>
 						</div>
 					) : (
-						<div className="otheruser">							
+						<div className="otheruser">
 							<video
 								playsInline
 								autoPlay
@@ -210,6 +213,17 @@ const Meet: NextPage = () => {
 									)
 								}
 							</div>
+
+							{
+								isOtherUserSharingScreen && (
+									<button
+										className="otheruser__fullscreen"
+										onClick={ () => otherUserVideoRef.current?.requestFullscreen() }
+									>
+										<BiExpand />
+									</button>
+								)
+							}
 						</div>
 					)
 				}
@@ -254,7 +268,7 @@ const Meet: NextPage = () => {
 					<S.ActionButton>
 						<button
 							className={`action__button ${isSharingScreen && 'action__button-sharing'}`}
-							onClick={ () => setIsSharingScreen(!isSharingScreen) }
+							onClick={ updateScreenSharing }
 						>
 							<BiDesktop className="action__button-icon" />
 						</button>

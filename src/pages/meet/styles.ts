@@ -111,6 +111,20 @@ export const MeetContainer = styled.div<TMeetContainer>`
 		&__mic-icon {
 			color: ${props => props.theme.colors.text};
 		}
+
+		&__fullscreen {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			position: absolute;
+			bottom: 1rem;
+			right: 1rem;
+			padding: .5rem;
+			column-gap: .5rem;
+			border-radius: .5rem;
+			background-color: ${props => transparentize(.5, props.theme.colors.body)};
+			color: ${props => props.theme.colors.text};
+		}
 	}
 
 	.calling {

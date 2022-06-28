@@ -8,8 +8,6 @@ export const formValidations = Yup.object().shape({
 	userEmail: Yup.string()
 		.email('page.home.form.userEmail.invalid')
 		.required('page.home.form.userEmail.required'),
-	meetName: Yup.string()
-		.min(3, 'page.home.form.meetName.tooShort')
-		.max(50, 'page.home.form.meetName.tooLong')
-		.required('page.home.form.meetName.required'),
+	meetId: Yup.string()
+		.required('page.home.form.meetId.required'),
 });

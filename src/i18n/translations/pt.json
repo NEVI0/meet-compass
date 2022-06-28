@@ -12,18 +12,21 @@
 			},
 			"form": {
 				"userName": {
-					"toShort": "Seu nome é muito curto!",
-					"toLong": "Seu nome é muito longo!",
+					"tooShort": "Seu nome é muito curto!",
+					"tooLong": "Seu nome é muito longo!",
 					"required": "Você precisa informar seu nome!"
 				},
-				"email": {
+				"userEmail": {
 					"invalid": "O e-mail informado está inválido!",
 					"required": "Você precisa informar seu e-mail!"
 				},
 				"meetName": {
-					"toShort": "O nome da chamada é muito curto!",
-					"toLong": "O nome da chamada é muito longo!",
+					"tooShort": "O nome da chamada é muito curto!",
+					"tooLong": "O nome da chamada é muito longo!",
 					"required": "Você precisa informar o nome da chamada!"
+				},
+				"meetId": {
+					"required": "Você precisa informar o ID da chamada!"
 				}
 			}
 		},

@@ -35,6 +35,10 @@ const handler = (_: any, response: any) => {
 				io.to(to).emit('request-connection', { signal, from });
 			});
 
+			socket.on('already-in-meet', (data: any) => {
+				io.to(data.to).emit('other-user-already-in-meet');
+			});
+
 			socket.on('accept-call', (data: TAcceptCallData) => {
 				const { from, to, signal, meetName } = data;
 				io.to(to).emit('call-accepted', { from, signal, meetName });
@@ -63,6 +67,11 @@ const handler = (_: any, response: any) => {
 			socket.on('handle-user-video', (data: any) => {
 				const { to, shouldStop } = data;
 				io.to(to).emit('handle-other-user-video', shouldStop);
+			});
+
+			socket.on('update-screen-sharing', (data: any) => {
+				const { to, isSharing } = data;
+				io.to(to).emit('handle-other-user-screen-sharing', isSharing);
 			});
 
 			socket.on('send-message', (data: any) => {

@@ -19,6 +19,7 @@ interface MeetContextProps {
 	meetName: string;
 	userData: TUser;
 	otherUserData: TUser;
+	callingOtherUserData: TUser;
 
 	isOtherUserMuted: boolean;
 	isOtherUserVideoStopped: boolean;
@@ -26,6 +27,9 @@ interface MeetContextProps {
 	isCallingUser: boolean;
 	meetRequestAccepted: boolean;
 	isReceivingMeetRequest: boolean;
+	
+	isSharingScreen: boolean;
+	isOtherUserSharingScreen: boolean;
 
 	getUserStream: () => Promise<MediaStream | undefined>;
 	startNewMeet: (userName: string, userEmail: string, meetName: string) => boolean;
@@ -38,6 +42,7 @@ interface MeetContextProps {
 	leftMeet: () => void;
 	updateStreamAudio: (shouldMute: boolean) => void;
 	updateStreamVideo: (shouldStop: boolean) => void;
+	updateScreenSharing: () => void;
 }
 
 const MeetContext: React.Context<MeetContextProps> = createContext({} as MeetContextProps);
@@ -55,17 +60,21 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 	const [ meetName, setMeetName ] = useState<string>('');
 	const [ userData, setUserData ] = useState<TUser>({} as TUser);
 	const [ otherUserData, setOtherUserData ] = useState<TUser>({} as TUser);
+	const [ callingOtherUserData, setCallingOtherUserData ] = useState<TUser>({} as TUser);
 	
 	const [ isOtherUserMuted, setIsOtherUserMuted ] = useState<boolean>(false);
 	const [ isOtherUserVideoStopped, setIsOtherUserVideoStopped ] = useState<boolean>(false);
 
 	const [ userStream, setUserStream ] = useState<MediaStream>();
   	const [ otherUserSignal, setOtherUserSignal ] = useState<SimplePeer.SignalData>();
+  	const [ callingOtherUserSignal, setCallingOtherUserSignal ] = useState<SimplePeer.SignalData>();
 
 	const [ isCallingUser, setIsCallingUser ] = useState<boolean>(false);
 	const [ meetRequestAccepted, setMeetRequestAccepted ] = useState<boolean>(false);
 	const [ isReceivingMeetRequest, setIsReceivingMeetRequest ] = useState<boolean>(false);
-
+	
+	const [ isSharingScreen, setIsSharingScreen ] = useState<boolean>(false);
+	const [ isOtherUserSharingScreen, setIsOtherUserSharingScreen ] = useState<boolean>(false);
 
 	const clearMeetData = () => {
 		setOtherUserData({} as TUser);
@@ -128,7 +137,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				});
 			})
 		
-			peer.on('stream', stream => { 
+			peer.on('stream', stream => {
 				if (otherUserVideoRef.current) otherUserVideoRef.current.srcObject = stream;
 			});
 
@@ -144,12 +153,23 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 			setMeetRequestAccepted(true);
 			setIsReceivingMeetRequest(false);
 
+			const user = {
+				data: callingOtherUserData,
+				signal: callingOtherUserSignal
+			}
+
+			setOtherUserData(user.data);
+			setOtherUserSignal(user.signal);
+
+			setCallingOtherUserData({} as TUser);
+			setCallingOtherUserSignal(undefined);
+
 			const peer = new SimplePeer({ initiator: false, trickle: false, stream: userStream });
 
 			peer.on('signal', data => {
 				socketRef.current.emit('accept-call', {
 					from: userData,
-					to: otherUserData.id,
+					to: user.data.id,
 					signal: data,
 					meetName
 				});
@@ -160,7 +180,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 			});
 
 			peerRef.current = peer;  // @ts-ignore
-			peer.signal(otherUserSignal);
+			peer.signal(user.signal);
 		} catch (error) {
 			console.log('Error: ', error);
 		}
@@ -204,6 +224,37 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 		socketRef.current.emit('handle-user-video', { to: otherUserData.id, shouldStop });
 	}
 
+	const updateScreenSharing = async () => {
+		try {
+			let stream;
+
+			if (isSharingScreen) {
+				stream = userStream;
+				setIsSharingScreen(false);
+
+				socketRef.current.emit('update-screen-sharing', { to: otherUserData.id, isSharing: false })
+			} else {
+				stream = await navigator.mediaDevices.getDisplayMedia();
+				setIsSharingScreen(true);
+
+				socketRef.current.emit('update-screen-sharing', { to: otherUserData.id, isSharing: true })
+			}
+
+			const [ oldStream ] = peerRef.current.streams;
+			const [ oldTrack ] = oldStream.getVideoTracks();
+			const [ newTrack ] = stream?.getVideoTracks()!;
+
+			newTrack.onended = () => {
+				const [ userTrack ] = userStream?.getVideoTracks()!;
+				peerRef.current.replaceTrack(oldTrack, userTrack, oldStream);
+			}
+
+			peerRef.current.replaceTrack(oldTrack, newTrack, oldStream);
+		} catch (error) {
+			console.log('Error: ', error);
+		}
+	}
+
 	useEffect(() => {
 		const handleSocketConnection = async () => {
 			try {
@@ -217,8 +268,13 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 
 				socketRef.current.on('request-connection', (data: TRequestConnectionData) => {
 					setIsReceivingMeetRequest(true);
-					setOtherUserData(data.from);
-					setOtherUserSignal(data.signal);
+					setCallingOtherUserData(data.from);
+					setCallingOtherUserSignal(data.signal);
+				});
+
+				socketRef.current.on('other-user-already-in-meet', () => {
+					cancelMeetRequest();
+					toast('The user you called is already in a meet!', TOAST_DEFAULT_CONFIG);
 				});
 
 				socketRef.current.on('call-accepted', (data: TCallAccepted) => {
@@ -275,13 +331,41 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				socketRef.current.on('handle-other-user-video', (shouldStop: boolean) => {
 					setIsOtherUserVideoStopped(shouldStop);
 				});
+
+				socketRef.current.on('handle-other-user-screen-sharing', (isSharing: boolean) => {
+					setIsOtherUserSharingScreen(isSharing);
+				});
 			} catch (error) {
 				console.log('Could not init socket connection! ', error);
 			}
 		}
 
 		handleSocketConnection();
+
+		return () => {
+			socketRef.current.off('link-not-available');
+			socketRef.current.off('request-connection');
+			socketRef.current.off('other-user-already-in-meet');
+			socketRef.current.off('call-accepted');
+			socketRef.current.off('call-rejected');
+			socketRef.current.off('user-left');
+			socketRef.current.off('removed-from-meet');
+			socketRef.current.off('other-user-left-meet');
+			socketRef.current.off('update-meet-name');
+			socketRef.current.off('handle-other-user-audio');
+			socketRef.current.off('handle-other-user-video');
+			socketRef.current.off('handle-other-user-screen-sharing');
+		};
 	}, []);
+
+	useEffect(() => {
+		if (isReceivingMeetRequest) {
+			const alreadyInMeet = otherUserSignal || !isEmpty(otherUserData);
+			if (alreadyInMeet) socketRef.current.emit('already-in-meet', {
+				to: callingOtherUserData.id
+			});
+		}
+	}, [isReceivingMeetRequest]);
 
 	return (
 		<MeetContext.Provider
@@ -293,6 +377,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				meetName,
 				userData,
 				otherUserData,
+				callingOtherUserData,
 
 				isOtherUserMuted,
 				isOtherUserVideoStopped,
@@ -300,6 +385,9 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				isCallingUser,
 				meetRequestAccepted,
 				isReceivingMeetRequest,
+				
+				isSharingScreen,
+				isOtherUserSharingScreen,
 
 				getUserStream,
 				startNewMeet,
@@ -311,7 +399,8 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				removeOtherUserFromMeet,
 				leftMeet,
 				updateStreamAudio,
-				updateStreamVideo
+				updateStreamVideo,
+				updateScreenSharing
 			}}
 		>
 			{ children }

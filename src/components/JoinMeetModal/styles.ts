@@ -1,11 +1,6 @@
 import styled, { css } from 'styled-components';
 
-type TJoinMeetModal = {
-	visible: boolean;
-	isCalling: boolean;
-}
-
-export const JoinMeetModal = styled.div<TJoinMeetModal>`
+export const JoinMeetModal = styled.div<{ visible: boolean; }>`
 	position: fixed;
 	inset: 0;
 	display: flex;
@@ -47,13 +42,6 @@ export const JoinMeetModal = styled.div<TJoinMeetModal>`
 			display: flex;
 			flex-direction: column;
 			row-gap: .75rem;
-		}
-
-		&__error {
-			color: ${props => props.theme.colors.red};
-			font-size: ${props => props.theme.font.smallSize};
-			font-weight: 500;
-			text-align: center;
 		}
 	}
 

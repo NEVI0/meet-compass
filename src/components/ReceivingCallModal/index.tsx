@@ -13,14 +13,14 @@ import * as S from './styles';
 const ReceivingCallModal: React.FC<{ visible: boolean; }> = ({ visible }) => {
 
 	const { t } = useTranslation();
-	const { otherUserData, acceptMeetRequest, rejectMeetRequest } = useMeetContext();
+	const { callingOtherUserData, acceptMeetRequest, rejectMeetRequest } = useMeetContext();
 
 	return (
 		<S.ReceivingCallModal visible={ visible }>
 			<div className="receivingcall">
 				<header className="receivingcall__header">
 					<h2 className="receivingcall__title">
-						{ t('receivingCallModal.title', { user: otherUserData.name }) }
+						{ t('receivingCallModal.title', { user: callingOtherUserData.name }) }
 					</h2>
 
 					<IconButton
