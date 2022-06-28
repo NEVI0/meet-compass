@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BiUserCircle, BiMenu, BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, BiPhoneOff, BiChat, BiEdit, BiUserX, BiEnvelope, BiCopy } from 'react-icons/bi';
+import { BiUserCircle, BiMenu, BiVideo, BiVideoOff, BiMicrophone, BiMicrophoneOff, BiDesktop, BiPhoneOff, BiChat, BiEdit, BiUserX, BiEnvelope, BiCopy, BiExpand } from 'react-icons/bi';
 import { MutatingDots } from 'react-loader-spinner';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
@@ -46,9 +46,11 @@ const Meet: NextPage = () => {
 		isOtherUserVideoStopped,
 
 		isCallingUser,
-		isSharingScreen,
 		meetRequestAccepted,
 		isReceivingMeetRequest,
+		
+		isSharingScreen,
+		isOtherUserSharingScreen,
 
 		getUserStream,
 		cancelMeetRequest,
@@ -184,7 +186,7 @@ const Meet: NextPage = () => {
 							</div>
 						</div>
 					) : (
-						<div className="otheruser">							
+						<div className="otheruser">
 							<video
 								playsInline
 								autoPlay
@@ -211,6 +213,17 @@ const Meet: NextPage = () => {
 									)
 								}
 							</div>
+
+							{
+								isOtherUserSharingScreen && (
+									<button
+										className="otheruser__fullscreen"
+										onClick={ () => otherUserVideoRef.current?.requestFullscreen() }
+									>
+										<BiExpand />
+									</button>
+								)
+							}
 						</div>
 					)
 				}

@@ -69,6 +69,11 @@ const handler = (_: any, response: any) => {
 				io.to(to).emit('handle-other-user-video', shouldStop);
 			});
 
+			socket.on('update-screen-sharing', (data: any) => {
+				const { to, isSharing } = data;
+				io.to(to).emit('handle-other-user-screen-sharing', isSharing);
+			});
+
 			socket.on('send-message', (data: any) => {
 				const { to, message } = data;
 				io.to(to).emit('get-message', message);

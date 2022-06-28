@@ -25,9 +25,11 @@ interface MeetContextProps {
 	isOtherUserVideoStopped: boolean;
 
 	isCallingUser: boolean;
-	isSharingScreen: boolean;
 	meetRequestAccepted: boolean;
 	isReceivingMeetRequest: boolean;
+	
+	isSharingScreen: boolean;
+	isOtherUserSharingScreen: boolean;
 
 	getUserStream: () => Promise<MediaStream | undefined>;
 	startNewMeet: (userName: string, userEmail: string, meetName: string) => boolean;
@@ -68,10 +70,11 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
   	const [ callingOtherUserSignal, setCallingOtherUserSignal ] = useState<SimplePeer.SignalData>();
 
 	const [ isCallingUser, setIsCallingUser ] = useState<boolean>(false);
-	const [ isSharingScreen, setIsSharingScreen ] = useState<boolean>(false);
 	const [ meetRequestAccepted, setMeetRequestAccepted ] = useState<boolean>(false);
 	const [ isReceivingMeetRequest, setIsReceivingMeetRequest ] = useState<boolean>(false);
 	
+	const [ isSharingScreen, setIsSharingScreen ] = useState<boolean>(false);
+	const [ isOtherUserSharingScreen, setIsOtherUserSharingScreen ] = useState<boolean>(false);
 
 	const clearMeetData = () => {
 		setOtherUserData({} as TUser);
@@ -228,9 +231,13 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 			if (isSharingScreen) {
 				stream = userStream;
 				setIsSharingScreen(false);
+
+				socketRef.current.emit('update-screen-sharing', { to: otherUserData.id, isSharing: false })
 			} else {
 				stream = await navigator.mediaDevices.getDisplayMedia();
 				setIsSharingScreen(true);
+
+				socketRef.current.emit('update-screen-sharing', { to: otherUserData.id, isSharing: true })
 			}
 
 			const [ oldStream ] = peerRef.current.streams;
@@ -324,6 +331,10 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				socketRef.current.on('handle-other-user-video', (shouldStop: boolean) => {
 					setIsOtherUserVideoStopped(shouldStop);
 				});
+
+				socketRef.current.on('handle-other-user-screen-sharing', (isSharing: boolean) => {
+					setIsOtherUserSharingScreen(isSharing);
+				});
 			} catch (error) {
 				console.log('Could not init socket connection! ', error);
 			}
@@ -343,6 +354,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 			socketRef.current.off('update-meet-name');
 			socketRef.current.off('handle-other-user-audio');
 			socketRef.current.off('handle-other-user-video');
+			socketRef.current.off('handle-other-user-screen-sharing');
 		};
 	}, []);
 
@@ -371,9 +383,11 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				isOtherUserVideoStopped,
 
 				isCallingUser,
-				isSharingScreen,
 				meetRequestAccepted,
 				isReceivingMeetRequest,
+				
+				isSharingScreen,
+				isOtherUserSharingScreen,
 
 				getUserStream,
 				startNewMeet,
