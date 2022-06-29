@@ -8,34 +8,51 @@ export type TUser = {
 	email: string;
 }
 
-export type TCallUserData = {
+export type TSendMessageEventData = {
+	to: string;
+	message: string;
+}
+
+export type TNewMeetNameEventData = {
+	to: string;
+	newMeetName: string;
+}
+
+export type TUpdateUserAudioEventData = {
+	to: string;
+	shouldMute: boolean;
+}
+
+export type TUpdateUserVideoEventData = {
+	to: string;
+	shouldStop: boolean;
+}
+
+export type TUpdateScreenSharingEventData = {
+	to: string;
+	isSharing: boolean;
+}
+
+export type TCallUserEventData = {
 	to: string;
 	from: TUser;
 	signal: SimplePeer.SignalData;
 }
 
-export type TAcceptCallData = {
-	from: TUser;
+export type TAcceptCallEventData = {
 	to: string;
-	meetName: string;
+	from: TUser;
 	signal: SimplePeer.SignalData;
+	meetName: string;
 }
 
-export type TRequestConnectionData = {
+export type TRequestMeetConnectionEventData = {
 	from: TUser;
 	signal: SimplePeer.SignalData;
 }
 
-export type TCallAccepted = {
-	meetName: string;
+export type TCallAcceptedEventData = {
 	from: TUser;
 	signal: SimplePeer.SignalData;
-}
-
-export type TRemoveUser = {
-	userToRemove: TUser;
-}
-
-export type TUserLeft = {
-	user: TUser;
+	meetName: string;
 }

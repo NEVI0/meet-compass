@@ -13,8 +13,8 @@ import { IconButton, ReceivingCallModal, RenameMeetModal, Chat, Menu } from '../
 import useMeetContext from '../../contexts/MeetContext';
 
 import { isEmpty } from '../../utils/functions';
-import { useWindowBreakpoints } from '../../hooks';
 import { LOTTIE_OPTIONS, TOAST_DEFAULT_CONFIG } from '../../utils/constants';
+import { useWindowBreakpoints } from '../../hooks';
 
 import { theme } from '../../styles/theme';
 import * as emptyAnimation from '../../../public/assets/animations/empty.json';
@@ -50,6 +50,8 @@ const Meet: NextPage = () => {
 		isReceivingMeetRequest,
 		
 		isSharingScreen,
+		isUsingVideo,
+		isUsingMicrophone,
 		isOtherUserSharingScreen,
 
 		getUserStream,
@@ -65,33 +67,14 @@ const Meet: NextPage = () => {
 	const [ isChatOpen, setIsChatOpen ] = useState<boolean>(false);
 	const [ isRenameMeetModalVisible, setIsRenameMeetModalVisible ] = useState<boolean>(false);
 
-	const [ isUsingVideo, setIsUsingVideo ] = useState<boolean>(true);
-	const [ isUsingMicrophone, setIsUsingMicrophone ] = useState<boolean>(true);
-
-	const handleCopyMeetId = () => {
-		setIsMenuOpen(false);
-		navigator.clipboard.writeText(`${window.origin}/home?meetId=${userData.id}`);
-		toast(t('page.meet.toast.copyId'), TOAST_DEFAULT_CONFIG);
-	}
-
-	const handleHangUp = async () => { // @ts-ignore
-		const userVideo = document.getElementById('user-video');
-		if (userVideo) userVideo.remove();
-		
-		setIsUsingVideo(false);
-		setIsUsingMicrophone(false);
-
-		leftMeet();
-	}
-
-	const handleUpdateUserAudioState = () => {
-		setIsUsingMicrophone(!isUsingMicrophone);
-		updateStreamAudio(isUsingMicrophone);
-	}
-
-	const handleUpdateUserVideoState = () => {
-		setIsUsingVideo(!isUsingVideo);
-		updateStreamVideo(isUsingVideo);
+	const handleCopyMeetId = async () => {
+		try {
+			setIsMenuOpen(false);
+			await navigator.clipboard.writeText(`${window.origin}/home?meetId=${userData.id}`);
+			toast(t('page.meet.toast.copyId'), TOAST_DEFAULT_CONFIG);
+		} catch (error) {
+			toast('Could not copy meet ID. Please try again!', TOAST_DEFAULT_CONFIG);
+		}
 	}
 
 	const handleRenameMeet = () => {
@@ -236,55 +219,37 @@ const Meet: NextPage = () => {
 				
 				<section className="footer__actions">
 					<S.ActionButton>
-						<button
-							className="action__button"
-							onClick={ handleUpdateUserAudioState }
-						>
+						<button className="action__button" onClick={ updateStreamAudio }>
 							{ isUsingMicrophone ? <BiMicrophone className="action__button-icon" /> : <BiMicrophoneOff className="action__button-icon" /> }
 						</button>
 
 						<div className="action__tooltip">
-							{
-								isUsingMicrophone ? t('page.meet.tooltip.microphone.disable') : t('page.meet.tooltip.microphone.enable')
-							}
+							{ isUsingMicrophone ? t('page.meet.tooltip.microphone.disable') : t('page.meet.tooltip.microphone.enable') }
 						</div>
 					</S.ActionButton>
 
 					<S.ActionButton>
-						<button
-							className="action__button"
-							onClick={ handleUpdateUserVideoState }
-						>
+						<button className="action__button" onClick={ updateStreamVideo }>
 							{ isUsingVideo ? <BiVideo className="action__button-icon" /> : <BiVideoOff className="action__button-icon" /> }
 						</button>
 
 						<div className="action__tooltip">
-							{
-								isUsingVideo ? t('page.meet.tooltip.video.disable') : t('page.meet.tooltip.video.enable')
-							}
+							{ isUsingVideo ? t('page.meet.tooltip.video.disable') : t('page.meet.tooltip.video.enable') }
 						</div>
 					</S.ActionButton>
 
 					<S.ActionButton>
-						<button
-							className={`action__button ${isSharingScreen && 'action__button-sharing'}`}
-							onClick={ updateScreenSharing }
-						>
+						<button className={`action__button ${isSharingScreen && 'action__button-sharing'}`} onClick={ updateScreenSharing }>
 							<BiDesktop className="action__button-icon" />
 						</button>
 
 						<div className="action__tooltip">
-							{
-								isSharingScreen ? t('page.meet.tooltip.shareScreen.stop') : t('page.meet.tooltip.shareScreen.start')
-							}
+							{ isSharingScreen ? t('page.meet.tooltip.shareScreen.stop') : t('page.meet.tooltip.shareScreen.start') }
 						</div>
 					</S.ActionButton>
 
 					<S.ActionButton>
-						<button
-							className="action__button action__button-hangup"
-							onClick={ handleHangUp }
-						>
+						<button className="action__button action__button-hangup" onClick={ leftMeet }>
 							<BiPhoneOff className="action__button-icon" />
 						</button>
 

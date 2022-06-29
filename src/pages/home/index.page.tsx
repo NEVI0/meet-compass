@@ -33,7 +33,7 @@ const Home: NextPage = () => {
 	const [ defaultMeetId, setDefaultMeetId ] = useState<string>('');
 	const [ isJoinMeetModalVisible, setIsJoinMeetModalVisible ] = useState<boolean>(false);
 
-	const handleSubmitForm = (values: TFormValues) => {
+	const handleCreateMeet = (values: TFormValues) => {
 		const { userName, userEmail, meetName } = values;
 
 		form.setSubmitting(true);
@@ -53,7 +53,7 @@ const Home: NextPage = () => {
 		},
 		validationSchema: formValidations,
 		onSubmit: (values) => {
-			handleSubmitForm(values);
+			handleCreateMeet(values);
 		}
 	});
 

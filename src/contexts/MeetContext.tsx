@@ -7,7 +7,7 @@ import SimplePeer from 'simple-peer';
 import { io } from 'socket.io-client';
 import { toast } from 'react-toastify';
 
-import { TCallAccepted, TRequestConnectionData, TUser, TUserLeft } from '../utils/types';
+import { TCallAcceptedEventData, TRequestMeetConnectionEventData, TUser } from '../utils/types';
 import { PEER_CONFIGS, TOAST_DEFAULT_CONFIG } from '../utils/constants';
 import { isEmpty } from '../utils/functions';
 
@@ -29,7 +29,9 @@ interface MeetContextProps {
 	isReceivingMeetRequest: boolean;
 	
 	isSharingScreen: boolean;
-	isOtherUserSharingScreen: boolean;
+	isUsingVideo: boolean;
+	isUsingMicrophone: boolean;
+	isOtherUserSharingScreen: boolean;	
 
 	getUserStream: () => Promise<MediaStream | undefined>;
 	startNewMeet: (userName: string, userEmail: string, meetName: string) => boolean;
@@ -40,8 +42,8 @@ interface MeetContextProps {
 	renameMeet: (newMeetName: string) => void;
 	removeOtherUserFromMeet: () => void;
 	leftMeet: () => void;
-	updateStreamAudio: (shouldMute: boolean) => void;
-	updateStreamVideo: (shouldStop: boolean) => void;
+	updateStreamAudio: () => void;
+	updateStreamVideo: () => void;
 	updateScreenSharing: () => void;
 }
 
@@ -74,15 +76,24 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 	const [ isReceivingMeetRequest, setIsReceivingMeetRequest ] = useState<boolean>(false);
 	
 	const [ isSharingScreen, setIsSharingScreen ] = useState<boolean>(false);
+	const [ isUsingVideo, setIsUsingVideo ] = useState<boolean>(false);
+	const [ isUsingMicrophone, setIsUsingMicrophone ] = useState<boolean>(false);
 	const [ isOtherUserSharingScreen, setIsOtherUserSharingScreen ] = useState<boolean>(false);
+
+	const [ disconnectedOtherUserId, setDisconnectedOtherUserId ] = useState<string>('');
 
 	const clearMeetData = () => {
 		setOtherUserData({} as TUser);
 		setOtherUserSignal(undefined);
 
+		setCallingOtherUserData({} as TUser);
+		setCallingOtherUserSignal(undefined);
+
 		setIsCallingUser(false);
 		setMeetRequestAccepted(false);
 		setIsReceivingMeetRequest(false);
+
+		setIsOtherUserSharingScreen(false);
 	}
 
 	const getUserStream = async () => {
@@ -91,9 +102,15 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 			if (userVideoRef.current) userVideoRef.current.srcObject = stream;
 
 			setUserStream(stream);
+			setIsUsingVideo(true);
+			setIsUsingMicrophone(true);
+
 			return stream;
 		} catch (error) {
-			console.log('Error: ', error);
+			setIsUsingVideo(false);
+			setIsUsingMicrophone(false);
+
+			toast('Please, allow the browser to get your video and audio stream!', TOAST_DEFAULT_CONFIG);
 		}
 	}
 
@@ -127,7 +144,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 			socketRef.current.emit('save-user-data', user);
 			setUserData(user);
 
-			socketRef.current.emit('user-to-call-exists', userToCallId);
+			socketRef.current.emit('check-meet-link', userToCallId);
 
 			peer.on('signal', data => {
 				socketRef.current.emit('call-user', {
@@ -148,28 +165,32 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 		}
 	}
 
-	const acceptMeetRequest = async () => {
+	const acceptMeetRequest = () => {
 		try {
 			setMeetRequestAccepted(true);
 			setIsReceivingMeetRequest(false);
 
-			const user = {
+			const otherUser = {
 				data: callingOtherUserData,
 				signal: callingOtherUserSignal
 			}
 
-			setOtherUserData(user.data);
-			setOtherUserSignal(user.signal);
+			setOtherUserData(otherUser.data);
+			setOtherUserSignal(otherUser.signal);
 
 			setCallingOtherUserData({} as TUser);
 			setCallingOtherUserSignal(undefined);
 
-			const peer = new SimplePeer({ initiator: false, trickle: false, stream: userStream });
+			const peer = new SimplePeer({
+				initiator: false,
+				trickle: false,
+				stream: userStream
+			});
 
 			peer.on('signal', data => {
 				socketRef.current.emit('accept-call', {
 					from: userData,
-					to: user.data.id,
+					to: otherUser.data.id,
 					signal: data,
 					meetName
 				});
@@ -180,14 +201,14 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 			});
 
 			peerRef.current = peer;  // @ts-ignore
-			peer.signal(user.signal);
+			peer.signal(otherUser.signal);
 		} catch (error) {
-			console.log('Error: ', error);
+			toast('Could not accept meet request!', TOAST_DEFAULT_CONFIG);
 		}
 	}
 
 	const rejectMeetRequest = () => {
-		socketRef.current.emit('reject-call', { to: otherUserData.id });
+		socketRef.current.emit('reject-call', otherUserData.id);
 		clearMeetData();
 	}
 
@@ -202,30 +223,53 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 	}
 
 	const removeOtherUserFromMeet = () => {
-		socketRef.current.emit('remove-user', { userToRemove: otherUserData });
+		socketRef.current.emit('remove-from-meet', otherUserData.id);
 		clearMeetData();
 	}
 
 	const leftMeet = () => {
-		socketRef.current.emit('left-meet', { to: otherUserData.id });
+		socketRef.current.emit('left-meet', otherUserData.id);
 		if (peerRef.current) peerRef.current.destroy();
 
-		clearMeetData();
+		userVideoRef.current?.remove();
+		
+		setIsUsingVideo(false);
+		setIsUsingMicrophone(false);
 		setMeetName('');
+		clearMeetData();
 
 		router.push('/home');
 	}
 
-	const updateStreamAudio = (shouldMute: boolean) => {
-		socketRef.current.emit('handle-user-audio', { to: otherUserData.id, shouldMute });
+	const updateStreamAudio = async () => {
+		let stream = userStream;
+
+		if (!stream) {
+			stream = await getUserStream();
+			if (!stream) return;
+		}
+
+		socketRef.current.emit('update-user-audio', { to: otherUserData.id, shouldMute: isUsingMicrophone });
+		setIsUsingMicrophone(!isUsingMicrophone);
 	}
 
-	const updateStreamVideo = (shouldStop: boolean) => {
-		socketRef.current.emit('handle-user-video', { to: otherUserData.id, shouldStop });
+	const updateStreamVideo = async () => {
+		let stream = userStream;
+
+		if (!stream) {
+			stream = await getUserStream();
+			if (!stream) return;
+		}
+
+		socketRef.current.emit('update-user-video', { to: otherUserData.id, shouldStop: isUsingVideo });
+		setIsUsingVideo(!isUsingVideo);
 	}
 
 	const updateScreenSharing = async () => {
 		try {
+			const hasNoOtherUser = !otherUserSignal || isEmpty(otherUserData);
+			if (hasNoOtherUser) return toast('You can not share your screen being alone in the meet!', TOAST_DEFAULT_CONFIG);
+
 			let stream;
 
 			if (isSharingScreen) {
@@ -251,33 +295,74 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 
 			peerRef.current.replaceTrack(oldTrack, newTrack, oldStream);
 		} catch (error) {
-			console.log('Error: ', error);
+			toast('Could not share screen!', TOAST_DEFAULT_CONFIG);
 		}
 	}
 
 	useEffect(() => {
 		const handleSocketConnection = async () => {
 			try {
+				
 				await fetch('/api/socket');
 				socketRef.current = io();
 
+				// Generic events
 				socketRef.current.on('link-not-available', () => {
-					toast(t('page.meet.toast.linkNotAvailable'), TOAST_DEFAULT_CONFIG);
 					cancelMeetRequest();
+					toast(t('page.meet.toast.linkNotAvailable'), TOAST_DEFAULT_CONFIG);
 				});
 
-				socketRef.current.on('request-connection', (data: TRequestConnectionData) => {
+				socketRef.current.on('update-meet-name', (newMeetName: string) => {
+					setMeetName(newMeetName);
+					toast(t('page.meet.toast.meetNameUpdated'), TOAST_DEFAULT_CONFIG);
+				});
+
+				// Disconnections events
+				socketRef.current.on('user-left', (userDisconnectedId: string) => {
+					setDisconnectedOtherUserId(userDisconnectedId);
+				});
+
+				socketRef.current.on('removed-from-meet', () => {
+					setMeetName('');
+					clearMeetData();
+					peerRef.current.destroy();
+					
+					router.replace('/home');
+					toast(t('page.meet.toast.userRemoved'), TOAST_DEFAULT_CONFIG);
+				});
+
+				socketRef.current.on('other-user-left-meet', () => {
+					setMeetName('');
+					clearMeetData();
+					peerRef.current.destroy();
+
+					toast(t('page.meet.toast.otherUserLeft'), TOAST_DEFAULT_CONFIG);
+				});
+
+				// Meet stream events
+				socketRef.current.on('update-other-user-audio', (shouldMute: boolean) => {
+					if (otherUserVideoRef.current) {
+						otherUserVideoRef.current.muted = shouldMute;
+						setIsOtherUserMuted(shouldMute);
+					}
+				});
+
+				socketRef.current.on('update-other-user-video', (shouldStop: boolean) => {
+					setIsOtherUserVideoStopped(shouldStop);
+				});
+
+				socketRef.current.on('update-other-user-screen-sharing', (isSharing: boolean) => {
+					setIsOtherUserSharingScreen(isSharing);
+				});
+
+				// Meet initiation events
+				socketRef.current.on('request-meet-connection', (data: TRequestMeetConnectionEventData) => {
 					setIsReceivingMeetRequest(true);
 					setCallingOtherUserData(data.from);
 					setCallingOtherUserSignal(data.signal);
 				});
 
-				socketRef.current.on('other-user-already-in-meet', () => {
-					cancelMeetRequest();
-					toast('The user you called is already in a meet!', TOAST_DEFAULT_CONFIG);
-				});
-
-				socketRef.current.on('call-accepted', (data: TCallAccepted) => {
+				socketRef.current.on('call-accepted', (data: TCallAcceptedEventData) => {
 					setIsCallingUser(false);
 					setMeetRequestAccepted(true);
 					setMeetName(data.meetName);
@@ -289,52 +374,15 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				socketRef.current.on('call-rejected', () => {
 					clearMeetData();
 					peerRef.current.destroy();
+
 					toast(t('page.meet.toast.requestDeclined'), TOAST_DEFAULT_CONFIG);
 				});
 
-				socketRef.current.on('user-left', () => {
-					const isOtherUserDisconnected = !otherUserSignal || isEmpty(otherUserData);
-					if (isOtherUserDisconnected) return;
-
-					clearMeetData();
-					peerRef.current.destroy();
+				socketRef.current.on('other-user-already-in-meet', () => {
+					cancelMeetRequest();
+					toast('The user you called is already in a meet!', TOAST_DEFAULT_CONFIG);
 				});
 
-				socketRef.current.on('removed-from-meet', () => {
-					toast(t('page.meet.toast.userRemoved'), TOAST_DEFAULT_CONFIG);
-
-					setMeetName('');
-					peerRef.current.destroy();
-
-					router.push('/home');
-				});
-
-				socketRef.current.on('other-user-left-meet', () => {
-					toast(t('page.meet.toast.otherUserLeft'), TOAST_DEFAULT_CONFIG);
-					clearMeetData();
-					setMeetName('');
-					peerRef.current.destroy();
-				});
-
-				socketRef.current.on('update-meet-name', (newMeetName: string) => {
-					setMeetName(newMeetName);
-					toast(t('page.meet.toast.meetNameUpdated'), TOAST_DEFAULT_CONFIG);
-				});
-
-				socketRef.current.on('handle-other-user-audio', (shouldMute: boolean) => {
-					if (otherUserVideoRef.current) {
-						otherUserVideoRef.current.muted = shouldMute;
-						setIsOtherUserMuted(shouldMute);
-					}
-				});
-
-				socketRef.current.on('handle-other-user-video', (shouldStop: boolean) => {
-					setIsOtherUserVideoStopped(shouldStop);
-				});
-
-				socketRef.current.on('handle-other-user-screen-sharing', (isSharing: boolean) => {
-					setIsOtherUserSharingScreen(isSharing);
-				});
 			} catch (error) {
 				console.log('Could not init socket connection! ', error);
 			}
@@ -344,28 +392,42 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 
 		return () => {
 			socketRef.current.off('link-not-available');
-			socketRef.current.off('request-connection');
-			socketRef.current.off('other-user-already-in-meet');
-			socketRef.current.off('call-accepted');
-			socketRef.current.off('call-rejected');
+			socketRef.current.off('update-meet-name');
+
 			socketRef.current.off('user-left');
 			socketRef.current.off('removed-from-meet');
 			socketRef.current.off('other-user-left-meet');
-			socketRef.current.off('update-meet-name');
-			socketRef.current.off('handle-other-user-audio');
-			socketRef.current.off('handle-other-user-video');
-			socketRef.current.off('handle-other-user-screen-sharing');
+
+			socketRef.current.off('update-other-user-audio');
+			socketRef.current.off('update-other-user-video');
+			socketRef.current.off('update-other-user-screen-sharing');
+
+			socketRef.current.off('request-meet-connection');
+			socketRef.current.off('call-accepted');
+			socketRef.current.off('call-rejected');
+			socketRef.current.off('other-user-already-in-meet');
 		};
 	}, []);
 
 	useEffect(() => {
 		if (isReceivingMeetRequest) {
 			const alreadyInMeet = otherUserSignal || !isEmpty(otherUserData);
-			if (alreadyInMeet) socketRef.current.emit('already-in-meet', {
-				to: callingOtherUserData.id
-			});
+			if (alreadyInMeet) socketRef.current.emit('already-in-meet', callingOtherUserData.id);
 		}
 	}, [isReceivingMeetRequest]);
+
+	useEffect(() => {
+		if (disconnectedOtherUserId) {
+			if (disconnectedOtherUserId === otherUserData.id) {
+				clearMeetData();
+				peerRef.current.destroy();
+
+				toast('The user left the meet!', TOAST_DEFAULT_CONFIG);
+			} else {
+				setDisconnectedOtherUserId('');
+			}
+		}
+	}, [disconnectedOtherUserId]);
 
 	return (
 		<MeetContext.Provider
@@ -387,6 +449,8 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				isReceivingMeetRequest,
 				
 				isSharingScreen,
+				isUsingVideo,
+				isUsingMicrophone,
 				isOtherUserSharingScreen,
 
 				getUserStream,

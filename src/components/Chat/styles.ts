@@ -66,6 +66,12 @@ export const Chat = styled.div<{ visible: boolean; }>`
 			align-self: flex-end;
 			border-bottom-left-radius: 1rem;
 		}
+
+		&-link {
+			cursor: pointer;
+			text-decoration: underline;
+			color: ${props => props.theme.colors.primary};
+		}
 	}
 
 	.chat__footer {
