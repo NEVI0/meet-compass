@@ -1,6 +1,15 @@
 import { Server } from 'socket.io';
 
-import { TUser, TCallUserData, TAcceptCallData, TRemoveUser } from '../../utils/types';
+import {
+	TUser,
+	TAcceptCallEventData,
+	TCallUserEventData,
+	TNewMeetNameEventData,
+	TSendMessageEventData,
+	TUpdateScreenSharingEventData,
+	TUpdateUserAudioEventData,
+	TUpdateUserVideoEventData
+} from '../../utils/types';
 
 const handler = (_: any, response: any) => {
 	if (!response.socket.server.io) {
@@ -10,75 +19,76 @@ const handler = (_: any, response: any) => {
 		let users: any = {};
 		
 		io.on('connection', socket => {
-			socket.on('save-user-data', (userData: TUser) => {
-				users[socket.id] = userData;
+			
+			// Generic events
+			socket.on('save-user-data', (user: TUser) => {
+				users[socket.id] = user;
 			});
 
-			socket.on('user-to-call-exists', (id: string) => {
-				if (!users[id]) {
-					socket.emit('link-not-available');
-				}
+			socket.on('check-meet-link', (id: string) => {
+				if (!users[id]) socket.emit('link-not-available');
 			});
 
-			socket.on('disconnect', () => {
-				socket.broadcast.emit('user-left', { user: users[socket.id] });
-				delete users[socket.id];
+			socket.on('send-message', (data: TSendMessageEventData) => {
+				const { to, message } = data;
+				io.to(to).emit('received-message', message);
 			});
 
-			socket.on('remove-user', (data: TRemoveUser) => {
-				const { userToRemove } = data;
-				io.to(userToRemove.id).emit('removed-from-meet');
-			});
-
-			socket.on('call-user', (data: TCallUserData) => {
-				const { to, from, signal } = data;
-				io.to(to).emit('request-connection', { signal, from });
-			});
-
-			socket.on('already-in-meet', (data: any) => {
-				io.to(data.to).emit('other-user-already-in-meet');
-			});
-
-			socket.on('accept-call', (data: TAcceptCallData) => {
-				const { from, to, signal, meetName } = data;
-				io.to(to).emit('call-accepted', { from, signal, meetName });
-			});
-
-			socket.on('reject-call', (data: any) => {
-				const { to } = data;
-				io.to(to).emit('call-rejected');
-			});
-
-			socket.on('left-meet', (data: any) => {
-				const { to } = data;
-				io.to(to).emit('other-user-left-meet');
-			});
-
-			socket.on('meet-new-name', (data: any) => {
+			socket.on('meet-new-name', (data: TNewMeetNameEventData) => {
 				const { to, newMeetName } = data;
 				io.to(to).emit('update-meet-name', newMeetName);
 			});
 
-			socket.on('handle-user-audio', (data: any) => {
+			// Disconnections events
+			socket.on('disconnect', () => {
+				socket.broadcast.emit('user-left');
+				delete users[socket.id];
+			});
+
+			socket.on('remove-from-meet', (userToRemove: string) => {
+				io.to(userToRemove).emit('removed-from-meet');
+			});
+
+			socket.on('left-meet', (to: string) => {
+				io.to(to).emit('other-user-left-meet');
+			});
+			
+			// Meet stream events
+			socket.on('update-user-audio', (data: TUpdateUserAudioEventData) => {
 				const { to, shouldMute } = data;
-				io.to(to).emit('handle-other-user-audio', shouldMute);
+				io.to(to).emit('update-other-user-audio', shouldMute);
 			});
 
-			socket.on('handle-user-video', (data: any) => {
+			socket.on('update-user-video', (data: TUpdateUserVideoEventData) => {
 				const { to, shouldStop } = data;
-				io.to(to).emit('handle-other-user-video', shouldStop);
+				io.to(to).emit('update-other-user-video', shouldStop);
 			});
 
-			socket.on('update-screen-sharing', (data: any) => {
+			socket.on('update-screen-sharing', (data: TUpdateScreenSharingEventData) => {
 				const { to, isSharing } = data;
-				io.to(to).emit('handle-other-user-screen-sharing', isSharing);
+				io.to(to).emit('update-other-user-screen-sharing', isSharing);
 			});
 
-			socket.on('send-message', (data: any) => {
-				const { to, message } = data;
-				io.to(to).emit('get-message', message);
+			// Meet initiation events
+			socket.on('call-user', (data: TCallUserEventData) => {
+				const { to, from, signal } = data;
+				io.to(to).emit('request-meet-connection', { from, signal });
 			});
-		});		
+
+			socket.on('accept-call', (data: TAcceptCallEventData) => {
+				const { to, from, signal, meetName } = data;
+				io.to(to).emit('call-accepted', { from, signal, meetName });
+			});
+
+			socket.on('reject-call', (to: string) => {
+				io.to(to).emit('call-rejected');
+			});
+
+			socket.on('already-in-meet', (to: string) => {
+				io.to(to).emit('other-user-already-in-meet');
+			});
+
+		});
 	}
 
 	response.end();
