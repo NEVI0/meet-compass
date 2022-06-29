@@ -5,6 +5,7 @@ import { BiSend, BiX } from 'react-icons/bi';
 import { IconButton } from '..';
 import useMeetContext from '../../contexts/MeetContext';
 
+import { isLink } from '../../utils/functions';
 import * as S from './styles';
 
 const Chat: React.FC<{ visible: boolean; onClose: () => void; }> = ({ visible, onClose }) => {
@@ -18,12 +19,18 @@ const Chat: React.FC<{ visible: boolean; onClose: () => void; }> = ({ visible, o
 		const chatContent = document.getElementById('chat-content');
 		
 		if (chatContent) {
-			const p = document.createElement('p');
+			const isMessageLink = isLink(message);
+			const element = document.createElement(isMessageLink ? 'a' : 'p'); 
 
-			p.className = `chat__message chat__message-${side}`;
-			p.innerText = message;
+			if (isMessageLink) { // @ts-ignore
+				element.href = message; // @ts-ignore
+				element.target = '_blank';
+			}
 
-			chatContent.append(p);
+			element.className = `chat__message chat__message-${side} ${isMessageLink && 'chat__message-link'}`;
+			element.innerText = message;
+
+			chatContent.append(element);
 		}
 	}
 
