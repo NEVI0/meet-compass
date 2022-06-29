@@ -40,7 +40,7 @@ const Home: NextPage = () => {
 		const hadSuccess = startNewMeet(userName, userEmail, meetName);
 
 		form.setSubmitting(false);
-		if (!hadSuccess) return toast(t('page.home.toast.errorInStartingMeet'), TOAST_DEFAULT_CONFIG);
+		if (!hadSuccess) return toast(t('toastMessage.errorWhileStartingMeet'), TOAST_DEFAULT_CONFIG);
 		
 		router.push('/meet');
 	}

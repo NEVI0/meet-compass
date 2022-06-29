@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import Lottie from 'react-lottie';
 
 import type { NextPage } from 'next';
@@ -23,6 +24,7 @@ const NotFound: NextPage = () => {
 
 	const router = useRouter();
 	const breakpoint = useWindowBreakpoints();
+	const { t } = useTranslation();
 
 	useEffect(() => {
 		const timer = setTimeout(() => {
@@ -47,11 +49,11 @@ const NotFound: NextPage = () => {
 
 				<div>
 					<h1 className="notfound__title">
-						Ops... there is nothing here!
+						{ t('page.notFound.title') }
 					</h1>
 
 					<p className="notfound__message">
-						You are going to be redirect to home page in about 5 seconds.
+						{ t('page.notFound.message') }
 					</p>
 				</div>
 			</main>
