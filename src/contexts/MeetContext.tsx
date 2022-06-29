@@ -166,45 +166,41 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 	}
 
 	const acceptMeetRequest = () => {
-		try {
-			setMeetRequestAccepted(true);
-			setIsReceivingMeetRequest(false);
+		setMeetRequestAccepted(true);
+		setIsReceivingMeetRequest(false);
 
-			const otherUser = {
-				data: callingOtherUserData,
-				signal: callingOtherUserSignal
-			}
-
-			setOtherUserData(otherUser.data);
-			setOtherUserSignal(otherUser.signal);
-
-			setCallingOtherUserData({} as TUser);
-			setCallingOtherUserSignal(undefined);
-
-			const peer = new SimplePeer({
-				initiator: false,
-				trickle: false,
-				stream: userStream
-			});
-
-			peer.on('signal', data => {
-				socketRef.current.emit('accept-call', {
-					from: userData,
-					to: otherUser.data.id,
-					signal: data,
-					meetName
-				});
-			});
-
-			peer.on('stream', stream => { 
-				if (otherUserVideoRef.current) otherUserVideoRef.current.srcObject = stream;
-			});
-
-			peerRef.current = peer;  // @ts-ignore
-			peer.signal(otherUser.signal);
-		} catch (error) {
-			toast('Could not accept meet request!', TOAST_DEFAULT_CONFIG);
+		const otherUser = {
+			data: callingOtherUserData,
+			signal: callingOtherUserSignal
 		}
+
+		setOtherUserData(otherUser.data);
+		setOtherUserSignal(otherUser.signal);
+
+		setCallingOtherUserData({} as TUser);
+		setCallingOtherUserSignal(undefined);
+
+		const peer = new SimplePeer({
+			initiator: false,
+			trickle: false,
+			stream: userStream
+		});
+
+		peer.on('signal', data => {
+			socketRef.current.emit('accept-call', {
+				from: userData,
+				to: otherUser.data.id,
+				signal: data,
+				meetName
+			});
+		});
+
+		peer.on('stream', stream => { 
+			if (otherUserVideoRef.current) otherUserVideoRef.current.srcObject = stream;
+		});
+
+		peerRef.current = peer;  // @ts-ignore
+		peer.signal(otherUser.signal);
 	}
 
 	const rejectMeetRequest = () => {
