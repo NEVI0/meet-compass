@@ -52,7 +52,6 @@ const Meet: NextPage = () => {
 		isSharingScreen,
 		isUsingVideo,
 		isUsingMicrophone,
-
 		isOtherUserSharingScreen,
 
 		getUserStream,

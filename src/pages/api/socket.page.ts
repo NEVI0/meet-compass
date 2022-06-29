@@ -41,7 +41,7 @@ const handler = (_: any, response: any) => {
 
 			// Disconnections events
 			socket.on('disconnect', () => {
-				socket.broadcast.emit('user-left');
+				socket.broadcast.emit('user-left', socket.id);
 				delete users[socket.id];
 			});
 

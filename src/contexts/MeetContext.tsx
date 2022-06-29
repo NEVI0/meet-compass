@@ -31,8 +31,7 @@ interface MeetContextProps {
 	isSharingScreen: boolean;
 	isUsingVideo: boolean;
 	isUsingMicrophone: boolean;
-	
-	isOtherUserSharingScreen: boolean;
+	isOtherUserSharingScreen: boolean;	
 
 	getUserStream: () => Promise<MediaStream | undefined>;
 	startNewMeet: (userName: string, userEmail: string, meetName: string) => boolean;
@@ -79,8 +78,9 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 	const [ isSharingScreen, setIsSharingScreen ] = useState<boolean>(false);
 	const [ isUsingVideo, setIsUsingVideo ] = useState<boolean>(false);
 	const [ isUsingMicrophone, setIsUsingMicrophone ] = useState<boolean>(false);
-
 	const [ isOtherUserSharingScreen, setIsOtherUserSharingScreen ] = useState<boolean>(false);
+
+	const [ disconnectedOtherUserId, setDisconnectedOtherUserId ] = useState<string>('');
 
 	const clearMeetData = () => {
 		setOtherUserData({} as TUser);
@@ -318,12 +318,8 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				});
 
 				// Disconnections events
-				socketRef.current.on('user-left', () => {
-					const isOtherUserDisconnected = !otherUserSignal || isEmpty(otherUserData);
-					if (isOtherUserDisconnected) return;
-
-					clearMeetData();
-					peerRef.current.destroy();
+				socketRef.current.on('user-left', (userDisconnectedId: string) => {
+					setDisconnectedOtherUserId(userDisconnectedId);
 				});
 
 				socketRef.current.on('removed-from-meet', () => {
@@ -420,6 +416,19 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 		}
 	}, [isReceivingMeetRequest]);
 
+	useEffect(() => {
+		if (disconnectedOtherUserId) {
+			if (disconnectedOtherUserId === otherUserData.id) {
+				clearMeetData();
+				peerRef.current.destroy();
+
+				toast('The user left the meet!', TOAST_DEFAULT_CONFIG);
+			} else {
+				setDisconnectedOtherUserId('');
+			}
+		}
+	}, [disconnectedOtherUserId]);
+
 	return (
 		<MeetContext.Provider
 			value={{
@@ -442,7 +451,6 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				isSharingScreen,
 				isUsingVideo,
 				isUsingMicrophone,
-
 				isOtherUserSharingScreen,
 
 				getUserStream,
