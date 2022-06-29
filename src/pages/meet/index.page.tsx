@@ -50,6 +50,9 @@ const Meet: NextPage = () => {
 		isReceivingMeetRequest,
 		
 		isSharingScreen,
+		isUsingVideo,
+		isUsingMicrophone,
+
 		isOtherUserSharingScreen,
 
 		getUserStream,
@@ -65,9 +68,6 @@ const Meet: NextPage = () => {
 	const [ isChatOpen, setIsChatOpen ] = useState<boolean>(false);
 	const [ isRenameMeetModalVisible, setIsRenameMeetModalVisible ] = useState<boolean>(false);
 
-	const [ isUsingVideo, setIsUsingVideo ] = useState<boolean>(true);
-	const [ isUsingMicrophone, setIsUsingMicrophone ] = useState<boolean>(true);
-
 	const handleCopyMeetId = async () => {
 		try {
 			setIsMenuOpen(false);
@@ -76,26 +76,6 @@ const Meet: NextPage = () => {
 		} catch (error) {
 			toast('Could not copy meet ID. Please try again!', TOAST_DEFAULT_CONFIG);
 		}
-	}
-
-	const handleHangUp = async () => {
-		userVideoRef.current?.pause();
-		userVideoRef.current?.remove();
-		
-		setIsUsingVideo(false);
-		setIsUsingMicrophone(false);
-
-		leftMeet();
-	}
-
-	const handleUpdateUserAudioState = () => {
-		updateStreamAudio(!isUsingMicrophone);
-		setIsUsingMicrophone(!isUsingMicrophone);
-	}
-
-	const handleUpdateUserVideoState = () => {
-		updateStreamVideo(!isUsingVideo);
-		setIsUsingVideo(!isUsingVideo);
 	}
 
 	const handleRenameMeet = () => {
@@ -240,7 +220,7 @@ const Meet: NextPage = () => {
 				
 				<section className="footer__actions">
 					<S.ActionButton>
-						<button className="action__button" onClick={ handleUpdateUserAudioState }>
+						<button className="action__button" onClick={ updateStreamAudio }>
 							{ isUsingMicrophone ? <BiMicrophone className="action__button-icon" /> : <BiMicrophoneOff className="action__button-icon" /> }
 						</button>
 
@@ -250,7 +230,7 @@ const Meet: NextPage = () => {
 					</S.ActionButton>
 
 					<S.ActionButton>
-						<button className="action__button" onClick={ handleUpdateUserVideoState }>
+						<button className="action__button" onClick={ updateStreamVideo }>
 							{ isUsingVideo ? <BiVideo className="action__button-icon" /> : <BiVideoOff className="action__button-icon" /> }
 						</button>
 
@@ -270,7 +250,7 @@ const Meet: NextPage = () => {
 					</S.ActionButton>
 
 					<S.ActionButton>
-						<button className="action__button action__button-hangup" onClick={ handleHangUp }>
+						<button className="action__button action__button-hangup" onClick={ leftMeet }>
 							<BiPhoneOff className="action__button-icon" />
 						</button>
 

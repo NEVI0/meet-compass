@@ -29,6 +29,9 @@ interface MeetContextProps {
 	isReceivingMeetRequest: boolean;
 	
 	isSharingScreen: boolean;
+	isUsingVideo: boolean;
+	isUsingMicrophone: boolean;
+	
 	isOtherUserSharingScreen: boolean;
 
 	getUserStream: () => Promise<MediaStream | undefined>;
@@ -40,8 +43,8 @@ interface MeetContextProps {
 	renameMeet: (newMeetName: string) => void;
 	removeOtherUserFromMeet: () => void;
 	leftMeet: () => void;
-	updateStreamAudio: (shouldMute: boolean) => void;
-	updateStreamVideo: (shouldStop: boolean) => void;
+	updateStreamAudio: () => void;
+	updateStreamVideo: () => void;
 	updateScreenSharing: () => void;
 }
 
@@ -74,15 +77,23 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 	const [ isReceivingMeetRequest, setIsReceivingMeetRequest ] = useState<boolean>(false);
 	
 	const [ isSharingScreen, setIsSharingScreen ] = useState<boolean>(false);
+	const [ isUsingVideo, setIsUsingVideo ] = useState<boolean>(false);
+	const [ isUsingMicrophone, setIsUsingMicrophone ] = useState<boolean>(false);
+
 	const [ isOtherUserSharingScreen, setIsOtherUserSharingScreen ] = useState<boolean>(false);
 
 	const clearMeetData = () => {
 		setOtherUserData({} as TUser);
 		setOtherUserSignal(undefined);
 
+		setCallingOtherUserData({} as TUser);
+		setCallingOtherUserSignal(undefined);
+
 		setIsCallingUser(false);
 		setMeetRequestAccepted(false);
 		setIsReceivingMeetRequest(false);
+
+		setIsOtherUserSharingScreen(false);
 	}
 
 	const getUserStream = async () => {
@@ -91,9 +102,15 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 			if (userVideoRef.current) userVideoRef.current.srcObject = stream;
 
 			setUserStream(stream);
+			setIsUsingVideo(true);
+			setIsUsingMicrophone(true);
+
 			return stream;
 		} catch (error) {
-			console.log('Error: ', error);
+			setIsUsingVideo(false);
+			setIsUsingMicrophone(false);
+
+			toast('Please, allow the browser to get your video and audio stream!', TOAST_DEFAULT_CONFIG);
 		}
 	}
 
@@ -148,28 +165,32 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 		}
 	}
 
-	const acceptMeetRequest = async () => {
+	const acceptMeetRequest = () => {
 		try {
 			setMeetRequestAccepted(true);
 			setIsReceivingMeetRequest(false);
 
-			const user = {
+			const otherUser = {
 				data: callingOtherUserData,
 				signal: callingOtherUserSignal
 			}
 
-			setOtherUserData(user.data);
-			setOtherUserSignal(user.signal);
+			setOtherUserData(otherUser.data);
+			setOtherUserSignal(otherUser.signal);
 
 			setCallingOtherUserData({} as TUser);
 			setCallingOtherUserSignal(undefined);
 
-			const peer = new SimplePeer({ initiator: false, trickle: false, stream: userStream });
+			const peer = new SimplePeer({
+				initiator: false,
+				trickle: false,
+				stream: userStream
+			});
 
 			peer.on('signal', data => {
 				socketRef.current.emit('accept-call', {
 					from: userData,
-					to: user.data.id,
+					to: otherUser.data.id,
 					signal: data,
 					meetName
 				});
@@ -180,9 +201,9 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 			});
 
 			peerRef.current = peer;  // @ts-ignore
-			peer.signal(user.signal);
+			peer.signal(otherUser.signal);
 		} catch (error) {
-			console.log('Error: ', error);
+			toast('Could not accept meet request!', TOAST_DEFAULT_CONFIG);
 		}
 	}
 
@@ -210,24 +231,44 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 		socketRef.current.emit('left-meet', { to: otherUserData.id });
 		if (peerRef.current) peerRef.current.destroy();
 
-		clearMeetData();
+		userVideoRef.current?.remove();
+		
+		setIsUsingVideo(false);
+		setIsUsingMicrophone(false);
 		setMeetName('');
+		clearMeetData();
 
 		router.push('/home');
 	}
 
-	const updateStreamAudio = (shouldMute: boolean) => {
-		socketRef.current.emit('handle-user-audio', { to: otherUserData.id, shouldMute });
+	const updateStreamAudio = async () => {
+		let stream = userStream;
+
+		if (!stream) {
+			stream = await getUserStream();
+			if (!stream) return;
+		}
+
+		socketRef.current.emit('handle-user-audio', { to: otherUserData.id, shouldMute: isUsingMicrophone });
+		setIsUsingMicrophone(!isUsingMicrophone);
 	}
 
-	const updateStreamVideo = (shouldStop: boolean) => {
-		socketRef.current.emit('handle-user-video', { to: otherUserData.id, shouldStop });
+	const updateStreamVideo = async () => {
+		let stream = userStream;
+
+		if (!stream) {
+			stream = await getUserStream();
+			if (!stream) return;
+		}
+
+		socketRef.current.emit('handle-user-video', { to: otherUserData.id, shouldStop: isUsingVideo });
+		setIsUsingVideo(!isUsingVideo);
 	}
 
 	const updateScreenSharing = async () => {
 		try {
 			const hasNoOtherUser = !otherUserSignal || isEmpty(otherUserData);
-			if (hasNoOtherUser) return toast('You can not share your screen being alone!', TOAST_DEFAULT_CONFIG);
+			if (hasNoOtherUser) return toast('You can not share your screen being alone in the meet!', TOAST_DEFAULT_CONFIG);
 
 			let stream;
 
@@ -254,7 +295,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 
 			peerRef.current.replaceTrack(oldTrack, newTrack, oldStream);
 		} catch (error) {
-			console.log('Error: ', error);
+			toast('Could not share screen!', TOAST_DEFAULT_CONFIG);
 		}
 	}
 
@@ -390,6 +431,9 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				isReceivingMeetRequest,
 				
 				isSharingScreen,
+				isUsingVideo,
+				isUsingMicrophone,
+
 				isOtherUserSharingScreen,
 
 				getUserStream,
