@@ -3,7 +3,9 @@ import 'styled-components';
 declare module 'styled-components' {
 	export interface DefaultTheme {
 		defaults: {
+			headerHeight: string;
 			footerHeight: string;
+			fixed: number;
 		};
 		font: {
 			family: string;

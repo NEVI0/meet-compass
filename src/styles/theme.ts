@@ -2,7 +2,9 @@ import { DefaultTheme } from 'styled-components';
 
 export const theme: DefaultTheme = {
 	defaults: {
-		footerHeight: '80px'
+		headerHeight: '60px',
+		footerHeight: '80px',
+		fixed: 5
 	},
 	font: {
 		family: 'Inter, sans-serif',
