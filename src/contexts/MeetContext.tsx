@@ -93,6 +93,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 		setMeetRequestAccepted(false);
 		setIsReceivingMeetRequest(false);
 
+		setIsSharingScreen(false);
 		setIsOtherUserSharingScreen(false);
 	}
 
@@ -204,7 +205,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 	}
 
 	const rejectMeetRequest = () => {
-		socketRef.current.emit('reject-call', otherUserData.id);
+		socketRef.current.emit('reject-call', callingOtherUserData.id);
 		clearMeetData();
 	}
 
