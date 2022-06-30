@@ -10,7 +10,7 @@ export const JoinMeetModal = styled.div<{ visible: boolean; }>`
 	transition: .3s;
 	visibility: hidden;
 	opacity: 0;
-	z-index: 5;
+	z-index: ${props => props.theme.defaults.fixed};
 
 	${props => props.visible && css`
 		visibility: visible;

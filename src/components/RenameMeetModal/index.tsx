@@ -31,9 +31,9 @@ const RenameMeetModal: React.FC<{ visible: boolean; onClose: () => void; }> = ({
 		},
 		validationSchema: Yup.object().shape({
 			newMeetName: Yup.string()
-				.min(3, 'page.home.form.meetName.tooShort')
-				.max(50, 'page.home.form.meetName.tooLong')
-				.required('page.home.form.meetName.required')
+				.min(3, 'formValidations.meetName.tooShort')
+				.max(50, 'formValidations.meetName.tooLong')
+				.required('formValidations.meetName.required')
 		}),
 		onSubmit: (values) => {
 			handleRenameMeet(values);

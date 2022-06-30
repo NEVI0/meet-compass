@@ -71,9 +71,9 @@ const Meet: NextPage = () => {
 		try {
 			setIsMenuOpen(false);
 			await navigator.clipboard.writeText(`${window.origin}/home?meetId=${userData.id}`);
-			toast(t('page.meet.toast.copyId'), TOAST_DEFAULT_CONFIG);
+			toast(t('toastMessage.copiedMeetLink'), TOAST_DEFAULT_CONFIG);
 		} catch (error) {
-			toast('Could not copy meet ID. Please try again!', TOAST_DEFAULT_CONFIG);
+			toast(t('toastMessage.errorWhileCopyingMeetLink'), TOAST_DEFAULT_CONFIG);
 		}
 	}
 

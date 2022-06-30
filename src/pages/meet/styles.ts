@@ -21,7 +21,7 @@ export const MeetContainer = styled.div<TMeetContainer>`
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		height: 60px;
+		height: ${props => props.theme.defaults.headerHeight};
 		padding: 0 2rem;
 		background-color: ${props => props.theme.colors.container};
 		transition: .3s;
@@ -44,7 +44,7 @@ export const MeetContainer = styled.div<TMeetContainer>`
 		border-radius: 1rem;
 		border: 3px solid ${props => props.theme.colors.primary};
 		background-color: ${props => props.theme.colors.body};
-		z-index: 5;
+		z-index: ${props => props.theme.defaults.fixed};
 		
 		&__video {
 			width: 100%;
@@ -79,8 +79,8 @@ export const MeetContainer = styled.div<TMeetContainer>`
 
 		&__video {
 			width: auto;
-			height: calc(100vh - 60px - 80px - 4rem);
 			opacity: 1;
+			height: calc(100vh - ${props => props.theme.defaults.headerHeight} - ${props => props.theme.defaults.footerHeight} - 4rem);
 
 			${props => props.isOtherUserVideoStopped && 'opacity: 0;'};
 		}
@@ -184,10 +184,10 @@ export const MeetContainer = styled.div<TMeetContainer>`
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		height: 80px;
+		height: ${props => props.theme.defaults.footerHeight};
 		padding: 0 2rem;
 		background-color: ${props => props.theme.colors.container};
-		z-index: 5;
+		z-index: ${props => props.theme.defaults.fixed};
 		transition: .3s;
 
 		&__title {
@@ -323,6 +323,7 @@ export const ActionButton = styled.div`
 		left: 50%;
 		transform: translateX(-50%);
 		opacity: 0;
+		visibility: hidden;
 		cursor: default;
 		padding: .5rem;
 		border-radius: .5rem;
@@ -335,7 +336,10 @@ export const ActionButton = styled.div`
 		transition: .3s;
 	}
 
-	.action__button:hover:not(:focus) + .action__tooltip {
-		opacity: 1;
+	@media screen and (min-width: 768px) {
+		.action__button:hover + .action__tooltip {
+			opacity: 1;
+			visibility: visible;
+		}	
 	}
 `;

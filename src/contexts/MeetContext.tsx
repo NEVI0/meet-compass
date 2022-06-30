@@ -93,6 +93,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 		setMeetRequestAccepted(false);
 		setIsReceivingMeetRequest(false);
 
+		setIsSharingScreen(false);
 		setIsOtherUserSharingScreen(false);
 	}
 
@@ -110,7 +111,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 			setIsUsingVideo(false);
 			setIsUsingMicrophone(false);
 
-			toast('Please, allow the browser to get your video and audio stream!', TOAST_DEFAULT_CONFIG);
+			toast(t('toastMessage.allowGetVideoAndAudio'), TOAST_DEFAULT_CONFIG);
 		}
 	}
 
@@ -166,49 +167,45 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 	}
 
 	const acceptMeetRequest = () => {
-		try {
-			setMeetRequestAccepted(true);
-			setIsReceivingMeetRequest(false);
+		setMeetRequestAccepted(true);
+		setIsReceivingMeetRequest(false);
 
-			const otherUser = {
-				data: callingOtherUserData,
-				signal: callingOtherUserSignal
-			}
-
-			setOtherUserData(otherUser.data);
-			setOtherUserSignal(otherUser.signal);
-
-			setCallingOtherUserData({} as TUser);
-			setCallingOtherUserSignal(undefined);
-
-			const peer = new SimplePeer({
-				initiator: false,
-				trickle: false,
-				stream: userStream
-			});
-
-			peer.on('signal', data => {
-				socketRef.current.emit('accept-call', {
-					from: userData,
-					to: otherUser.data.id,
-					signal: data,
-					meetName
-				});
-			});
-
-			peer.on('stream', stream => { 
-				if (otherUserVideoRef.current) otherUserVideoRef.current.srcObject = stream;
-			});
-
-			peerRef.current = peer;  // @ts-ignore
-			peer.signal(otherUser.signal);
-		} catch (error) {
-			toast('Could not accept meet request!', TOAST_DEFAULT_CONFIG);
+		const otherUser = {
+			data: callingOtherUserData,
+			signal: callingOtherUserSignal
 		}
+
+		setOtherUserData(otherUser.data);
+		setOtherUserSignal(otherUser.signal);
+
+		setCallingOtherUserData({} as TUser);
+		setCallingOtherUserSignal(undefined);
+
+		const peer = new SimplePeer({
+			initiator: false,
+			trickle: false,
+			stream: userStream
+		});
+
+		peer.on('signal', data => {
+			socketRef.current.emit('accept-call', {
+				from: userData,
+				to: otherUser.data.id,
+				signal: data,
+				meetName
+			});
+		});
+
+		peer.on('stream', stream => { 
+			if (otherUserVideoRef.current) otherUserVideoRef.current.srcObject = stream;
+		});
+
+		peerRef.current = peer;  // @ts-ignore
+		peer.signal(otherUser.signal);
 	}
 
 	const rejectMeetRequest = () => {
-		socketRef.current.emit('reject-call', otherUserData.id);
+		socketRef.current.emit('reject-call', callingOtherUserData.id);
 		clearMeetData();
 	}
 
@@ -228,14 +225,22 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 	}
 
 	const leftMeet = () => {
+		const clearUserData = () => {
+			setUserData({} as TUser);
+			setUserStream(undefined);
+
+			setIsUsingVideo(false);
+			setIsUsingMicrophone(false);
+
+			setMeetName('');
+		}
+		
 		socketRef.current.emit('left-meet', otherUserData.id);
 		if (peerRef.current) peerRef.current.destroy();
 
 		userVideoRef.current?.remove();
 		
-		setIsUsingVideo(false);
-		setIsUsingMicrophone(false);
-		setMeetName('');
+		clearUserData();
 		clearMeetData();
 
 		router.push('/home');
@@ -268,7 +273,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 	const updateScreenSharing = async () => {
 		try {
 			const hasNoOtherUser = !otherUserSignal || isEmpty(otherUserData);
-			if (hasNoOtherUser) return toast('You can not share your screen being alone in the meet!', TOAST_DEFAULT_CONFIG);
+			if (hasNoOtherUser) return toast(t('toastMessage.canNotshareScreen'), TOAST_DEFAULT_CONFIG);
 
 			let stream;
 
@@ -295,7 +300,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 
 			peerRef.current.replaceTrack(oldTrack, newTrack, oldStream);
 		} catch (error) {
-			toast('Could not share screen!', TOAST_DEFAULT_CONFIG);
+			toast(t('toastMessage.sharingScreenError'), TOAST_DEFAULT_CONFIG);
 		}
 	}
 
@@ -309,12 +314,13 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				// Generic events
 				socketRef.current.on('link-not-available', () => {
 					cancelMeetRequest();
-					toast(t('page.meet.toast.linkNotAvailable'), TOAST_DEFAULT_CONFIG);
+					router.replace('/home');
+					toast(t('toastMessage.linkNotAvailable'), TOAST_DEFAULT_CONFIG);
 				});
 
 				socketRef.current.on('update-meet-name', (newMeetName: string) => {
 					setMeetName(newMeetName);
-					toast(t('page.meet.toast.meetNameUpdated'), TOAST_DEFAULT_CONFIG);
+					toast(t('toastMessage.meetNameUpdated'), TOAST_DEFAULT_CONFIG);
 				});
 
 				// Disconnections events
@@ -328,7 +334,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 					peerRef.current.destroy();
 					
 					router.replace('/home');
-					toast(t('page.meet.toast.userRemoved'), TOAST_DEFAULT_CONFIG);
+					toast(t('toastMessage.userRemovedFromMeet'), TOAST_DEFAULT_CONFIG);
 				});
 
 				socketRef.current.on('other-user-left-meet', () => {
@@ -336,7 +342,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 					clearMeetData();
 					peerRef.current.destroy();
 
-					toast(t('page.meet.toast.otherUserLeft'), TOAST_DEFAULT_CONFIG);
+					toast(t('toastMessage.otherUserLeftMeet'), TOAST_DEFAULT_CONFIG);
 				});
 
 				// Meet stream events
@@ -375,12 +381,12 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 					clearMeetData();
 					peerRef.current.destroy();
 
-					toast(t('page.meet.toast.requestDeclined'), TOAST_DEFAULT_CONFIG);
+					toast(t('toastMessage.requestDeclined'), TOAST_DEFAULT_CONFIG);
 				});
 
 				socketRef.current.on('other-user-already-in-meet', () => {
 					cancelMeetRequest();
-					toast('The user you called is already in a meet!', TOAST_DEFAULT_CONFIG);
+					toast(t('toastMessage.otherUserInMeet'), TOAST_DEFAULT_CONFIG);
 				});
 
 			} catch (error) {
@@ -422,7 +428,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				clearMeetData();
 				peerRef.current.destroy();
 
-				toast('The user left the meet!', TOAST_DEFAULT_CONFIG);
+				toast(t('toastMessage.otherUserLeftMeet'), TOAST_DEFAULT_CONFIG);
 			} else {
 				setDisconnectedOtherUserId('');
 			}

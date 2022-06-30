@@ -2,14 +2,14 @@ import * as Yup from 'yup';
 
 export const formValidations = Yup.object().shape({
 	userName: Yup.string()
-	  .min(3, 'page.home.form.userName.tooShort')
-	  .max(50, 'page.home.form.userName.tooLong')
-	  .required('page.home.form.userName.required'),
+	  .min(3, 'formValidations.userName.tooShort')
+	  .max(50, 'formValidations.userName.tooLong')
+	  .required('formValidations.userName.required'),
 	userEmail: Yup.string()
-		.email('page.home.form.userEmail.invalid')
-		.required('page.home.form.userEmail.required'),
+		.email('formValidations.userEmail.invalid')
+		.required('formValidations.userEmail.required'),
 	meetName: Yup.string()
-		.min(3, 'page.home.form.meetName.tooShort')
-		.max(50, 'page.home.form.meetName.tooLong')
-		.required('page.home.form.meetName.required'),
+		.min(3, 'formValidations.meetName.tooShort')
+		.max(50, 'formValidations.meetName.tooLong')
+		.required('formValidations.meetName.required'),
 });

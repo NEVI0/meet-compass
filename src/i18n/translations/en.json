@@ -2,44 +2,14 @@
 	"page": {
 		"home": {
 			"title": "Welcome to Meet Compass",
-			"subtitle": "Fusce ultricies diam ut lectus scelerisque, non blandit velit accumsan.",
+			"subtitle": "More security on calls with your friends.",
 			"button": "Start new meet",
 			"or": "or",
 			"joinMeet": "Just enter in a friend meet ",
-			"joinMeetLink": "clicking here!",
-			"toast": {
-				"errorInStartingMeet": "Could not start your meet, please try again!"
-			},
-			"form": {
-				"userName": {
-					"tooShort": "Your name is too short!",
-					"tooLong": "Your name is too long!",
-					"required": "You need to provide your name!"
-				},
-				"userEmail": {
-					"invalid": "The e-mail provided is invalid!",
-					"required": "You need to provide your e-mail!"
-				},
-				"meetName": {
-					"tooShort": "The meet name is too short!",
-					"tooLong": "The meet name is too long!",
-					"required": "You need to provide the meet name!"
-				},
-				"meetId": {
-					"required": "You need to provide the meet ID!"
-				}
-			}
+			"joinMeetLink": "clicking here!"
 		},
 		"meet": {
 			"title": "Metting",
-			"toast": {
-				"copyId": "Meet link copied to your clipboard!",
-				"userRemoved": "You have been removed from the meet!",
-				"requestDeclined": "Your meet request have been declined!",
-				"otherUserLeft": "The user left the meet!",
-				"meetNameUpdated": "The meet name have been changed!",
-				"linkNotAvailable": "Link not available!"
-			},
 			"calling": {
 				"title"	: "Calling {{ user }}...",
 				"message": "the calling request.",
@@ -47,7 +17,7 @@
 			},
 			"empty": {
 				"title": "There is nobody here!",
-				"message": "Try to invite a friend of you to have a meet ",
+				"message": "Try to invite your friend ",
 				"messageLink": "clicking here."
 			},
 			"tooltip": {
@@ -56,12 +26,12 @@
 					"disable": "Disable microphone"
 				},
 				"video": {
-					"enable": "Enable your video",
-					"disable": "Disable your video"
+					"enable": "Enable video",
+					"disable": "Disable video"
 				},
 				"shareScreen": {
-					"start": "Start sharing your screen",
-					"stop": "Stop sharing your screen"
+					"start": "Start sharing screen",
+					"stop": "Stop sharing screen"
 				},
 				"left": "Left meeting"
 			},
@@ -72,9 +42,13 @@
 				"editName": "Edit meet name",
 				"copyId": "Copy meet link",
 				"openChat": "Open chat",
-				"sendEmail": "Send email to {{ user }}",
+				"sendEmail": "Send e-mail to {{ user }}",
 				"removeUser": "Remove {{ user }} from meet"
 			}		
+		},
+		"notFound": {
+			"title": "Ops... there is nothing here!",
+			"message": "You are going to be redirect to home page in about 5 seconds."
 		}
 	},
 	"joinMeetModal": {
@@ -97,5 +71,38 @@
 		"meetId": "Meet ID",
 		"newMeetName": "New meet name",
 		"sendMessage": "Type your message"
+	},
+	"formValidations": {
+		"userName": {
+			"tooShort": "Your name is too short!",
+			"tooLong": "Your name is too long!",
+			"required": "You need to provide your name!"
+		},
+		"userEmail": {
+			"invalid": "The e-mail provided is invalid!",
+			"required": "You need to provide your e-mail!"
+		},
+		"meetName": {
+			"tooShort": "The meet name is too short!",
+			"tooLong": "The meet name is too long!",
+			"required": "You need to provide the meet name!"
+		},
+		"meetId": {
+			"required": "You need to provide the meet ID!"
+		}
+	},
+	"toastMessage": {
+		"errorWhileStartingMeet": "Could not start your meet!",
+		"copiedMeetLink": "Meet link copied to your clipboard!",
+		"errorWhileCopyingMeetLink": "Could not copy meet link. Please try again!",
+		"userRemovedFromMeet": "You have been removed from the meet!",
+		"requestDeclined": "Your meet request have been declined!",
+		"otherUserLeftMeet": "The other user left the meet!",
+		"meetNameUpdated": "The meet name have been changed!",
+		"linkNotAvailable": "Link not available!",
+		"allowGetVideoAndAudio": "Please, allow the browser to get your video and audio!",
+		"canNotshareScreen": "You can not share your screen being alone in the meet!",
+		"sharingScreenError": "Could not start sharing screen!",
+		"otherUserInMeet": "The user you called is already in a meet!"
 	}
 }
