@@ -397,21 +397,23 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 		handleSocketConnection();
 
 		return () => {
-			socketRef.current.off('link-not-available');
-			socketRef.current.off('update-meet-name');
+			if (socketRef.current) {
+				socketRef.current.off('link-not-available');
+				socketRef.current.off('update-meet-name');
 
-			socketRef.current.off('user-left');
-			socketRef.current.off('removed-from-meet');
-			socketRef.current.off('other-user-left-meet');
+				socketRef.current.off('user-left');
+				socketRef.current.off('removed-from-meet');
+				socketRef.current.off('other-user-left-meet');
 
-			socketRef.current.off('update-other-user-audio');
-			socketRef.current.off('update-other-user-video');
-			socketRef.current.off('update-other-user-screen-sharing');
+				socketRef.current.off('update-other-user-audio');
+				socketRef.current.off('update-other-user-video');
+				socketRef.current.off('update-other-user-screen-sharing');
 
-			socketRef.current.off('request-meet-connection');
-			socketRef.current.off('call-accepted');
-			socketRef.current.off('call-rejected');
-			socketRef.current.off('other-user-already-in-meet');
+				socketRef.current.off('request-meet-connection');
+				socketRef.current.off('call-accepted');
+				socketRef.current.off('call-rejected');
+				socketRef.current.off('other-user-already-in-meet');
+			}
 		};
 	}, []);
 
