@@ -115,6 +115,15 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 		}
 	}
 
+	const checkUserStream = async () => {
+		let stream = userStream;
+
+		if (!stream) {
+			stream = await getUserStream();
+			if (!stream) return;
+		}
+	}
+
 	const startNewMeet = (userName: string, userEmail: string, meet: string) => {
 		try {
 			const user = { id: socketRef.current.id, name: userName, email: userEmail };
@@ -247,24 +256,14 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 	}
 
 	const updateStreamAudio = async () => {
-		let stream = userStream;
-
-		if (!stream) {
-			stream = await getUserStream();
-			if (!stream) return;
-		}
+		await checkUserStream();
 
 		socketRef.current.emit('update-user-audio', { to: otherUserData.id, shouldMute: isUsingMicrophone });
 		setIsUsingMicrophone(!isUsingMicrophone);
 	}
 
 	const updateStreamVideo = async () => {
-		let stream = userStream;
-
-		if (!stream) {
-			stream = await getUserStream();
-			if (!stream) return;
-		}
+		await checkUserStream();
 
 		socketRef.current.emit('update-user-video', { to: otherUserData.id, shouldStop: isUsingVideo });
 		setIsUsingVideo(!isUsingVideo);
@@ -275,6 +274,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 			const hasNoOtherUser = !otherUserSignal || isEmpty(otherUserData);
 			if (hasNoOtherUser) return toast(t('toastMessage.canNotshareScreen'), TOAST_DEFAULT_CONFIG);
 
+			await checkUserStream();
 			let stream;
 
 			if (isSharingScreen) {
