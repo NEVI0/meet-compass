@@ -314,6 +314,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				// Generic events
 				socketRef.current.on('link-not-available', () => {
 					cancelMeetRequest();
+					router.replace('/home');
 					toast(t('toastMessage.linkNotAvailable'), TOAST_DEFAULT_CONFIG);
 				});
 
