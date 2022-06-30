@@ -225,14 +225,22 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 	}
 
 	const leftMeet = () => {
+		const clearUserData = () => {
+			setUserData({} as TUser);
+			setUserStream(undefined);
+
+			setIsUsingVideo(false);
+			setIsUsingMicrophone(false);
+
+			setMeetName('');
+		}
+		
 		socketRef.current.emit('left-meet', otherUserData.id);
 		if (peerRef.current) peerRef.current.destroy();
 
 		userVideoRef.current?.remove();
 		
-		setIsUsingVideo(false);
-		setIsUsingMicrophone(false);
-		setMeetName('');
+		clearUserData();
 		clearMeetData();
 
 		router.push('/home');
