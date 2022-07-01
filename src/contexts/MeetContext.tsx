@@ -438,7 +438,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 	}, [disconnectedOtherUserId]);
 
 	useEffect(() => {
-		if (peerRef.current) console.log('Peer: ', peerRef.current);
+		console.log('Peer: ', peerRef.current);
 	}, [peerRef]);
 
 	return (
