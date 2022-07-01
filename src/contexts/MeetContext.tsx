@@ -243,16 +243,19 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 
 			setMeetName('');
 		}
-		
+
 		socketRef.current.emit('left-meet', otherUserData.id);
 		if (peerRef.current) peerRef.current.destroy();
 
 		userVideoRef.current?.remove();
+
+		const tracks = userStream?.getTracks();
+		tracks?.forEach(track => track.stop());
 		
 		clearUserData();
 		clearMeetData();
 
-		router.push('/home');
+		router.replace('/home');
 	}
 
 	const updateStreamAudio = async () => {
@@ -296,6 +299,8 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 			newTrack.onended = () => {
 				const [ userTrack ] = userStream?.getVideoTracks()!;
 				peerRef.current.replaceTrack(oldTrack, userTrack, oldStream);
+
+				setIsSharingScreen(false);
 			}
 
 			peerRef.current.replaceTrack(oldTrack, newTrack, oldStream);
@@ -314,6 +319,10 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				// Generic events
 				socketRef.current.on('link-not-available', () => {
 					cancelMeetRequest();
+
+					const tracks = userStream?.getTracks();
+					tracks?.forEach(track => track.stop());
+
 					router.replace('/home');
 					toast(t('toastMessage.linkNotAvailable'), TOAST_DEFAULT_CONFIG);
 				});
@@ -331,6 +340,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				socketRef.current.on('removed-from-meet', () => {
 					setMeetName('');
 					clearMeetData();
+
 					peerRef.current.destroy();
 					
 					router.replace('/home');

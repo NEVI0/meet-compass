@@ -4,14 +4,22 @@ import { theme } from '../styles/theme';
 export const PEER_CONFIGS = {		  
 	iceServers: [
 		{
-			urls: 'stun:numb.viagenie.ca',
-			username: 'sultan1640@gmail.com',
-			credential: '98376683'
+			urls: 'stun:openrelay.metered.ca:80',
 		},
 		{
-			urls: 'turn:numb.viagenie.ca',
-			username: 'sultan1640@gmail.com',
-			credential: '98376683'
+			urls: 'turn:openrelay.metered.ca:80',
+			username: 'openrelayproject',
+			credential: 'openrelayproject',
+		},
+		{
+			urls: 'turn:openrelay.metered.ca:443',
+			username: 'openrelayproject',
+			credential: 'openrelayproject',
+		},
+		{
+			urls: 'turn:openrelay.metered.ca:443?transport=tcp',
+			username: 'openrelayproject',
+			credential: 'openrelayproject',
 		}
 	]
 }

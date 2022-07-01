@@ -88,7 +88,7 @@ const Meet: NextPage = () => {
 	}
 
 	useEffect(() => {
-		if (isEmpty(userData)) router.push('/home');
+		if (isEmpty(userData)) router.replace('/home');
 		getUserStream();
 	}, []);
 
