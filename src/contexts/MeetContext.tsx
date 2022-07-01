@@ -115,6 +115,15 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 		}
 	}
 
+	const checkUserStream = async () => {
+		let stream = userStream;
+
+		if (!stream) {
+			stream = await getUserStream();
+			if (!stream) return;
+		}
+	}
+
 	const startNewMeet = (userName: string, userEmail: string, meet: string) => {
 		try {
 			const user = { id: socketRef.current.id, name: userName, email: userEmail };
@@ -247,24 +256,14 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 	}
 
 	const updateStreamAudio = async () => {
-		let stream = userStream;
-
-		if (!stream) {
-			stream = await getUserStream();
-			if (!stream) return;
-		}
+		await checkUserStream();
 
 		socketRef.current.emit('update-user-audio', { to: otherUserData.id, shouldMute: isUsingMicrophone });
 		setIsUsingMicrophone(!isUsingMicrophone);
 	}
 
 	const updateStreamVideo = async () => {
-		let stream = userStream;
-
-		if (!stream) {
-			stream = await getUserStream();
-			if (!stream) return;
-		}
+		await checkUserStream();
 
 		socketRef.current.emit('update-user-video', { to: otherUserData.id, shouldStop: isUsingVideo });
 		setIsUsingVideo(!isUsingVideo);
@@ -275,6 +274,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 			const hasNoOtherUser = !otherUserSignal || isEmpty(otherUserData);
 			if (hasNoOtherUser) return toast(t('toastMessage.canNotshareScreen'), TOAST_DEFAULT_CONFIG);
 
+			await checkUserStream();
 			let stream;
 
 			if (isSharingScreen) {
@@ -397,21 +397,23 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 		handleSocketConnection();
 
 		return () => {
-			socketRef.current.off('link-not-available');
-			socketRef.current.off('update-meet-name');
+			if (socketRef.current) {
+				socketRef.current.off('link-not-available');
+				socketRef.current.off('update-meet-name');
 
-			socketRef.current.off('user-left');
-			socketRef.current.off('removed-from-meet');
-			socketRef.current.off('other-user-left-meet');
+				socketRef.current.off('user-left');
+				socketRef.current.off('removed-from-meet');
+				socketRef.current.off('other-user-left-meet');
 
-			socketRef.current.off('update-other-user-audio');
-			socketRef.current.off('update-other-user-video');
-			socketRef.current.off('update-other-user-screen-sharing');
+				socketRef.current.off('update-other-user-audio');
+				socketRef.current.off('update-other-user-video');
+				socketRef.current.off('update-other-user-screen-sharing');
 
-			socketRef.current.off('request-meet-connection');
-			socketRef.current.off('call-accepted');
-			socketRef.current.off('call-rejected');
-			socketRef.current.off('other-user-already-in-meet');
+				socketRef.current.off('request-meet-connection');
+				socketRef.current.off('call-accepted');
+				socketRef.current.off('call-rejected');
+				socketRef.current.off('other-user-already-in-meet');
+			}
 		};
 	}, []);
 
@@ -434,6 +436,10 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 			}
 		}
 	}, [disconnectedOtherUserId]);
+
+	useEffect(() => {
+		if (peerRef.current) console.log('Peer: ', peerRef.current);
+	}, [peerRef]);
 
 	return (
 		<MeetContext.Provider

@@ -48,7 +48,7 @@ const Chat: React.FC<{ visible: boolean; onClose: () => void; }> = ({ visible, o
 		});
 
 		return () => {
-			socketRef.current.off('received-message');
+			if (socketRef.current) socketRef.current.off('received-message');
 		}
 	}, []);
 

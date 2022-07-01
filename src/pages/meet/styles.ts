@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { transparentize, darken } from 'polished';
 
 type TMeetContainer = {
@@ -45,6 +45,9 @@ export const MeetContainer = styled.div<TMeetContainer>`
 		border: 3px solid ${props => props.theme.colors.primary};
 		background-color: ${props => props.theme.colors.body};
 		z-index: ${props => props.theme.defaults.fixed};
+		opacity: 0;
+		visibility: hidden;
+		transition: .3s;
 		
 		&__video {
 			width: 100%;
@@ -52,7 +55,10 @@ export const MeetContainer = styled.div<TMeetContainer>`
 			object-fit: cover;
 		}
 
-		${props => !props.isUsingVideo && 'transition: .3s ease all; opacity: 0'};
+		${props => props.isUsingVideo && css`
+			opacity: 1;
+			visibility: visible;
+		`};
 	}
 
 	.meet {
