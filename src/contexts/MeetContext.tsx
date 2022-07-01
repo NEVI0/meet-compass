@@ -299,6 +299,8 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 			newTrack.onended = () => {
 				const [ userTrack ] = userStream?.getVideoTracks()!;
 				peerRef.current.replaceTrack(oldTrack, userTrack, oldStream);
+
+				setIsSharingScreen(false);
 			}
 
 			peerRef.current.replaceTrack(oldTrack, newTrack, oldStream);
@@ -338,9 +340,6 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				socketRef.current.on('removed-from-meet', () => {
 					setMeetName('');
 					clearMeetData();
-
-					const tracks = userStream?.getTracks();
-					tracks?.forEach(track => track.stop());
 
 					peerRef.current.destroy();
 					
