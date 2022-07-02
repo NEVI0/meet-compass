@@ -274,8 +274,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 
 	const updateScreenSharing = async () => {
 		try {
-			const hasNoOtherUser = !otherUserSignal || isEmpty(otherUserData);
-			if (hasNoOtherUser) return toast(t('toastMessage.canNotshareScreen'), TOAST_DEFAULT_CONFIG);
+			if (isEmpty(otherUserData)) return toast(t('toastMessage.canNotshareScreen'), TOAST_DEFAULT_CONFIG);
 
 			await checkUserStream();
 			let stream;
@@ -446,8 +445,6 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 			}
 		}
 	}, [disconnectedOtherUserId]);
-
-	console.log('Peer: ', peerRef.current);
 
 	return (
 		<MeetContext.Provider

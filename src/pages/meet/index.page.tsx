@@ -299,7 +299,7 @@ const Meet: NextPage = () => {
 							</p>
 						</S.MenuItem>
 						
-						<S.MenuItem href={`mailto:${otherUserData.email}`}>
+						<S.MenuItem href={`mailto:${otherUserData.email}`} target="_blank">
 							<BiEnvelope className="menuitem__icon" />
 
 							<p className="menuitem__description">
