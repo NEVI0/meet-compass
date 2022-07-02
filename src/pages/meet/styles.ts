@@ -123,7 +123,7 @@ export const MeetContainer = styled.div<TMeetContainer>`
 			align-items: center;
 			justify-content: center;
 			position: absolute;
-			bottom: 1rem;
+			top: 1rem;
 			right: 1rem;
 			padding: .5rem;
 			column-gap: .5rem;
