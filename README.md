@@ -35,6 +35,8 @@ Features:
 - Remove user from meet
 - Select language
 
+<img src="public/assets/images/meet-compass-post.png" alt="Post">
+
 ## :electric_plug: How it works
 
 You just need to open the site to be able to create a meet or connect to other user meet. This happens because when the sites starts it is opened a web socket connection.
