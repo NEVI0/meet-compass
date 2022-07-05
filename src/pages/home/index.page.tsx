@@ -28,7 +28,7 @@ const Home: NextPage = () => {
 
 	const router = useRouter();
 	const { t } = useTranslation();
-	const { userStream, isCallingUser, startNewMeet, clearUserStream } = useMeetContext();
+	const { userStream, startNewMeet, clearUserStream } = useMeetContext();
 	
 	const [ defaultMeetId, setDefaultMeetId ] = useState<string>('');
 	const [ isJoinMeetModalVisible, setIsJoinMeetModalVisible ] = useState<boolean>(false);
@@ -58,20 +58,18 @@ const Home: NextPage = () => {
 	});
 
 	useEffect(() => {
-		if (userStream && !isCallingUser) {
-			const tracks = userStream.getTracks();
-			tracks.forEach(track => track.stop());
-
-			clearUserStream();
-		}
-	}, [userStream]);
-
-	useEffect(() => {
-		const { meetId } = router.query;
+		const { meetId, stopStream } = router.query;
 
 		if (meetId) {
 			setIsJoinMeetModalVisible(true); // @ts-ignore
 			setDefaultMeetId(meetId);
+		}
+
+		if (stopStream) {
+			const tracks = userStream?.getTracks();
+			tracks?.forEach(track => track.stop());
+
+			clearUserStream();
 		}
 	}, [router.query]);
 

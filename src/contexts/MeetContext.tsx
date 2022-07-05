@@ -106,8 +106,6 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 
 	const getUserStream = async () => {
 		try {
-			if (userStream) return;
-
 			const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true }); 
 			if (userVideoRef.current) userVideoRef.current.srcObject = stream;
 
@@ -261,7 +259,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 		clearUserData();
 		clearMeetData();
 
-		router.replace('/home');
+		router.replace('/home?stopStream=true');
 	}
 
 	const updateStreamAudio = async () => {
@@ -332,7 +330,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 					const tracks = userStream?.getTracks();
 					tracks?.forEach(track => track.stop());
 
-					router.replace('/home');
+					router.replace('/home?stopStream=true');
 					toast(t('toastMessage.linkNotAvailable'), TOAST_DEFAULT_CONFIG);
 				});
 
@@ -352,7 +350,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 
 					peerRef.current.destroy();
 					
-					router.replace('/home');
+					router.replace('/home?stopStream=true');
 					toast(t('toastMessage.userRemovedFromMeet'), TOAST_DEFAULT_CONFIG);
 				});
 
