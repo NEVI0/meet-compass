@@ -5,7 +5,7 @@ import { BiSend, BiX } from 'react-icons/bi';
 import { IconButton } from '..';
 import useMeetContext from '../../contexts/MeetContext';
 
-import { isLink } from '../../utils/functions';
+import { isEmpty, isLink } from '../../utils/functions';
 import * as S from './styles';
 
 const Chat: React.FC<{ visible: boolean; onClose: () => void; }> = ({ visible, onClose }) => {
@@ -51,6 +51,20 @@ const Chat: React.FC<{ visible: boolean; onClose: () => void; }> = ({ visible, o
 			if (socketRef.current) socketRef.current.off('received-message');
 		}
 	}, []);
+
+	useEffect(() => {
+		if (isEmpty(otherUserData)) {
+			const chatContent = document.getElementById('chat-content');
+			if (!chatContent) return;
+
+			let child = chatContent.lastElementChild;
+
+			while (child) {
+				chatContent.removeChild(child);
+				child = chatContent.lastElementChild;
+			}
+		}
+	}, [otherUserData]);
 
 	return (
 		<S.Chat visible={ visible }>
