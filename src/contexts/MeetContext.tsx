@@ -47,6 +47,7 @@ interface MeetContextProps {
 	updateStreamAudio: () => void;
 	updateStreamVideo: () => void;
 	updateScreenSharing: () => void;
+	clearUserStream: () => void;
 }
 
 const MeetContext: React.Context<MeetContextProps> = createContext({} as MeetContextProps);
@@ -99,8 +100,14 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 		setIsOtherUserSharingScreen(false);
 	}
 
+	const clearUserStream = () => {
+		setUserStream(undefined);
+	}
+
 	const getUserStream = async () => {
 		try {
+			if (userStream) return;
+
 			const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true }); 
 			if (userVideoRef.current) userVideoRef.current.srcObject = stream;
 
@@ -486,7 +493,8 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				leftMeet,
 				updateStreamAudio,
 				updateStreamVideo,
-				updateScreenSharing
+				updateScreenSharing,
+				clearUserStream
 			}}
 		>
 			{ children }
