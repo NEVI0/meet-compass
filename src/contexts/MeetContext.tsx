@@ -24,6 +24,8 @@ interface MeetContextProps {
 	isOtherUserMuted: boolean;
 	isOtherUserVideoStopped: boolean;
 
+	userStream?: MediaStream;
+
 	isCallingUser: boolean;
 	meetRequestAccepted: boolean;
 	isReceivingMeetRequest: boolean;
@@ -45,6 +47,7 @@ interface MeetContextProps {
 	updateStreamAudio: () => void;
 	updateStreamVideo: () => void;
 	updateScreenSharing: () => void;
+	clearUserStream: () => void;
 }
 
 const MeetContext: React.Context<MeetContextProps> = createContext({} as MeetContextProps);
@@ -97,8 +100,14 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 		setIsOtherUserSharingScreen(false);
 	}
 
+	const clearUserStream = () => {
+		setUserStream(undefined);
+	}
+
 	const getUserStream = async () => {
 		try {
+			if (userStream) return userStream;
+
 			const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true }); 
 			if (userVideoRef.current) userVideoRef.current.srcObject = stream;
 
@@ -120,8 +129,10 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 
 		if (!stream) {
 			stream = await getUserStream();
-			if (!stream) return;
+			if (!stream) return true;
 		}
+
+		return false;
 	}
 
 	const startNewMeet = (userName: string, userEmail: string, meet: string) => {
@@ -236,7 +247,6 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 	const leftMeet = () => {
 		const clearUserData = () => {
 			setUserData({} as TUser);
-			setUserStream(undefined);
 
 			setIsUsingVideo(false);
 			setIsUsingMicrophone(false);
@@ -246,27 +256,25 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 
 		socketRef.current.emit('left-meet', otherUserData.id);
 		if (peerRef.current) peerRef.current.destroy();
-
 		userVideoRef.current?.remove();
-
-		const tracks = userStream?.getTracks();
-		tracks?.forEach(track => track.stop());
 		
 		clearUserData();
 		clearMeetData();
 
-		router.replace('/home');
+		router.replace('/home?stopStream=true');
 	}
 
 	const updateStreamAudio = async () => {
-		await checkUserStream();
+		const hasNoStream = await checkUserStream();
+		if (hasNoStream) return;
 
 		socketRef.current.emit('update-user-audio', { to: otherUserData.id, shouldMute: isUsingMicrophone });
 		setIsUsingMicrophone(!isUsingMicrophone);
 	}
 
 	const updateStreamVideo = async () => {
-		await checkUserStream();
+		const hasNoStream = await checkUserStream();
+		if (hasNoStream) return;
 
 		socketRef.current.emit('update-user-video', { to: otherUserData.id, shouldStop: isUsingVideo });
 		setIsUsingVideo(!isUsingVideo);
@@ -276,7 +284,9 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 		try {
 			if (isEmpty(otherUserData)) return toast(t('toastMessage.canNotshareScreen'), TOAST_DEFAULT_CONFIG);
 
-			await checkUserStream();
+			const hasNoStream = await checkUserStream();
+			if (hasNoStream) return;
+			
 			let stream;
 
 			if (isSharingScreen) {
@@ -322,7 +332,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 					const tracks = userStream?.getTracks();
 					tracks?.forEach(track => track.stop());
 
-					router.replace('/home');
+					router.replace('/home?stopStream=true');
 					toast(t('toastMessage.linkNotAvailable'), TOAST_DEFAULT_CONFIG);
 				});
 
@@ -342,7 +352,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 
 					peerRef.current.destroy();
 					
-					router.replace('/home');
+					router.replace('/home?stopStream=true');
 					toast(t('toastMessage.userRemovedFromMeet'), TOAST_DEFAULT_CONFIG);
 				});
 
@@ -461,6 +471,8 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				isOtherUserMuted,
 				isOtherUserVideoStopped,
 
+				userStream,
+
 				isCallingUser,
 				meetRequestAccepted,
 				isReceivingMeetRequest,
@@ -481,7 +493,8 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				leftMeet,
 				updateStreamAudio,
 				updateStreamVideo,
-				updateScreenSharing
+				updateScreenSharing,
+				clearUserStream
 			}}
 		>
 			{ children }
