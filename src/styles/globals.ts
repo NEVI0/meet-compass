@@ -80,6 +80,19 @@ export const GlobalStyles = createGlobalStyle`
 	input[type=number] {
 		-moz-appearance: textfield;
 	}
+
+	::-webkit-scrollbar {
+		width: 5px;
+	}
+	::-webkit-scrollbar-track {
+		background: transparent;
+	}
+	::-webkit-scrollbar-thumb {
+		background: #555;
+	}
+	::-webkit-scrollbar-thumb:hover {
+		background: #2d2d2d;
+	}
 `;
 
 /*
