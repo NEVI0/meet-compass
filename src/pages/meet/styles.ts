@@ -34,7 +34,7 @@ export const MeetContainer = styled.div<TMeetContainer>`
 	.user {
 		position: fixed;
 		right: 1rem;
-		bottom: calc(80px + 1rem);
+		bottom: calc(${props => props.theme.defaults.footerHeight} + 1rem);
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -244,7 +244,7 @@ export const MeetContainer = styled.div<TMeetContainer>`
 
 			&__video {
 				width: auto;
-				height: calc(100vh - 80px - 4rem);
+				height: calc(100vh - ${props => props.theme.defaults.footerHeight} - 4rem);
 			}
 		}
 
