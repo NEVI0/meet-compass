@@ -2,6 +2,10 @@
   "name": "video-compass",
   "version": "0.1.0",
   "private": true,
+  "author": "Névio Costa Magagnin",
+  "description": "Video chat application with WebRTC",
+  "repository": "https://github.com/NEVI0/meet-compass",
+  "homepage": "https://meet-compass.herokuapp.com/home",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
