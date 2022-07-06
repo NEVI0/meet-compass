@@ -106,9 +106,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 
 	const getUserStream = async () => {
 		try {
-			if (userStream) return userStream;
-
-			const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true }); 
+			const stream = userStream ? userStream : await navigator.mediaDevices.getUserMedia({ video: true, audio: true }); 
 			if (userVideoRef.current) userVideoRef.current.srcObject = stream;
 
 			setUserStream(stream);
