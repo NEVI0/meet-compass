@@ -218,6 +218,9 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 			if (otherUserVideoRef.current) otherUserVideoRef.current.srcObject = stream;
 		});
 
+		setIsUsingVideo(true);
+		setIsUsingMicrophone(true);
+
 		peerRef.current = peer;  // @ts-ignore
 		peer.signal(otherUser.signal);
 	}
