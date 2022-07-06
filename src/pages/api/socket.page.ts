@@ -84,6 +84,10 @@ const handler = (_: any, response: any) => {
 				io.to(to).emit('call-rejected');
 			});
 
+			socket.on('cancel-meet-request', (to: string) => {
+				io.to(to).emit('call-canceled');
+			});
+
 			socket.on('already-in-meet', (to: string) => {
 				io.to(to).emit('other-user-already-in-meet');
 			});

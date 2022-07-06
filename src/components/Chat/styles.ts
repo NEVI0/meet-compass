@@ -35,19 +35,6 @@ export const Chat = styled.div<{ visible: boolean; }>`
 		padding: 1.5rem;
 		border-top: 1px solid ${props => props.theme.colors.body};
 		border-bottom: 1px solid ${props => props.theme.colors.body};
-
-		::-webkit-scrollbar {
-			width: 5px;
-		}
-		::-webkit-scrollbar-track {
-			background: transparent;
-		}
-		::-webkit-scrollbar-thumb {
-			background: #555;
-		}
-		::-webkit-scrollbar-thumb:hover {
-			background: #2d2d2d;
-		}
 	}
 
 	.chat__message {

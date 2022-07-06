@@ -106,9 +106,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 
 	const getUserStream = async () => {
 		try {
-			if (userStream) return userStream;
-
-			const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true }); 
+			const stream = userStream ? userStream : await navigator.mediaDevices.getUserMedia({ video: true, audio: true }); 
 			if (userVideoRef.current) userVideoRef.current.srcObject = stream;
 
 			setUserStream(stream);
@@ -163,9 +161,10 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 
 			const user = { id: socketRef.current.id, name: userName, email: userEmail };
 			socketRef.current.emit('save-user-data', user);
-			setUserData(user);
-
 			socketRef.current.emit('check-meet-link', userToCallId);
+			
+			setUserData(user);
+			setCallingOtherUserData({ id: userToCallId } as TUser);
 
 			peer.on('signal', data => {
 				socketRef.current.emit('call-user', {
@@ -220,6 +219,9 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 			if (otherUserVideoRef.current) otherUserVideoRef.current.srcObject = stream;
 		});
 
+		setIsUsingVideo(true);
+		setIsUsingMicrophone(true);
+
 		peerRef.current = peer;  // @ts-ignore
 		peer.signal(otherUser.signal);
 	}
@@ -230,7 +232,9 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 	}
 
 	const cancelMeetRequest = () => {
+		socketRef.current.emit('cancel-meet-request', callingOtherUserData.id);
 		peerRef.current.destroy();
+
 		clearMeetData();
 	}
 
@@ -403,6 +407,10 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 					toast(t('toastMessage.requestDeclined'), TOAST_DEFAULT_CONFIG);
 				});
 
+				socketRef.current.on('call-canceled', () => {
+					clearMeetData();
+				});
+
 				socketRef.current.on('other-user-already-in-meet', () => {
 					cancelMeetRequest();
 					toast(t('toastMessage.otherUserInMeet'), TOAST_DEFAULT_CONFIG);
@@ -431,6 +439,7 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				socketRef.current.off('request-meet-connection');
 				socketRef.current.off('call-accepted');
 				socketRef.current.off('call-rejected');
+				socketRef.current.off('call-canceled');
 				socketRef.current.off('other-user-already-in-meet');
 			}
 		};

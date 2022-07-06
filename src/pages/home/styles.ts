@@ -17,14 +17,15 @@ export const HomeContainer = styled.div`
 	}
 
 	.home {
-		height: 100vh;
+		min-height: 100vh;
 		row-gap: 2.5rem;
-		padding: 0 2rem;
+		padding: 2rem;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		background-color: ${props => props.theme.colors.container};
 		transition: .3s;
+		overflow: auto;
 
 		&__header {
 			display: flex;
@@ -103,13 +104,13 @@ export const HomeContainer = styled.div`
 
 	@media screen and (min-width: 576px) {
 		.home {
-			padding: 0 6rem;
+			padding: 3rem 6rem;
 		}
 	}
 
 	@media screen and (min-width: 767px) {
 		.home {
-			padding: 0 10rem;
+			padding: 5rem 10rem;
 		}
 	}
 
@@ -128,13 +129,13 @@ export const HomeContainer = styled.div`
 
 		.home {
 			width: 50%;
-			padding: 0 2.5rem;
+			padding: 2rem 2.5rem;
 		}
 	}
 
 	@media screen and (min-width: 1120px) {
 		.home {
-			padding: 0 4rem;
+			padding: 2rem 4rem;
 		}
 	}
 
@@ -146,7 +147,7 @@ export const HomeContainer = styled.div`
 		}
 
 		.home {
-			padding: 0 10rem;
+			padding: 5rem 10rem;
 		}
 	}
 `;
