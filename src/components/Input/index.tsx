@@ -8,6 +8,7 @@ interface InputProps {
 	disabled?: boolean;
 	value: string;
 	error?: string;
+	testId?: string;
 	onChangeValue: (value: string) => void;
 	onBlur?: (event: any) => void;
 	icon: any;
@@ -20,6 +21,7 @@ const Input: React.FC<InputProps> = ({
 	disabled = false,
 	value,
 	error = '',
+	testId,
 	onChangeValue,
 	onBlur,
 	icon
@@ -30,6 +32,7 @@ const Input: React.FC<InputProps> = ({
 				{ icon }
 
 				<input
+					data-testid={ testId }
 					name={ name }
 					type={ type }
 					disabled={ disabled }
