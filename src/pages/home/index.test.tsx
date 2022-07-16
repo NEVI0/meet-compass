@@ -2,7 +2,8 @@ import Home from './index.page';
 import { theme } from '../../styles/theme';
 
 import { ThemeProvider } from 'styled-components';
-import { render, screen, act, fireEvent } from '@testing-library/react';
+
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 const useRouter = jest.spyOn(require('next/router'), 'useRouter');
@@ -26,7 +27,7 @@ describe('Home page test', () => {
 		);
 	});
 
-	it('Check if start meet button become disabled when click without form values', async () => {
+	test('Check if start meet button become disabled when click without form values', async () => {
 		const user = userEvent.setup();
 		const startMeetButton = screen.getByTestId('startMeetButton');
 
@@ -34,7 +35,7 @@ describe('Home page test', () => {
 		expect(startMeetButton).toBeDisabled();
 	});
 
-	it('Check if start meet button become disabled with invalid form values', async () => {
+	test('Check if start meet button become disabled with invalid form values', async () => {
 		const startMeetButton = screen.getByTestId('startMeetButton');		
 		const user = userEvent.setup();
 
@@ -45,7 +46,7 @@ describe('Home page test', () => {
 		expect(startMeetButton).toBeDisabled();
 	});
 
-	it('Check if start meet button become enabled with valid form values', async () => {		
+	test('Check if start meet button become enabled with valid form values', async () => {		
 		const startMeetButton = screen.getByTestId('startMeetButton');		
 		const user = userEvent.setup();
 
