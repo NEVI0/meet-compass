@@ -102,6 +102,7 @@ const Home: NextPage = () => {
 
 				<form className="home__content" onSubmit={ form.handleSubmit }>
 					<Input
+						testId="userNameInput"
 						name="userName"
 						placeholder={ t('inputPlaceholder.userName') } // @ts-ignore
 						error={ (form.errors.userName && form.touched.userName) && t(form.errors.userName) }
@@ -112,6 +113,7 @@ const Home: NextPage = () => {
 					/>
 
 					<Input
+						testId="userEmailInput"
 						name="userEmail"
 						type="email"
 						placeholder={ t('inputPlaceholder.email') } // @ts-ignore
@@ -123,6 +125,7 @@ const Home: NextPage = () => {
 					/>
 
 					<Input
+						testId="meetNameInput"
 						name="meetName"
 						placeholder={ t('inputPlaceholder.meetName') } // @ts-ignore
 						error={ (form.errors.meetName && form.touched.meetName) && t(form.errors.meetName) }
@@ -132,7 +135,11 @@ const Home: NextPage = () => {
 						icon={ <BiAt className="input__icon" /> }
 					/>
 
-					<Button disabled={ !form.isValid || form.isSubmitting }>
+					<Button
+						type="submit"
+						testId="startMeetButton"
+						disabled={ !form.isValid || form.isSubmitting }
+					>
 						{
 							form.isSubmitting ? (
 								<Oval
