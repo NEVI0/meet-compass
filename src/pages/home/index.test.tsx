@@ -27,7 +27,7 @@ describe('home page tests', () => {
 		);
 	});
 
-	test('check if start meet button is disabled when click without form values', async () => {
+	test('start meet button is disabled when click without form values', async () => {
 		const user = userEvent.setup();
 		const startMeetButton = screen.getByTestId('startMeetButton');
 
@@ -35,7 +35,7 @@ describe('home page tests', () => {
 		expect(startMeetButton).toBeDisabled();
 	});
 
-	test('check if start meet button become disabled with invalid form values', async () => {
+	test('start meet button is disabled with invalid form values', async () => {
 		const startMeetButton = screen.getByTestId('startMeetButton');		
 		const user = userEvent.setup();
 
@@ -46,7 +46,7 @@ describe('home page tests', () => {
 		expect(startMeetButton).toBeDisabled();
 	});
 
-	test('check if start meet button become enabled with valid form values', async () => {		
+	test('start meet button is enabled with valid form values', async () => {		
 		const startMeetButton = screen.getByTestId('startMeetButton');		
 		const user = userEvent.setup();
 
@@ -55,5 +55,9 @@ describe('home page tests', () => {
 		await user.type(formInputs.meetName(), 'Valid meet name');
 		
 		expect(startMeetButton).not.toBeDisabled();
+	});
+
+	test('join meet modal appears with "meetId" query param', async () => {
+
 	});
 });
