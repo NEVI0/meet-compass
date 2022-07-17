@@ -11,23 +11,26 @@ const useRouter = jest.spyOn(require('next/router'), 'useRouter');
 const formInputs = {
 	userName: () => screen.getByTestId('userNameInput'),
 	userEmail: () => screen.getByTestId('userEmailInput'),
-	meetName: () => screen.getByTestId('meetNameInput')
+	meetName: () => screen.getByTestId('meetNameInput'),
+	meetId: () => screen.getByTestId('meetIdInput')
 }
 
+const TestComponent = () => (
+	<ThemeProvider theme={ theme }>
+		<Home />
+	</ThemeProvider>
+);
+
+const DEFAULT_MEET_ID_PARAM = '26452364723';
+
 describe('home page tests', () => {
-	beforeEach(() => {
+	test('disable start meet when click without form values', async () => {
 		useRouter.mockImplementation(() => ({
 			query: {}
 		}));
 
-		render(
-			<ThemeProvider theme={ theme }>
-				<Home />
-			</ThemeProvider>
-		);
-	});
+		render(<TestComponent />);
 
-	test('start meet button is disabled when click without form values', async () => {
 		const user = userEvent.setup();
 		const startMeetButton = screen.getByTestId('startMeetButton');
 
@@ -35,7 +38,13 @@ describe('home page tests', () => {
 		expect(startMeetButton).toBeDisabled();
 	});
 
-	test('start meet button is disabled with invalid form values', async () => {
+	test('disable start meet with invalid form values', async () => {
+		useRouter.mockImplementation(() => ({
+			query: {}
+		}));
+
+		render(<TestComponent />);
+
 		const startMeetButton = screen.getByTestId('startMeetButton');		
 		const user = userEvent.setup();
 
@@ -46,7 +55,13 @@ describe('home page tests', () => {
 		expect(startMeetButton).toBeDisabled();
 	});
 
-	test('start meet button is enabled with valid form values', async () => {		
+	test('enable start meet with valid form values', async () => {
+		useRouter.mockImplementation(() => ({
+			query: {}
+		}));
+
+		render(<TestComponent />);
+
 		const startMeetButton = screen.getByTestId('startMeetButton');		
 		const user = userEvent.setup();
 
@@ -57,7 +72,23 @@ describe('home page tests', () => {
 		expect(startMeetButton).not.toBeDisabled();
 	});
 
-	test('join meet modal appears with "meetId" query param', async () => {
+	test('join meet modal appears with "meetId" query param', () => {
+		useRouter.mockImplementation(() => ({
+			query: { meetId: DEFAULT_MEET_ID_PARAM }
+		}));
 
+		render(<TestComponent />);
+		
+		const joinMeetModal = screen.getByTestId('joinMeetModal');
+		expect(joinMeetModal).toHaveStyle('visibility: visible');
+	});
+
+	test('auto fill join meet modal meet id with "meetId" query param', () => {
+		useRouter.mockImplementation(() => ({
+			query: { meetId: DEFAULT_MEET_ID_PARAM }
+		}));
+
+		render(<TestComponent />);
+		expect(formInputs.meetId()).toHaveValue(DEFAULT_MEET_ID_PARAM);
 	});
 });

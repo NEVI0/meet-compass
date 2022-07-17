@@ -58,7 +58,7 @@ const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultMeetId, o
 	}, [defaultMeetId]);
 
 	return (
-		<S.JoinMeetModal visible={ visible }>
+		<S.JoinMeetModal data-testid="joinMeetModal" visible={ visible }>
 			<div className="joinmeet">
 				<header className="joinmeet__header">
 					<h2 className="joinmeet__title">
@@ -94,6 +94,7 @@ const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultMeetId, o
 					/>
 
 					<Input
+						testId="meetIdInput"
 						name="meetId"
 						placeholder={ t('inputPlaceholder.meetId') } // @ts-ignore
 						error={ (form.errors.meetId && form.touched.meetId) && t(form.errors.meetId) }
