@@ -14,11 +14,11 @@ const formInputs = {
 	meetName: () => screen.getByTestId('meetNameInput')
 }
 
-describe('Home page test', () => {
+describe('home page tests', () => {
 	beforeEach(() => {
 		useRouter.mockImplementation(() => ({
-			query: {  }
-		}))
+			query: {}
+		}));
 
 		render(
 			<ThemeProvider theme={ theme }>
@@ -27,7 +27,7 @@ describe('Home page test', () => {
 		);
 	});
 
-	test('Check if start meet button become disabled when click without form values', async () => {
+	test('check if start meet button is disabled when click without form values', async () => {
 		const user = userEvent.setup();
 		const startMeetButton = screen.getByTestId('startMeetButton');
 
@@ -35,7 +35,7 @@ describe('Home page test', () => {
 		expect(startMeetButton).toBeDisabled();
 	});
 
-	test('Check if start meet button become disabled with invalid form values', async () => {
+	test('check if start meet button become disabled with invalid form values', async () => {
 		const startMeetButton = screen.getByTestId('startMeetButton');		
 		const user = userEvent.setup();
 
@@ -46,7 +46,7 @@ describe('Home page test', () => {
 		expect(startMeetButton).toBeDisabled();
 	});
 
-	test('Check if start meet button become enabled with valid form values', async () => {		
+	test('check if start meet button become enabled with valid form values', async () => {		
 		const startMeetButton = screen.getByTestId('startMeetButton');		
 		const user = userEvent.setup();
 
