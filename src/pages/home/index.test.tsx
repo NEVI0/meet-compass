@@ -1,10 +1,7 @@
 import Home from './index.page';
-import { theme } from '../../styles/theme';
 
-import { ThemeProvider } from 'styled-components';
-
-import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { render, screen } from '../../test/defaultSetup';
 
 const useRouter = jest.spyOn(require('next/router'), 'useRouter');
 
@@ -15,12 +12,6 @@ const formInputs = {
 	meetId: () => screen.getByTestId('meetIdInput')
 }
 
-const TestComponent = () => (
-	<ThemeProvider theme={ theme }>
-		<Home />
-	</ThemeProvider>
-);
-
 const DEFAULT_MEET_ID_PARAM = '26452364723';
 
 describe('home page tests', () => {
@@ -29,7 +20,7 @@ describe('home page tests', () => {
 			query: {}
 		}));
 
-		render(<TestComponent />);
+		render(<Home />);
 
 		const user = userEvent.setup();
 		const startMeetButton = screen.getByTestId('startMeetButton');
@@ -43,7 +34,7 @@ describe('home page tests', () => {
 			query: {}
 		}));
 
-		render(<TestComponent />);
+		render(<Home />);
 
 		const startMeetButton = screen.getByTestId('startMeetButton');		
 		const user = userEvent.setup();
@@ -60,7 +51,7 @@ describe('home page tests', () => {
 			query: {}
 		}));
 
-		render(<TestComponent />);
+		render(<Home />);
 
 		const startMeetButton = screen.getByTestId('startMeetButton');		
 		const user = userEvent.setup();
@@ -77,7 +68,7 @@ describe('home page tests', () => {
 			query: { meetId: DEFAULT_MEET_ID_PARAM }
 		}));
 
-		render(<TestComponent />);
+		render(<Home />);
 		
 		const joinMeetModal = screen.getByTestId('joinMeetModal');
 		expect(joinMeetModal).toHaveStyle('visibility: visible');
@@ -88,7 +79,7 @@ describe('home page tests', () => {
 			query: { meetId: DEFAULT_MEET_ID_PARAM }
 		}));
 
-		render(<TestComponent />);
+		render(<Home />);
 		expect(formInputs.meetId()).toHaveValue(DEFAULT_MEET_ID_PARAM);
 	});
 });
