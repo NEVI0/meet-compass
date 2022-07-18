@@ -162,7 +162,7 @@ const Home: NextPage = () => {
 				</div>
 
 				<span className="home__join">
-					{ t('page.home.joinMeet') } <a onClick={ () => setIsJoinMeetModalVisible(true) }>{ t('page.home.joinMeetLink') }</a>
+					{ t('page.home.joinMeet') } <a data-testid="joinMeetLink" onClick={ () => setIsJoinMeetModalVisible(true) }>{ t('page.home.joinMeetLink') }</a>
 				</span>
 			</main>
 

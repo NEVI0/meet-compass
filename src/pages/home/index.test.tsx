@@ -82,4 +82,18 @@ describe('home page tests', () => {
 		render(<Home />);
 		expect(formInputs.meetId()).toHaveValue(DEFAULT_MEET_ID_PARAM);
 	});
+
+	test('open join meet modal when click in "clicking here" link', async () => {
+		useRouter.mockImplementation(() => ({
+			query: {}
+		}));
+
+		render(<Home />);
+
+		const joinMeetLink = screen.getByTestId('joinMeetLink');
+		await userEvent.click(joinMeetLink);
+
+		const joinMeetModal = screen.getByTestId('joinMeetModal');
+		expect(joinMeetModal).toHaveStyle('visibility: visible');
+	});
 });
