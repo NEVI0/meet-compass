@@ -11,6 +11,8 @@ import { LOTTIE_OPTIONS } from '../../utils/constants';
 import * as notFoundAnimation from '../../../public/assets/animations/not-found.json';
 import * as S from './styles';
 
+export const NOT_FOUND_SECONDS_TO_REDIRECT = 5000;
+
 const ANIMATION_DIMENSIONS = {
 	'xsm': { width: 300, height: 150 },
 	'sm': { width: 300, height: 150 },
@@ -29,7 +31,7 @@ const NotFound: NextPage = () => {
 	useEffect(() => {
 		const timer = setTimeout(() => {
 			router.replace('/home');
-		}, 5000);
+		}, NOT_FOUND_SECONDS_TO_REDIRECT);
 
 		return () => clearTimeout(timer);
 	}, []);
