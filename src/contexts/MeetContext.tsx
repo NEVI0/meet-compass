@@ -11,7 +11,7 @@ import { TCallAcceptedEventData, TRequestMeetConnectionEventData, TUser } from '
 import { PEER_CONFIGS, TOAST_DEFAULT_CONFIG } from '../utils/constants';
 import { isEmpty } from '../utils/functions';
 
-interface MeetContextProps {
+export interface MeetContextProps {
 	socketRef: React.RefObject<any>;
 	userVideoRef: React.RefObject<HTMLVideoElement>;
 	otherUserVideoRef: React.RefObject<HTMLVideoElement>;
@@ -52,7 +52,7 @@ interface MeetContextProps {
 
 const MeetContext: React.Context<MeetContextProps> = createContext({} as MeetContextProps);
 
-export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
+export const MeetProvider: React.FC<{ testData?: any, children: any }> = ({ testData, children }) => {
 
 	const router = useRouter();
 	const { t } = useTranslation();
@@ -503,7 +503,9 @@ export const MeetProvider: React.FC<{ children: any }> = ({ children }) => {
 				updateStreamAudio,
 				updateStreamVideo,
 				updateScreenSharing,
-				clearUserStream
+				clearUserStream,
+
+				...testData
 			}}
 		>
 			{ children }
