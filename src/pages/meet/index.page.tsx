@@ -90,6 +90,8 @@ const Meet: NextPage = () => {
 	useEffect(() => {
 		if (isEmpty(userData)) router.replace('/home?stopStream=true');
 		getUserStream();
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (
@@ -249,7 +251,7 @@ const Meet: NextPage = () => {
 					</S.ActionButton>
 
 					<S.ActionButton>
-						<button className="action__button action__button-hangup" onClick={ leftMeet }>
+						<button data-testid="leftMeetButton" className="action__button action__button-hangup" onClick={ leftMeet }>
 							<BiPhoneOff className="action__button-icon" />
 						</button>
 

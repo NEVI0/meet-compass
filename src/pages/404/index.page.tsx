@@ -34,6 +34,7 @@ const NotFound: NextPage = () => {
 		}, NOT_FOUND_SECONDS_TO_REDIRECT);
 
 		return () => clearTimeout(timer);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (

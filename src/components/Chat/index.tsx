@@ -43,13 +43,17 @@ const Chat: React.FC<{ visible: boolean; onClose: () => void; }> = ({ visible, o
 	}
 
 	useEffect(() => {
-		if (socketRef.current) socketRef.current.on('received-message', (message: string) => {
+		const socket = socketRef;
+
+		if (socket.current) socket.current.on('received-message', (message: string) => {
 			handleAddMessage(message, 'left');
 		});
 
 		return () => {
-			if (socketRef.current) socketRef.current.off('received-message');
+			if (socket.current) socket.current.off('received-message');
 		}
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {

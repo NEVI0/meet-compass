@@ -54,7 +54,8 @@ const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultMeetId, o
 	});
 
 	useEffect(() => {
-		if (defaultMeetId) form.setFieldValue('meetId', defaultMeetId)
+		if (defaultMeetId) form.setFieldValue('meetId', defaultMeetId);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [defaultMeetId]);
 
 	return (
