@@ -6,6 +6,8 @@ import { MeetProvider, MeetContextProps } from '../../contexts/MeetContext';
 import userEvent from '@testing-library/user-event';
 import { render, screen } from '../../test/defaultSetup';
 
+import { hasKeyWorkInWarning } from '../../utils/functions';
+
 describe('meet page tests', () => {
 	const user = userEvent.setup();
 	const redirectionFunction = jest.fn();
@@ -19,7 +21,7 @@ describe('meet page tests', () => {
 	);
 
 	beforeAll(() => {
-		console.warn = () => '';
+		console.warn = (message: string) => !hasKeyWorkInWarning(message) && originalWarn(message);
 
 		useRouter.mockImplementation(() => ({
 			replace: redirectionFunction
