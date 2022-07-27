@@ -110,6 +110,7 @@ const Meet: NextPage = () => {
 				</h2>
 
 				<IconButton
+					testId="headerOpenMenuButton"
 					onClick={ () => setIsMenuOpen(true) }
 					icon={ <BiMenu /> }
 				/>
@@ -267,6 +268,7 @@ const Meet: NextPage = () => {
 					</span>
 
 					<IconButton
+						testId="footerOpenMenuButton"
 						onClick={ () => setIsMenuOpen(true) }
 						icon={ <BiMenu /> }
 					/>
