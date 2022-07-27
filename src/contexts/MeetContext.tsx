@@ -417,7 +417,7 @@ export const MeetProvider: React.FC<{ testData?: any, children: any }> = ({ test
 				});
 
 			} catch (error) {
-				console.log('Could not init socket connection! ', error);
+				// Could not init socket connection!
 			}
 		}
 
