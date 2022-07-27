@@ -3,12 +3,13 @@ import * as S from './styles';
 
 interface IconButtonProps{
 	icon: any;
+	testId?: string;
 	onClick: () => void;
 }
 
-const IconButton: React.FC<IconButtonProps> = ({ icon, onClick }) => {
+const IconButton: React.FC<IconButtonProps> = ({ icon, testId, onClick }) => {
 	return (
-		<S.IconButton onClick={ onClick }>
+		<S.IconButton data-testid={ testId } onClick={ onClick }>
 			{ icon }
 		</S.IconButton>
 	);

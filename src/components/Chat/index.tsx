@@ -71,7 +71,7 @@ const Chat: React.FC<{ visible: boolean; onClose: () => void; }> = ({ visible, o
 	}, [otherUserData]);
 
 	return (
-		<S.Chat visible={ visible }>
+		<S.Chat data-testid="chat" visible={ visible }>
 			<header className="chat__header">
 				<h2 className="chat__title">
 					{ t('page.meet.chat.title') }

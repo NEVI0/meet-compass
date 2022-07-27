@@ -17,7 +17,7 @@ const Menu: React.FC<MenuProps> = ({ visible, onClose, children }) => {
 	const { userData } = useMeetContext();
 
 	return (
-		<S.Menu visible={ visible }>
+		<S.Menu data-testid="menu" visible={ visible }>
 			<header className="menu__header">
 				<div className="menu__data">
 					<h2 className="menu__title">
