@@ -295,7 +295,7 @@ const Meet: NextPage = () => {
 
 				{
 					!isEmpty(otherUserData) && <>
-						<S.MenuItem onClick={ handleOpenChat }>
+						<S.MenuItem data-testid="openChatButton" onClick={ handleOpenChat }>
 							<BiChat className="menuitem__icon" />
 
 							<p className="menuitem__description">

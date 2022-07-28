@@ -71,4 +71,22 @@ describe('meet page tests', () => {
 		const menu = screen.getByTestId('menu');
 		expect(menu).toHaveStyle('visibility: visible');
 	});
+
+	test('open chat', async () => {
+		const mockMeetData = {
+			otherUserData: {
+				id: '123',
+				name: 'User Name',
+				email: 'user@gmail.com'
+			}
+		} as MeetContextProps;
+
+		render(<MockMeet testData={ mockMeetData } />);
+
+		const openChatButton = screen.getByTestId('openChatButton');	
+		await user.click(openChatButton);
+
+		const chat = screen.getByTestId('chat');
+		expect(chat).toHaveStyle('visibility: visible');
+	});
 });
