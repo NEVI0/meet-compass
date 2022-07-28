@@ -52,6 +52,16 @@ describe('meet page tests', () => {
 		expect(userName).toBeInTheDocument();
 	});
 
+	test('check meet name in screen', () => {
+		const mockMeetName = 'My custom meet name';
+		const mockMeetData = { meetName: mockMeetName } as MeetContextProps;
+		
+		render(<MockMeet testData={ mockMeetData } />);
+
+		const [ meetName ] = screen.queryAllByText(mockMeetName);
+		expect(meetName).toBeInTheDocument();
+	});
+
 	test('open menu by header', async () => {
 		render(<MockMeet />);
 
@@ -88,5 +98,17 @@ describe('meet page tests', () => {
 
 		const chat = screen.getByTestId('chat');
 		expect(chat).toHaveStyle('visibility: visible');
+	});
+
+	test('left meet', async () => {
+		const mockLeftMeetFunction = jest.fn();
+		const mockMeetData = { leftMeet() { mockLeftMeetFunction() } } as MeetContextProps;
+
+		render(<MockMeet testData={ mockMeetData } />);
+
+		const leftMeetButton = screen.getByTestId('leftMeetButton');	
+		await user.click(leftMeetButton);
+
+		expect(mockLeftMeetFunction).toHaveBeenCalled();
 	});
 });
