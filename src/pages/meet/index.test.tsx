@@ -37,7 +37,23 @@ describe('meet page tests', () => {
 		expect(redirectionFunction).toHaveBeenCalled();
 	});
 
-	test('check user name in screen', () => {
+	test('expect user id in screen', () => {
+		const mockUserId = 'ahsdbjh1b34';
+		const mockMeetData = {
+			userData: {
+				id: mockUserId,
+				name: 'User Name',
+				email: 'user@gmail.com'
+			}
+		} as MeetContextProps;
+		
+		render(<MockMeet testData={ mockMeetData } />);
+
+		const userId = screen.queryByText(mockUserId);
+		expect(userId).toBeInTheDocument();
+	});
+
+	test('expect user name in screen', () => {
 		const mockMeetData = {
 			userData: {
 				id: '123',
@@ -52,7 +68,7 @@ describe('meet page tests', () => {
 		expect(userName).toBeInTheDocument();
 	});
 
-	test('check meet name in screen', () => {
+	test('expect meet name in screen', () => {
 		const mockMeetName = 'My custom meet name';
 		const mockMeetData = { meetName: mockMeetName } as MeetContextProps;
 		
@@ -80,6 +96,29 @@ describe('meet page tests', () => {
 
 		const menu = screen.getByTestId('menu');
 		expect(menu).toHaveStyle('visibility: visible');
+	});
+
+	test('expect user name and e-mail in opened menu', async () => {
+		const mockUserName = 'User name';
+		const mockUserEmail = 'user@gmail.com';
+		const mockMeetData = {
+			userData: {
+				id: '123',
+				name: mockUserName,
+				email: mockUserEmail
+			}
+		} as MeetContextProps;
+
+		render(<MockMeet testData={ mockMeetData } />);
+
+		const footerOpenMenuButton = screen.getByTestId('footerOpenMenuButton');	
+		await user.click(footerOpenMenuButton);
+
+		const userName = screen.queryByText(mockUserName);
+		const userEmail = screen.queryByText(mockUserEmail);
+
+		expect(userName).toBeInTheDocument();
+		expect(userEmail).toBeInTheDocument();
 	});
 
 	test('open chat', async () => {
