@@ -64,7 +64,7 @@ describe('meet page tests', () => {
 		
 		render(<MockMeet testData={ mockMeetData } />);
 
-		const userName = screen.getByText('User Name');
+		const userName = screen.queryByText('User Name');
 		expect(userName).toBeInTheDocument();
 	});
 
@@ -78,24 +78,20 @@ describe('meet page tests', () => {
 		expect(meetName).toBeInTheDocument();
 	});
 
-	test('open menu by header', async () => {
-		render(<MockMeet />);
+	test('expect other user name in screen', () => {
+		const mockUserName = 'Other User Name';
+		const mockMeetData = {
+			otherUserData: {
+				id: '123',
+				name: mockUserName,
+				email: 'user@gmail.com'
+			}
+		} as MeetContextProps;
+		
+		render(<MockMeet testData={ mockMeetData } />);
 
-		const headerOpenMenuButton = screen.getByTestId('headerOpenMenuButton');	
-		await user.click(headerOpenMenuButton);
-
-		const menu = screen.getByTestId('menu');
-		expect(menu).toHaveStyle('visibility: visible');
-	});
-
-	test('open menu by footer', async () => {
-		render(<MockMeet />);
-
-		const footerOpenMenuButton = screen.getByTestId('footerOpenMenuButton');	
-		await user.click(footerOpenMenuButton);
-
-		const menu = screen.getByTestId('menu');
-		expect(menu).toHaveStyle('visibility: visible');
+		const otherUserName = screen.queryByText(mockUserName);
+		expect(otherUserName).toBeInTheDocument();
 	});
 
 	test('expect user name and e-mail in opened menu', async () => {
@@ -119,6 +115,26 @@ describe('meet page tests', () => {
 
 		expect(userName).toBeInTheDocument();
 		expect(userEmail).toBeInTheDocument();
+	});
+
+	test('open menu by header', async () => {
+		render(<MockMeet />);
+
+		const headerOpenMenuButton = screen.getByTestId('headerOpenMenuButton');	
+		await user.click(headerOpenMenuButton);
+
+		const menu = screen.getByTestId('menu');
+		expect(menu).toHaveStyle('visibility: visible');
+	});
+
+	test('open menu by footer', async () => {
+		render(<MockMeet />);
+
+		const footerOpenMenuButton = screen.getByTestId('footerOpenMenuButton');	
+		await user.click(footerOpenMenuButton);
+
+		const menu = screen.getByTestId('menu');
+		expect(menu).toHaveStyle('visibility: visible');
 	});
 
 	test('open chat', async () => {
