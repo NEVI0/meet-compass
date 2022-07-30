@@ -37,6 +37,30 @@ describe('meet page tests', () => {
 		expect(redirectionFunction).toHaveBeenCalled();
 	});
 
+	test('expect to appear space animation when there is no other user connected', () => {
+		const mockMeetData = {
+			userData: {
+				id: '132',
+				name: 'User Name',
+				email: 'user@gmail.com'
+			}
+		} as MeetContextProps;
+		
+		render(<MockMeet testData={ mockMeetData } />);
+
+		const emptyContent = screen.getByTestId('emptyContent');
+		expect(emptyContent).toBeInTheDocument();
+	});
+
+	test('expect to appear calling user animation when there is calling', () => {
+		const mockMeetData = { isCallingUser: true } as MeetContextProps;
+		
+		render(<MockMeet testData={ mockMeetData } />);
+
+		const callingContent = screen.getByTestId('callingContent');
+		expect(callingContent).toBeInTheDocument();
+	});
+
 	test('expect user id in screen', () => {
 		const mockUserId = 'ahsdbjh1b34';
 		const mockMeetData = {
@@ -155,15 +179,26 @@ describe('meet page tests', () => {
 		expect(chat).toHaveStyle('visibility: visible');
 	});
 
-	test('left meet', async () => {
-		const mockLeftMeetFunction = jest.fn();
-		const mockMeetData = { leftMeet() { mockLeftMeetFunction() } } as MeetContextProps;
+	test('open rename meet name modal', async () => {
+		render(<MockMeet />);
 
+		const openRenameMeetModalButton = screen.getByTestId('openRenameMeetModalButton');	
+		await user.click(openRenameMeetModalButton);
+
+		const renameMeetModal = screen.getByTestId('renameMeetModal');
+		expect(renameMeetModal).toHaveStyle('visibility: visible');
+	});
+
+	test('expect to open modal when receiving call', () => {
+		const mockMeetData = {
+			isReceivingMeetRequest: true,
+			meetRequestAccepted: false
+		} as MeetContextProps;
+		
 		render(<MockMeet testData={ mockMeetData } />);
 
-		const leftMeetButton = screen.getByTestId('leftMeetButton');	
-		await user.click(leftMeetButton);
-
-		expect(mockLeftMeetFunction).toHaveBeenCalled();
+		const receivingCallModal = screen.getByTestId('receivingCallModal');
+		expect(receivingCallModal).toHaveStyle('visibility: visible');
 	});
+
 });
