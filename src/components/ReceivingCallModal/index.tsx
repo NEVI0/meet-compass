@@ -16,7 +16,7 @@ const ReceivingCallModal: React.FC<{ visible: boolean; }> = ({ visible }) => {
 	const { callingOtherUserData, acceptMeetRequest, rejectMeetRequest } = useMeetContext();
 
 	return (
-		<S.ReceivingCallModal visible={ visible }>
+		<S.ReceivingCallModal visible={ visible } data-testid="receivingCallModal">
 			<div className="receivingcall">
 				<header className="receivingcall__header">
 					<h2 className="receivingcall__title">

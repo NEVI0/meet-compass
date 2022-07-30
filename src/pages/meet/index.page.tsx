@@ -130,7 +130,7 @@ const Meet: NextPage = () => {
 			<main className="meet">
 				{
 					isCallingUser ? (
-						<div className="calling">
+						<div data-testid="callingContent" className="calling">
 							<MutatingDots
 								ariaLabel="loading-indicator"
 								width={ 100 }
@@ -150,7 +150,7 @@ const Meet: NextPage = () => {
 							</div>
 						</div>
 					) : isEmpty(otherUserData) ? (
-						<div className="empty">
+						<div data-testid="emptyContent" className="empty">
 							<Lottie
 								isPaused={ false }
 								isStopped={ false }
@@ -277,7 +277,7 @@ const Meet: NextPage = () => {
 
 			<Chat visible={ isChatOpen } onClose={ () => setIsChatOpen(false) } />
 			<Menu visible={ isMenuOpen } onClose={ () => setIsMenuOpen(false) }>
-				<S.MenuItem onClick={ handleRenameMeet }>
+				<S.MenuItem onClick={ handleRenameMeet } data-testid="openRenameMeetModalButton">
 					<BiEdit className="menuitem__icon" />
 
 					<p className="menuitem__description">

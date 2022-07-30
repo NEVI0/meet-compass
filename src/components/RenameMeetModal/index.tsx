@@ -41,7 +41,7 @@ const RenameMeetModal: React.FC<{ visible: boolean; onClose: () => void; }> = ({
 	});
 
 	return (
-		<S.RenameMeetModal visible={ visible }>
+		<S.RenameMeetModal visible={ visible } data-testid="renameMeetModal">
 			<div className="renamemeet">
 				<header className="renamemeet__header">
 					<h2 className="renamemeet__title">
