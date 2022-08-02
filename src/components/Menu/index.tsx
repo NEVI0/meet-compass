@@ -30,6 +30,7 @@ const Menu: React.FC<MenuProps> = ({ visible, onClose, children }) => {
 				</div>
 
 				<IconButton
+					testId="closeMenuButton"
 					onClick={ onClose }
 					icon={ <BiX /> }
 				/>
