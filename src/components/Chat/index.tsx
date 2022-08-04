@@ -28,7 +28,7 @@ const Chat: React.FC<{ visible: boolean; onClose: () => void; }> = ({ visible, o
 			}
 
 			element.className = `chat__message chat__message-${side} ${isMessageLink && 'chat__message-link'}`;
-			element.innerText = message;
+			element.append(message);
 
 			chatContent.append(element);
 		}
@@ -83,12 +83,13 @@ const Chat: React.FC<{ visible: boolean; onClose: () => void; }> = ({ visible, o
 				/>
 			</header>
 
-			<main className="chat__content" id="chat-content">
+			<main className="chat__content" id="chat-content" data-testid="chatContent">
 			</main>
 
 			<footer className="chat__footer">
 				<form className="chat__form">
 					<input
+						data-testid="chatMessage"
 						type="text"
 						placeholder={ t('inputPlaceholder.sendMessage') }
 						className="chat__field"
@@ -96,7 +97,7 @@ const Chat: React.FC<{ visible: boolean; onClose: () => void; }> = ({ visible, o
 						onChange={ event => setChatMessage(event.target.value) }
 					/>
 
-					<button className="chat__send" onClick={ handleSendMessage }>
+					<button data-testid="sendChatMessage" className="chat__send" onClick={ handleSendMessage }>
 						<BiSend />
 					</button>
 				</form>
