@@ -83,7 +83,7 @@ const Chat: React.FC<{ visible: boolean; onClose: () => void; }> = ({ visible, o
 				/>
 			</header>
 
-			<main className="chat__content" id="chat-content" data-testid="chatContent">
+			<main className="chat__content" id="chat-content">
 			</main>
 
 			<footer className="chat__footer">
