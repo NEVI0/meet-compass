@@ -105,7 +105,7 @@ const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultMeetId, o
 						icon={ <BiAt className="input__icon" /> }
 					/>
 
-					<Button disabled={ !form.isValid || form.isSubmitting }>
+					<Button type="submit" disabled={ !form.isValid || form.isSubmitting }>
 						{ t('joinMeetModal.button') }
 					</Button>
 				</form>
