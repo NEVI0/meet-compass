@@ -25,6 +25,6 @@ export const isLink = (text: string) => {
 	return !!linkRegex.test(text);
 }
 
-export const hasKeyWorkInWarning = (message: string) => {
+export const hasKeyWordInWarning = (message: string) => {
 	return message.includes('componentWillUpdate');
 }

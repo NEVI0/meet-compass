@@ -6,7 +6,7 @@ import { MeetProvider, MeetContextProps } from '../../contexts/MeetContext';
 import userEvent from '@testing-library/user-event';
 import { render, screen } from '../../test/defaultSetup';
 
-import { hasKeyWorkInWarning } from '../../utils/functions';
+import { hasKeyWordInWarning } from '../../utils/functions';
 
 interface MockChatProps {
 	visible: boolean;
@@ -28,7 +28,7 @@ describe('chat component tests', () => {
 	);
 
 	beforeAll(() => {
-		console.warn = (message: string) => !hasKeyWorkInWarning(message) && originalWarn(message);
+		console.warn = (message: string) => !hasKeyWordInWarning(message) && originalWarn(message);
 	});
 
 	afterAll(() => {

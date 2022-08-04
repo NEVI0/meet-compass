@@ -3,7 +3,7 @@ import Home from './index.page';
 import userEvent from '@testing-library/user-event';
 import { render, screen, act } from '../../test/defaultSetup';
 
-import { hasKeyWorkInWarning } from '../../utils/functions';
+import { hasKeyWordInWarning } from '../../utils/functions';
 
 const DEFAULT_MEET_ID_PARAM = '26452364723';
 
@@ -20,7 +20,7 @@ describe('home page tests', () => {
 	}
 	
 	beforeAll(() => {
-		console.warn = (message: string) => !hasKeyWorkInWarning(message) && originalWarn(message);
+		console.warn = (message: string) => !hasKeyWordInWarning(message) && originalWarn(message);
 	});
 
 	afterAll(() => {

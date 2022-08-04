@@ -1,7 +1,7 @@
 import NotFound, { NOT_FOUND_SECONDS_TO_REDIRECT } from './index.page';
 import { render } from '../../test/defaultSetup';
 
-import { hasKeyWorkInWarning } from '../../utils/functions';
+import { hasKeyWordInWarning } from '../../utils/functions';
 
 describe('not found page tests', () => {
 	jest.setTimeout(10000);
@@ -10,7 +10,7 @@ describe('not found page tests', () => {
 	const useRouter = jest.spyOn(require('next/router'), 'useRouter');
 
 	beforeAll(() => {
-		console.warn = (message: string) => !hasKeyWorkInWarning(message) && originalWarn(message);
+		console.warn = (message: string) => !hasKeyWordInWarning(message) && originalWarn(message);
 	});
 
 	afterAll(() => {
