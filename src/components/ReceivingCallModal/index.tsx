@@ -31,6 +31,7 @@ const ReceivingCallModal: React.FC<{ visible: boolean; }> = ({ visible }) => {
 
 				<div className="receivingcall__content">
 					<Button
+						testId="rejectMeetRequestButton"
 						bgColor={ theme.colors.red }
 						actionBgColor={ darken(.2, theme.colors.red) }
 						onClick={ rejectMeetRequest }
@@ -38,7 +39,10 @@ const ReceivingCallModal: React.FC<{ visible: boolean; }> = ({ visible }) => {
 						{ t('receivingCallModal.decline') }
 					</Button>
 
-					<Button onClick={ acceptMeetRequest }>
+					<Button 
+						testId="acceptMeetRequestButton" 
+						onClick={ acceptMeetRequest }
+					>
 						{ t('receivingCallModal.accept') }
 					</Button>
 				</div>
