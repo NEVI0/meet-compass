@@ -9,7 +9,7 @@ const LanguageSwitch: React.FC = () => {
 	const { selectedLanguage, changeSelectedLanguage } = useAppContext();
 
 	return (
-		<S.LanguageSwitch onClick={ changeSelectedLanguage }>
+		<S.LanguageSwitch data-testid="languageSwitch" onClick={ changeSelectedLanguage }>
 			<Image
 				width={ 20 }
 				height={ 20 }

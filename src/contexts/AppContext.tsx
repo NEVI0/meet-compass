@@ -3,14 +3,14 @@ import i18n from '../i18n';
 
 type TLanguage = 'en' | 'pt';
 
-interface AppContextProps {
+export interface AppContextProps {
 	selectedLanguage: TLanguage;
 	changeSelectedLanguage: () => void;
 }
 
 const AppContext: React.Context<AppContextProps> = createContext({} as AppContextProps);
 
-export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
+export const AppProvider: React.FC<{ testData?: any; children: any; }> = ({ testData, children }) => {
 
 	const [ selectedLanguage, setSelectedLanguage ] = useState<TLanguage>('en');
 
@@ -32,7 +32,13 @@ export const AppProvider: React.FC<{ children: any; }> = ({ children }) => {
 	}, []);
 
 	return (
-		<AppContext.Provider value={{ selectedLanguage, changeSelectedLanguage }}>
+		<AppContext.Provider
+			value={{ 
+				selectedLanguage, 
+				changeSelectedLanguage,
+				...testData
+			}}
+		>
 			{ children }
 		</AppContext.Provider>
 	);
