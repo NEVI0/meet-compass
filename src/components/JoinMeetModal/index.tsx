@@ -74,7 +74,7 @@ const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultMeetId, o
 
 				<form className="joinmeet__content" onSubmit={ form.handleSubmit }>
 					<Input
-						testId="userNameInput"
+						testId="joinMeetModalUserNameInput"
 						name="userName"
 						placeholder={ t('inputPlaceholder.userName') } // @ts-ignore
 						error={ (form.errors.userName && form.touched.userName) && t(form.errors.userName) }
@@ -85,7 +85,7 @@ const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultMeetId, o
 					/>
 
 					<Input
-						testId="userEmailInput"
+						testId="joinMeetModalUserEmailInput"
 						name="userEmail"
 						type="email"
 						placeholder={ t('inputPlaceholder.email') } // @ts-ignore

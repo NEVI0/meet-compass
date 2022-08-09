@@ -70,8 +70,8 @@ describe('join meet modal component tests', () => {
 	test('expect to enable form button with valid input values', async () => {
 		render(<MockJoinMeetModal visible={ true } onClose={ onCloseFunction } />);
 
-		const userNameInput = screen.getByTestId('userNameInput');
-		const userEmailInput = screen.getByTestId('userEmailInput');
+		const userNameInput = screen.getByTestId('joinMeetModalUserNameInput');
+		const userEmailInput = screen.getByTestId('joinMeetModalUserEmailInput');
 		const meetIdInput = screen.getByTestId('meetIdInput');
 
 		await user.type(userNameInput, 'User Name');
@@ -85,7 +85,7 @@ describe('join meet modal component tests', () => {
 	test('expect to disable form button with invalid input values', async () => {
 		render(<MockJoinMeetModal visible={ true } onClose={ onCloseFunction } />);
 
-		const userNameInput = screen.getByTestId('userNameInput');
+		const userNameInput = screen.getByTestId('joinMeetModalUserNameInput');
 		await user.type(userNameInput, 'Ue');
 
 		const joinMeetButton = screen.getByTestId('joinMeetButton');
@@ -101,8 +101,8 @@ describe('join meet modal component tests', () => {
 		} as MeetContextProps;
 		render(<MockJoinMeetModal visible={ true } onClose={ onCloseFunction } testData={ mockMeetData } />);
 
-		const userNameInput = screen.getByTestId('userNameInput');
-		const userEmailInput = screen.getByTestId('userEmailInput');
+		const userNameInput = screen.getByTestId('joinMeetModalUserNameInput');
+		const userEmailInput = screen.getByTestId('joinMeetModalUserEmailInput');
 		const meetIdInput = screen.getByTestId('meetIdInput');
 
 		await user.type(userNameInput, 'User Name');
