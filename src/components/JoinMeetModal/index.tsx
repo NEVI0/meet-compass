@@ -74,6 +74,7 @@ const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultMeetId, o
 
 				<form className="joinmeet__content" onSubmit={ form.handleSubmit }>
 					<Input
+						testId="userNameInput"
 						name="userName"
 						placeholder={ t('inputPlaceholder.userName') } // @ts-ignore
 						error={ (form.errors.userName && form.touched.userName) && t(form.errors.userName) }
@@ -84,6 +85,7 @@ const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultMeetId, o
 					/>
 
 					<Input
+						testId="userEmailInput"
 						name="userEmail"
 						type="email"
 						placeholder={ t('inputPlaceholder.email') } // @ts-ignore
@@ -105,7 +107,7 @@ const JoinMeetModal: React.FC<JoinMeetModalProps> = ({ visible, defaultMeetId, o
 						icon={ <BiAt className="input__icon" /> }
 					/>
 
-					<Button type="submit" disabled={ !form.isValid || form.isSubmitting }>
+					<Button type="submit" testId="joinMeetButton" disabled={ !form.isValid || form.isSubmitting }>
 						{ t('joinMeetModal.button') }
 					</Button>
 				</form>
