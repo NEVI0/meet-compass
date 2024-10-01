@@ -1,5 +1,7 @@
+import { UuidAbstract } from '@domain/entities';
+
 export interface UserAbstract {
-    id: string;
+    id: UuidAbstract;
     name: string;
     email: string;
 }
