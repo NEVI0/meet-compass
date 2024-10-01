@@ -1,0 +1,108 @@
+{
+	"page": {
+		"home": {
+			"title": "Welcome to Meet Compass",
+			"subtitle": "More security on calls with your friends.",
+			"button": "Start new meet",
+			"or": "or",
+			"joinMeet": "Just enter in a friend meet ",
+			"joinMeetLink": "clicking here!"
+		},
+		"meet": {
+			"title": "Metting",
+			"calling": {
+				"title"	: "Calling {{ user }}...",
+				"message": "the calling request.",
+				"messageLink": "Tap here to cancel "
+			},
+			"empty": {
+				"title": "There is nobody here!",
+				"message": "Try to invite your friend ",
+				"messageLink": "clicking here."
+			},
+			"tooltip": {
+				"microphone": {
+					"enable": "Enable microphone",
+					"disable": "Disable microphone"
+				},
+				"video": {
+					"enable": "Enable video",
+					"disable": "Disable video"
+				},
+				"shareScreen": {
+					"start": "Start sharing screen",
+					"stop": "Stop sharing screen"
+				},
+				"left": "Left meeting"
+			},
+			"chat": {
+				"title": "Meet chat"
+			},
+			"menu": {
+				"editName": "Edit meet name",
+				"copyId": "Copy meet link",
+				"openChat": "Open chat",
+				"sendEmail": "Send e-mail to {{ user }}",
+				"removeUser": "Remove {{ user }} from meet"
+			}		
+		},
+		"notFound": {
+			"title": "Ops... there is nothing here!",
+			"message": "You are going to be redirect to home page in about 5 seconds."
+		}
+	},
+	"joinMeetModal": {
+		"title": "Join meet",
+		"button": "Join meet"
+	},
+	"receivingCallModal": {
+		"title": "{{ user }} is calling you...",
+		"decline": "Decline",
+		"accept": "Accept"
+	},
+	"renameMeetModal": {
+		"title": "Rename meet",
+		"rename": "Rename"
+	},
+	"inputPlaceholder": {
+		"userName": "Your name",
+		"email": "E-mail",
+		"meetName": "Meet name",
+		"meetId": "Meet ID",
+		"newMeetName": "New meet name",
+		"sendMessage": "Type your message"
+	},
+	"formValidations": {
+		"userName": {
+			"tooShort": "Your name is too short!",
+			"tooLong": "Your name is too long!",
+			"required": "You need to provide your name!"
+		},
+		"userEmail": {
+			"invalid": "The e-mail provided is invalid!",
+			"required": "You need to provide your e-mail!"
+		},
+		"meetName": {
+			"tooShort": "The meet name is too short!",
+			"tooLong": "The meet name is too long!",
+			"required": "You need to provide the meet name!"
+		},
+		"meetId": {
+			"required": "You need to provide the meet ID!"
+		}
+	},
+	"toastMessage": {
+		"errorWhileStartingMeet": "Could not start your meet!",
+		"copiedMeetLink": "Meet link copied to your clipboard!",
+		"errorWhileCopyingMeetLink": "Could not copy meet link. Please try again!",
+		"userRemovedFromMeet": "You have been removed from the meet!",
+		"requestDeclined": "Your meet request have been declined!",
+		"otherUserLeftMeet": "The other user left the meet!",
+		"meetNameUpdated": "The meet name have been changed!",
+		"linkNotAvailable": "Link not available!",
+		"allowGetVideoAndAudio": "Please, allow the browser to get your video and audio!",
+		"canNotshareScreen": "You can not share your screen being alone in the meet!",
+		"sharingScreenError": "Could not start sharing screen!",
+		"otherUserInMeet": "The user you called is already in a meet!"
+	}
+}
