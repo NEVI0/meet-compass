@@ -1,6 +1,7 @@
 import { FC } from 'react';
 
 import { Icon, IconName } from '../Icon';
+import { LoadingSpinner } from '../LoadingSpinner';
 
 import * as S from './styles';
 
@@ -30,7 +31,7 @@ export const Button: FC<ButtonAbstract> = ({
             onClick={onClick}
         >
             {children}
-            {loading ? <></> : <Icon name={icon} />}
+            {loading ? <LoadingSpinner /> : <Icon name={icon} />}
         </S.Container>
     );
 };
