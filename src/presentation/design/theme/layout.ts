@@ -1,4 +1,6 @@
 export const layout = {
+    headerHeight: '80px',
+    footerHeight: '80px',
     breakpoints: {
         sm: '576px',
         md: '768px',
