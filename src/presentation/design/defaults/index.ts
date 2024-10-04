@@ -3,7 +3,7 @@ import { createGlobalStyle } from 'styled-components';
 export const DefaultStyles = createGlobalStyle`
 	:root {
 		--toastify-toast-width: 490px;
-		--toastify-color-dark: ${props => props.theme.colors.container};
+		--toastify-color-dark: ${props => props.theme.colors.toast.bg};
 	}
 
 	* {

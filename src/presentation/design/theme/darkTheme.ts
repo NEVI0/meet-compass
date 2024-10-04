@@ -14,4 +14,8 @@ export const darkTheme = {
         red: '#e22b2b',
         green: '#1e9228',
     },
+
+    toast: {
+        bg: '#161618',
+    },
 };
