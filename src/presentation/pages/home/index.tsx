@@ -1,4 +1,5 @@
 import { NextPage } from 'next';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
 
 import { useFormik } from 'formik';
@@ -10,6 +11,7 @@ import * as S from './styles';
 
 export const Home: NextPage = () => {
     const { t } = useLocale();
+    const router = useRouter();
 
     const form = useFormik({
         initialValues: {
@@ -64,7 +66,9 @@ export const Home: NextPage = () => {
                         placeholder={t('inputPlaceholder.meetName')}
                     />
 
-                    <Button icon="plus">{t('page.home.button')}</Button>
+                    <Button icon="plus" onClick={() => router.push('/meet')}>
+                        {t('page.home.button')}
+                    </Button>
                 </form>
 
                 <div className="home__divider">
