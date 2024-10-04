@@ -3,7 +3,7 @@ import Head from 'next/head';
 
 import { useLocale } from '@presentation/contexts/LocaleContext';
 
-import { ActionButton, IconButton } from './components';
+import { ActionButton, IconButton, EmptyMeet } from './components';
 
 import * as S from './styles';
 
@@ -24,7 +24,9 @@ export const Meet: FC = () => {
                 <IconButton icon="menu" onClick={() => null} />
             </header>
 
-            <main className="meet">dasdasd</main>
+            <main className="meet">
+                <EmptyMeet />
+            </main>
 
             <footer className="footer">
                 <span className="footer__info">12:00</span>
