@@ -4,7 +4,7 @@ export interface MeetAbstract {
     id: UuidAbstract;
     name: string;
 
-    createdAt: string;
+    createdAt: Date;
 
     owner: UserAbstract;
     participants: Array<UserAbstract>;

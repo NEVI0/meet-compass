@@ -1,9 +1,9 @@
 import { MeetAbstract, UserAbstract } from '@domain/entities';
-import { Uuid } from '@infra/adapters';
+import { User, Uuid } from '@infra/adapters';
 
 interface RawMeetData {
     name: string;
-    owner: UserAbstract;
+    owner: Omit<UserAbstract, 'id'>;
 }
 
 export class Meet implements MeetAbstract {
@@ -16,9 +16,9 @@ export class Meet implements MeetAbstract {
     constructor({ name, owner }: RawMeetData) {
         this.id = new Uuid();
         this.name = name;
-        this.createdAt = '';
+        this.createdAt = new Date();
 
-        this.owner = owner;
+        this.owner = new User(owner);
         this.participants = [];
     }
 
