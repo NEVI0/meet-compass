@@ -24,9 +24,15 @@ export const Container = styled.button<{ variant: Variant }>`
 
     font-size: ${props => props.theme.typography.size.icon};
     border-radius: 100%;
+    transition: 0.3s;
 
     > svg {
         fill: #fff;
+    }
+
+    &:disabled {
+        cursor: no-drop;
+        background-color: ${props => props.theme.colors.body};
     }
 
     ${props => VARIANTS[props.variant]};
