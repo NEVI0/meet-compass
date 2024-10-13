@@ -4,12 +4,17 @@ import * as S from './styles';
 
 interface TooltipAbstract {
     message: string;
+    forceHide?: boolean;
     children: ReactNode;
 }
 
-export const Tooltip: FC<TooltipAbstract> = ({ message, children }) => {
+export const Tooltip: FC<TooltipAbstract> = ({
+    message,
+    forceHide = false,
+    children,
+}) => {
     return (
-        <S.Container>
+        <S.Container forceHide={forceHide}>
             <span className="tooltip">{message}</span>
             <>{children}</>
         </S.Container>

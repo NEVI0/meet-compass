@@ -1,6 +1,6 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-export const Container = styled.div`
+export const Container = styled.div<{ forceHide: boolean }>`
     position: relative;
 
     .tooltip {
@@ -26,8 +26,12 @@ export const Container = styled.div`
         transition: 0.3s;
     }
 
-    &:hover > .tooltip {
-        opacity: 1;
-        visibility: visible;
-    }
+    ${props =>
+        !props.forceHide &&
+        css`
+            &:hover > .tooltip {
+                opacity: 1;
+                visibility: visible;
+            }
+        `}
 `;
