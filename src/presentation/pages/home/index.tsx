@@ -2,26 +2,19 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 
-import { useFormik } from 'formik';
+import { Form, Formik } from 'formik';
 
 import { useLocale } from '@presentation/contexts/LocaleContext';
 import { Button, Input, Icon } from '@presentation/components';
 
+import { useCreateMeet } from './hooks';
 import * as S from './styles';
 
 export const Home: NextPage = () => {
-    const { t } = useLocale();
     const router = useRouter();
 
-    const form = useFormik({
-        initialValues: {
-            user: '',
-            email: '',
-            meet: '',
-        },
-        validateOnMount: false,
-        onSubmit: values => console.log({ values }),
-    });
+    const { t } = useLocale();
+    const { create, loading } = useCreateMeet();
 
     return (
         <S.Containter>
@@ -48,28 +41,41 @@ export const Home: NextPage = () => {
                     </div>
                 </header>
 
-                <form className="home__content" onSubmit={() => null}>
-                    <Input
-                        name="name"
-                        icon="user"
-                        placeholder={t('inputPlaceholder.userName')}
-                    />
-                    <Input
-                        name="email"
-                        type="email"
-                        icon="mail"
-                        placeholder={t('inputPlaceholder.email')}
-                    />
-                    <Input
-                        name="meet"
-                        icon="at"
-                        placeholder={t('inputPlaceholder.meetName')}
-                    />
+                <Formik
+                    initialValues={{
+                        user: '',
+                        email: '',
+                        meet: '',
+                    }}
+                    onSubmit={values => {
+                        console.log(values);
+                    }}
+                >
+                    <Form className="home__content">
+                        <Input
+                            name="user"
+                            icon="user"
+                            placeholder={t('inputPlaceholder.userName')}
+                        />
 
-                    <Button icon="plus" onClick={() => router.push('/meet')}>
-                        {t('page.home.button')}
-                    </Button>
-                </form>
+                        <Input
+                            name="email"
+                            type="email"
+                            icon="mail"
+                            placeholder={t('inputPlaceholder.email')}
+                        />
+
+                        <Input
+                            name="meet"
+                            icon="at"
+                            placeholder={t('inputPlaceholder.meetName')}
+                        />
+
+                        <Button type="submit" icon="plus" loading={loading}>
+                            {t('page.home.button')}
+                        </Button>
+                    </Form>
+                </Formik>
 
                 <div className="home__divider">
                     <div className="home__divider-line" />
