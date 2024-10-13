@@ -1,7 +1,17 @@
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, useState } from 'react';
 
-import { MeetContext } from '../hooks/useMeet';
+import { MeetContext, MeetContextAbstract } from '../hooks/useMeet';
 
 export const MeetProvider: FC<{ children: ReactNode }> = ({ children }) => {
-    return <MeetContext.Provider value={{}}>{children}</MeetContext.Provider>;
+    const [meet, setMeet] = useState<MeetContextAbstract['meet']>(null);
+
+    const updateMeetData = (newMeetData: MeetContextAbstract['meet']) => {
+        setMeet(newMeetData);
+    };
+
+    return (
+        <MeetContext.Provider value={{ meet, updateMeetData }}>
+            {children}
+        </MeetContext.Provider>
+    );
 };

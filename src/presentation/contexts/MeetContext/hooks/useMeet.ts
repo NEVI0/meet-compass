@@ -1,7 +1,13 @@
 import { createContext, useContext } from 'react';
 import { isEmpty } from 'lodash';
 
-interface MeetContextAbstract {}
+import { MeetAbstract } from '@domain/entities';
+
+export interface MeetContextAbstract {
+    meet: MeetAbstract | null;
+
+    updateMeetData: (newMeetData: MeetContextAbstract['meet']) => void;
+}
 
 export const MeetContext = createContext<MeetContextAbstract>(
     {} as MeetContextAbstract,
