@@ -1,6 +1,10 @@
 import { FC, HTMLInputTypeAttribute } from 'react';
 
+import { useField } from 'formik';
+
 import { Icon, IconName } from '../Icon';
+import { LoadingSpinner } from '../LoadingSpinner';
+
 import * as S from './styles';
 
 interface InputAbstract {
@@ -23,21 +27,25 @@ export const Input: FC<InputAbstract> = ({
     loading,
     disabled,
 }) => {
+    const [field, meta] = useField<string>(name);
+
+    const hasError = Boolean(meta.error && meta.touched);
+
     return (
-        <S.Container error={!!error} disabled={disabled}>
+        <S.Container error={hasError} disabled={disabled}>
             <div className="input">
                 <input
                     id={name}
-                    name={name}
                     type={type}
                     disabled={disabled || loading}
                     placeholder={placeholder}
+                    {...field}
                 />
 
-                {loading ? <span></span> : <Icon name={icon} />}
+                {loading ? <LoadingSpinner /> : <Icon name={icon} />}
             </div>
 
-            {!!error && <span className="error">{error}</span>}
+            {hasError && <span className="error">{meta.error}</span>}
         </S.Container>
     );
 };
