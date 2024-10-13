@@ -8,7 +8,7 @@ const STORAGE_KEYS: Record<StorageKey, string> = {
     THEME: '@meet-compass:theme',
 };
 
-export default class LocalStorageProvider implements StorageProviderAbstract {
+export class LocalStorageProvider implements StorageProviderAbstract {
     public clear(): void {
         localStorage.clear();
     }

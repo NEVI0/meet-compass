@@ -1,5 +1,5 @@
 import { StorageProviderAbstract } from '@domain/providers';
-import LocalStorageProvider from './implementations/LocalStorageProvider';
+import { LocalStorageProvider } from './implementations/LocalStorageProvider';
 
 let instance: StorageProviderAbstract | null = null;
 
