@@ -14,6 +14,7 @@ export const Container = styled.div<{ participants: number }>`
     ${props =>
         props.participants === 1 &&
         css`
+            margin: 0 10rem;
             grid-template-columns: 1fr;
         `}
 
