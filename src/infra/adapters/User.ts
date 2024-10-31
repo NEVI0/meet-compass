@@ -1,5 +1,6 @@
 import { UserAbstract } from '@domain/entities';
-import { Uuid } from '@infra/adapters';
+
+import { v4 as uuidv4 } from 'uuid';
 
 interface RawUserData {
     name: string;
@@ -12,7 +13,7 @@ export class User implements UserAbstract {
     public email: UserAbstract['email'];
 
     constructor({ name, email }: RawUserData) {
-        this.id = new Uuid();
+        this.id = uuidv4();
         this.name = name;
         this.email = email;
     }

@@ -1,7 +1,5 @@
-import { UuidAbstract } from '@domain/entities';
-
 export interface UserAbstract {
-    id: UuidAbstract;
+    id: string;
     name: string;
     email: string;
 }

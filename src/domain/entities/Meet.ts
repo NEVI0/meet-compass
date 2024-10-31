@@ -1,7 +1,7 @@
-import { UserAbstract, UuidAbstract } from '@domain/entities';
+import { UserAbstract } from '@domain/entities';
 
 export interface MeetAbstract {
-    id: UuidAbstract;
+    id: string;
     name: string;
 
     createdAt: Date;

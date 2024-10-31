@@ -1,5 +1,7 @@
 import { MeetAbstract, UserAbstract } from '@domain/entities';
-import { User, Uuid } from '@infra/adapters';
+import { User } from '@infra/adapters';
+
+import { v4 as uuidv4 } from 'uuid';
 
 interface RawMeetData {
     name: string;
@@ -14,7 +16,7 @@ export class Meet implements MeetAbstract {
     public participants: MeetAbstract['participants'];
 
     constructor({ name, owner }: RawMeetData) {
-        this.id = new Uuid();
+        this.id = uuidv4();
         this.name = name;
         this.createdAt = new Date();
 
