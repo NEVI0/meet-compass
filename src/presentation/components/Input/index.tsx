@@ -9,7 +9,8 @@ import * as S from './styles';
 
 interface InputAbstract {
     name: string;
-    placeholder: string;
+    label: string;
+    placeholder?: string;
     icon: IconName;
 
     type?: HTMLInputTypeAttribute;
@@ -21,6 +22,7 @@ interface InputAbstract {
 export const Input: FC<InputAbstract> = ({
     name,
     icon,
+    label,
     placeholder,
     type = 'text',
     error,
@@ -33,6 +35,8 @@ export const Input: FC<InputAbstract> = ({
 
     return (
         <S.Container error={hasError} disabled={disabled}>
+            <label htmlFor={name}>{label}</label>
+
             <div className="input">
                 <input
                     id={name}
