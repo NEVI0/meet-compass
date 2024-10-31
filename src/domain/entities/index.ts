@@ -1,3 +1,3 @@
 export * from './User';
 export * from './Meet';
-export * from './Uuid';
+export * from './Socket';
