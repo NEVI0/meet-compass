@@ -1,0 +1,11 @@
+import { MeetEventHandlersRepositoryAbstract } from '@domain/repositories';
+
+export class ListenForParticipantRequestingAccessUseCase {
+    constructor(
+        private meetEventHandlersRepository: MeetEventHandlersRepositoryAbstract,
+    ) {}
+
+    public async execute() {
+        return this.meetEventHandlersRepository.onParticipantRequestingAccess();
+    }
+}
