@@ -1,22 +1,28 @@
 import { FC, useRef } from 'react';
 import Head from 'next/head';
 
+import { useMeet } from '@presentation/contexts/MeetContext';
 import { useLocale } from '@presentation/contexts/LocaleContext';
 
-import {
-    ActionButton,
-    IconButton,
-    // EmptyMeet,
-    Participants,
-} from './components';
+import { IconButton, Redirect } from '@presentation/components';
 
-import { useUserStream } from './hooks';
+import {
+    useLeaveMeet,
+    useUserStream,
+    useListenForParticipantRequestingAccess,
+} from './hooks';
+import { ActionButton, Participants } from './components';
 import * as S from './styles';
 
 export const Meet: FC = () => {
     const localUserVideoRef = useRef<HTMLVideoElement>(null);
 
+    useListenForParticipantRequestingAccess();
+
+    const { meet } = useMeet();
+
     const { t } = useLocale();
+    const { leave } = useLeaveMeet();
     const {
         loading,
         hasUserStream,
@@ -32,6 +38,8 @@ export const Meet: FC = () => {
             localUserVideoRef.current.srcObject = stream;
         },
     });
+
+    if (!meet) return <Redirect to="/home" />;
 
     return (
         <S.Container>
@@ -99,10 +107,11 @@ export const Meet: FC = () => {
                         label={t('page.meet.tooltip.left')}
                         icon="phone-off"
                         variant="red"
+                        onClick={leave}
                     />
                 </section>
 
-                <span className="footer__info">fdfsdfdsfdsf</span>
+                <span className="footer__info">{meet.id}</span>
             </footer>
         </S.Container>
     );
