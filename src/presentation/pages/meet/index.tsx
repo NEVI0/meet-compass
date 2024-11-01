@@ -7,11 +7,16 @@ import { useLocale } from '@presentation/contexts/LocaleContext';
 import { IconButton, Redirect } from '@presentation/components';
 
 import {
+    ActionButton,
+    Participants,
+    ParticipantsRequestingAccessModal,
+    Timer,
+} from './components';
+import {
     useLeaveMeet,
     useUserStream,
     useListenForParticipantRequestingAccess,
 } from './hooks';
-import { ActionButton, Participants } from './components';
 import * as S from './styles';
 
 export const Meet: FC = () => {
@@ -48,8 +53,7 @@ export const Meet: FC = () => {
             </Head>
 
             <header className="header">
-                <h2 className="header__title">Meet Name</h2>
-
+                <h2 className="header__title">{meet.name}</h2>
                 <IconButton icon="menu" onClick={() => null} />
             </header>
 
@@ -68,7 +72,7 @@ export const Meet: FC = () => {
             </S.LocalUserVideo>
 
             <footer className="footer">
-                <span className="footer__info">12:00</span>
+                <Timer />
 
                 <section className="footer__actions">
                     <ActionButton
@@ -113,6 +117,8 @@ export const Meet: FC = () => {
 
                 <span className="footer__info">{meet.id}</span>
             </footer>
+
+            <ParticipantsRequestingAccessModal />
         </S.Container>
     );
 };
