@@ -1,14 +1,14 @@
-import { makeSocketClientProvider } from '@infra/providers';
+import { makeMeetEventHandlersRepository } from '@infra/repositories';
 import { AnswerParticipantAccessRequestUseCase } from './implementations/AnswerParticipantAccessRequestUseCase';
 
 let instace: AnswerParticipantAccessRequestUseCase | null = null;
 
 export function makeAnswerParticipantAccessRequestUseCase() {
     if (!instace) {
-        const socketClientProvider = makeSocketClientProvider();
+        const meetEventHandlersRepository = makeMeetEventHandlersRepository();
 
         instace = new AnswerParticipantAccessRequestUseCase(
-            socketClientProvider,
+            meetEventHandlersRepository,
         );
     }
     return instace;
