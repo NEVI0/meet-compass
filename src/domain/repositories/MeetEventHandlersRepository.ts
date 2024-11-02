@@ -1,6 +1,12 @@
-import { ParticipantAccessAnswerDTO } from '@domain/dtos';
+import {
+    ListenForParticipantRequestingAccessDTO,
+    ParticipantAccessAnswerDTO,
+} from '@domain/dtos';
 
 export interface MeetEventHandlersRepositoryAbstract {
-    onParticipantRequestingAccess(): Promise<any>;
+    onParticipantRequestingAccess(
+        params: ListenForParticipantRequestingAccessDTO,
+    ): void;
+
     onAnswerParticipantAccessRequest(param: ParticipantAccessAnswerDTO): void;
 }

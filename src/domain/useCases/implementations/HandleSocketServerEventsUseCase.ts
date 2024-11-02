@@ -1,3 +1,4 @@
+import { ParticipantAccessAnswerDTO } from '@domain/dtos';
 import { MeetAbstract, UserAbstract } from '@domain/entities';
 import {
     ServerStorageProviderAbstract,
@@ -23,22 +24,23 @@ export class HandleSocketServerEventsUseCase {
     private handleRegisterUser() {
         this.socketServerProvider.on<UserAbstract>('register-user', user => {
             const socketId = this.socketServerProvider.socket?.id || '';
+            user.socketId = socketId;
 
-            this.serverStorageProvider.addUser({
-                ...user,
-                socketId,
-            });
+            this.serverStorageProvider.addUser(user);
         });
     }
 
     private handleRegisterMeet() {
         this.socketServerProvider.on<MeetAbstract>('register-meet', meet => {
             const socketId = this.socketServerProvider.socket?.id || '';
+            const owner = this.serverStorageProvider.findUserById(
+                meet.owner.id,
+            );
 
-            this.serverStorageProvider.addMeet({
-                ...meet,
-                socketId,
-            });
+            meet.socketId = socketId;
+            meet.owner.socketId = owner?.socketId || '';
+
+            this.serverStorageProvider.addMeet(meet);
         });
     }
 
@@ -49,13 +51,11 @@ export class HandleSocketServerEventsUseCase {
             const found = this.serverStorageProvider.findMeetById(meet.id);
             if (!found) return;
 
-            const user = this.serverStorageProvider.findUserById(
-                found.owner.id,
-            );
-            if (!user) return;
+            const user = this.serverStorageProvider.findUserById(from.id);
+            from.socketId = user?.socketId || '';
 
             this.socketServerProvider.emitToSocket(
-                user.socketId,
+                found.owner.socketId,
                 'participant-requesting-meet-access',
                 {
                     from,
@@ -66,17 +66,25 @@ export class HandleSocketServerEventsUseCase {
     }
 
     private handleAnswerMeetAccessRequest() {
-        this.socketServerProvider.on<any>(
+        this.socketServerProvider.on<ParticipantAccessAnswerDTO>(
             'answer-meet-access-request',
             data => {
-                const { answer } = data;
+                const { meetId, answer, participant } = data;
 
-                this.socketServerProvider.emit(
-                    answer === 'ACCEPTED'
-                        ? 'request-accepted'
-                        : 'request-denied',
-                    null,
+                if (answer === 'DENIED') {
+                    return this.socketServerProvider.emit(
+                        'request-denied',
+                        null,
+                    );
+                }
+
+                const meet = this.serverStorageProvider.addMeetParticipant(
+                    meetId,
+                    participant,
                 );
+                if (!meet) return;
+
+                this.socketServerProvider.emit('request-accepted', meet);
             },
         );
     }

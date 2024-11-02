@@ -1,7 +1,7 @@
-import { CreateMeetDTO, RequestMeetAccessDTO } from '@domain/dtos';
 import { MeetAbstract } from '@domain/entities';
+import { CreateMeetDTO, RequestMeetAccessDTO } from '@domain/dtos';
 
 export interface MeetRepositoryAbstract {
     create(params: CreateMeetDTO): MeetAbstract;
-    requestAccess(params: RequestMeetAccessDTO): void;
+    requestAccess(params: RequestMeetAccessDTO): Promise<MeetAbstract>;
 }

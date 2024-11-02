@@ -1,22 +1,21 @@
 import { UserAbstract, MeetAbstract } from '@domain/entities';
 
-export interface InternalUser extends UserAbstract {
-    socketId: string;
-}
-export interface InternalMeet extends MeetAbstract {
-    socketId: string;
-}
-
 export interface ServerStorageProviderAbstract {
-    addUser(user: InternalUser): void;
-    addMeet(meet: InternalMeet): void;
+    addUser(user: UserAbstract): void;
+    addMeet(meet: MeetAbstract): void;
 
-    findUserById(id: string): InternalUser | null;
-    findMeetById(id: string): InternalMeet | null;
+    findUserById(id: string): UserAbstract | null;
+    findMeetById(id: string): MeetAbstract | null;
 
     deleteUserById(id: string): void;
     deleteMeetById(id: string): void;
 
-    addMeetParticipant(meetId: string, participant: InternalUser): void;
-    removeMeetParticipant(meetId: string, participant: InternalUser): void;
+    addMeetParticipant(
+        meetId: string,
+        participant: UserAbstract,
+    ): MeetAbstract | null;
+    removeMeetParticipant(
+        meetId: string,
+        participant: UserAbstract,
+    ): MeetAbstract | null;
 }

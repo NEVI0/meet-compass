@@ -1,20 +1,17 @@
-import {
-    InternalMeet,
-    InternalUser,
-    ServerStorageProviderAbstract,
-} from '@domain/providers';
+import { MeetAbstract, UserAbstract } from '@domain/entities';
+import { ServerStorageProviderAbstract } from '@domain/providers';
 
 export class ServerStorageProvider implements ServerStorageProviderAbstract {
-    private users: Record<string, InternalUser> = {};
-    private meets: Record<string, InternalMeet> = {};
+    private users: Record<string, UserAbstract> = {};
+    private meets: Record<string, MeetAbstract> = {};
 
     constructor() {}
 
-    public addUser(user: InternalUser) {
+    public addUser(user: UserAbstract) {
         this.users[user.id] = user;
     }
 
-    public addMeet(meet: InternalMeet) {
+    public addMeet(meet: MeetAbstract) {
         this.meets[meet.id] = meet;
     }
 
@@ -42,17 +39,20 @@ export class ServerStorageProvider implements ServerStorageProviderAbstract {
         if (meet) delete this.meets[id];
     }
 
-    public addMeetParticipant(meetId: string, participant: InternalUser) {
-        const meet = this.meets[meetId];
-        if (!meet) return;
+    public addMeetParticipant(meetId: string, participant: UserAbstract) {
+        if (!this.meets[meetId]) return null;
 
-        this.meets[meetId].addParticipant(participant);
+        this.meets[meetId].participants.push(participant);
+        return this.meets[meetId];
     }
 
-    public removeMeetParticipant(meetId: string, participant: InternalUser) {
-        const meet = this.meets[meetId];
-        if (!meet) return;
+    public removeMeetParticipant(meetId: string, participant: UserAbstract) {
+        if (!this.meets[meetId]) return null;
 
-        this.meets[meetId].removeParticipant(participant);
+        this.meets[meetId].participants.filter(
+            ptc => ptc.id !== participant.id,
+        );
+
+        return this.meets[meetId];
     }
 }

@@ -1,4 +1,8 @@
-import { ParticipantAccessAnswerDTO } from '@domain/dtos';
+import {
+    ListenForParticipantRequestingAccessDTO,
+    ParticipantAccessAnswerDTO,
+} from '@domain/dtos';
+import { UserAbstract } from '@domain/entities';
 import { SocketClientProviderAbstract } from '@domain/providers';
 import { MeetEventHandlersRepositoryAbstract } from '@domain/repositories';
 
@@ -7,15 +11,13 @@ export class MeetEventHandlersRepository
 {
     constructor(private socketClientProvider: SocketClientProviderAbstract) {}
 
-    public onParticipantRequestingAccess() {
-        return new Promise(resolve => {
-            this.socketClientProvider.on<any>(
-                'participant-requesting-meet-access',
-                data => {
-                    return resolve(data);
-                },
-            );
-        });
+    public onParticipantRequestingAccess(
+        params: ListenForParticipantRequestingAccessDTO,
+    ) {
+        this.socketClientProvider.on<{ from: UserAbstract; signal: any }>(
+            'participant-requesting-meet-access',
+            params.onReceive,
+        );
     }
 
     public onAnswerParticipantAccessRequest(

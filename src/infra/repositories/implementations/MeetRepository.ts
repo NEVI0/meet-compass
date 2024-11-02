@@ -1,6 +1,8 @@
+import { MeetAbstract } from '@domain/entities';
 import { CreateMeetDTO, RequestMeetAccessDTO } from '@domain/dtos';
-import { SocketClientProviderAbstract } from '@domain/providers';
+
 import { MeetRepositoryAbstract } from '@domain/repositories';
+import { SocketClientProviderAbstract } from '@domain/providers';
 
 import { Meet, User } from '@infra/adapters';
 
@@ -13,19 +15,34 @@ export class MeetRepository implements MeetRepositoryAbstract {
             owner: params.owner,
         });
 
-        this.socketClientProvider.emit('register-meet', meet);
         this.socketClientProvider.emit('register-user', meet.owner);
+        this.socketClientProvider.emit('register-meet', meet);
 
         return meet;
     }
 
     public requestAccess(params: RequestMeetAccessDTO) {
         return new Promise((resolve, reject) => {
-            this.socketClientProvider.on('request-accepted', () => {
-                return resolve(null);
-            });
+            this.socketClientProvider.on<MeetAbstract>(
+                'request-accepted',
+                meet => {
+                    this.socketClientProvider.removeEventListener(
+                        'request-accepted',
+                    );
+                    this.socketClientProvider.removeEventListener(
+                        'request-denied',
+                    );
+
+                    return resolve(meet);
+                },
+            );
 
             this.socketClientProvider.on('request-denied', () => {
+                this.socketClientProvider.removeEventListener(
+                    'request-accepted',
+                );
+                this.socketClientProvider.removeEventListener('request-denied');
+
                 return reject();
             });
 
@@ -40,6 +57,6 @@ export class MeetRepository implements MeetRepositoryAbstract {
                 meet: params.meet,
                 signal: params.signal,
             });
-        });
+        }) as Promise<MeetAbstract>;
     }
 }

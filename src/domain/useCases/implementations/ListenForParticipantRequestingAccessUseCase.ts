@@ -1,3 +1,4 @@
+import { ListenForParticipantRequestingAccessDTO } from '@domain/dtos';
 import { MeetEventHandlersRepositoryAbstract } from '@domain/repositories';
 
 export class ListenForParticipantRequestingAccessUseCase {
@@ -5,7 +6,9 @@ export class ListenForParticipantRequestingAccessUseCase {
         private meetEventHandlersRepository: MeetEventHandlersRepositoryAbstract,
     ) {}
 
-    public async execute() {
-        return this.meetEventHandlersRepository.onParticipantRequestingAccess();
+    public async execute(params: ListenForParticipantRequestingAccessDTO) {
+        return this.meetEventHandlersRepository.onParticipantRequestingAccess(
+            params,
+        );
     }
 }
