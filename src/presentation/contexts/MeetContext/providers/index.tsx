@@ -5,12 +5,8 @@ import { MeetContext, MeetContextAbstract } from '../hooks/useMeet';
 export const MeetProvider: FC<{ children: ReactNode }> = ({ children }) => {
     const [meet, setMeet] = useState<MeetContextAbstract['meet']>(null);
 
-    const updateMeetData = (newMeetData: MeetContextAbstract['meet']) => {
-        setMeet(newMeetData);
-    };
-
     return (
-        <MeetContext.Provider value={{ meet, updateMeetData }}>
+        <MeetContext.Provider value={{ meet, setMeet }}>
             {children}
         </MeetContext.Provider>
     );

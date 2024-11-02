@@ -4,11 +4,15 @@ import { useRouter } from 'next/router';
 
 import { RequestMeetAccessDTO } from '@domain/dtos';
 import { makeRequestMeetAccessUseCase } from '@domain/useCases';
+
 import { useToast } from '@presentation/contexts/ToastContext';
+import { useMeet } from '@presentation/contexts/MeetContext';
 
 export const useRequestMeetAccess = () => {
     const router = useRouter();
+
     const { toast } = useToast();
+    const { setMeet } = useMeet();
 
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -16,7 +20,8 @@ export const useRequestMeetAccess = () => {
         try {
             setLoading(true);
 
-            await makeRequestMeetAccessUseCase().execute(params);
+            const meet = await makeRequestMeetAccessUseCase().execute(params);
+            setMeet(meet);
 
             toast.success('Acesso permitido!');
             router.push('/meet');

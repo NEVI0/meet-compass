@@ -1,12 +1,11 @@
-import { createContext, useContext } from 'react';
+import { createContext, Dispatch, SetStateAction, useContext } from 'react';
 import { isEmpty } from 'lodash';
 
 import { MeetAbstract } from '@domain/entities';
 
 export interface MeetContextAbstract {
     meet: MeetAbstract | null;
-
-    updateMeetData: (newMeetData: MeetContextAbstract['meet']) => void;
+    setMeet: Dispatch<SetStateAction<MeetAbstract | null>>;
 }
 
 export const MeetContext = createContext<MeetContextAbstract>(
