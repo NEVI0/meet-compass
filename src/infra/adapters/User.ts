@@ -11,10 +11,12 @@ export class User implements UserAbstract {
     public id: UserAbstract['id'];
     public name: UserAbstract['name'];
     public email: UserAbstract['email'];
+    public socketId: UserAbstract['socketId'];
 
     constructor({ name, email }: RawUserData) {
         this.id = uuidv4();
         this.name = name;
         this.email = email;
+        this.socketId = '';
     }
 }
