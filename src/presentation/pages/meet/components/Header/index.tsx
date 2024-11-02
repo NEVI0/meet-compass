@@ -2,6 +2,7 @@ import { FC } from 'react';
 import Head from 'next/head';
 
 import { useMeet } from '@presentation/contexts/MeetContext';
+import { useTheme } from '@presentation/contexts/ThemeContext';
 import { useLocale } from '@presentation/contexts/LocaleContext';
 
 import { IconButton } from '@presentation/components';
@@ -11,6 +12,7 @@ import * as S from './styles';
 export const Header: FC = () => {
     const { t } = useLocale();
     const { meet } = useMeet();
+    const { theme, toggleTheme } = useTheme();
 
     if (!meet) return undefined;
 
@@ -23,7 +25,14 @@ export const Header: FC = () => {
             <S.Container>
                 <h2>{meet.name}</h2>
 
-                <IconButton icon="menu" onClick={() => null} />
+                <div>
+                    <IconButton
+                        icon={theme.darkMode ? 'sun' : 'moon'}
+                        onClick={toggleTheme}
+                    />
+
+                    <IconButton icon="chat" onClick={() => null} />
+                </div>
             </S.Container>
         </>
     );

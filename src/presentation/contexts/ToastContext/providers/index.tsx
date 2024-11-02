@@ -4,8 +4,8 @@ import { FC, ReactNode, useMemo } from 'react';
 
 import { toast, ToastContainer, ToastOptions } from 'react-toastify';
 
-import { ToastContext } from '../hooks/useToast';
 import { useTheme } from '@presentation/contexts/ThemeContext';
+import { ToastContext } from '../hooks/useToast';
 
 export const ToastProvider: FC<{ children: ReactNode }> = ({ children }) => {
     const { theme } = useTheme();

@@ -18,4 +18,10 @@ export const Container = styled.header`
     > h2 {
         font-size: ${props => props.theme.typography.size.h2};
     }
+
+    > div {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
 `;

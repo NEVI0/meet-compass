@@ -22,6 +22,8 @@ import {
     BiPlus,
     BiEnvelope,
     BiCheckDouble,
+    BiSun,
+    BiMoon,
 } from 'react-icons/bi';
 
 import { useTheme } from '@presentation/contexts/ThemeContext';
@@ -48,6 +50,8 @@ const ICONS = {
     plus: BiPlus,
     mail: BiEnvelope,
     'double-check': BiCheckDouble,
+    sun: BiSun,
+    moon: BiMoon,
 };
 
 export type IconName = keyof typeof ICONS;

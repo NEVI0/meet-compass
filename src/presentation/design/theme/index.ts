@@ -3,7 +3,7 @@ import { typography } from './typography';
 import { lightTheme } from './lightTheme';
 import { darkTheme } from './darkTheme';
 
-export const createTheme = (darkMode: boolean = true) => ({
+export const createTheme = (darkMode: boolean = false) => ({
     darkMode,
     layout,
     typography,

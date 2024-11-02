@@ -3,12 +3,12 @@ export const lightTheme = {
     secondary: '#381996',
 
     text: {
-        main: '#FFF',
-        light: '#b4b4ba',
+        main: '#08080c',
+        light: '#a0a0a5',
     },
 
-    body: '#08080c',
-    container: '#111114',
+    body: '#FFF',
+    container: '#f4f4f4',
 
     others: {
         red: '#e22b2b',
@@ -16,6 +16,6 @@ export const lightTheme = {
     },
 
     toast: {
-        bg: '#161618',
+        bg: '#fff',
     },
 };
