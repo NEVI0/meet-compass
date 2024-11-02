@@ -1,7 +1,8 @@
 import { FC, useEffect } from 'react';
 
-import * as S from './styles';
 import { Icon } from '@presentation/components';
+
+import * as S from './styles';
 
 interface ParticipantAbstract {
     index: number;

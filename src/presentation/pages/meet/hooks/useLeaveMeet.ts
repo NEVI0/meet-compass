@@ -5,10 +5,10 @@ import { useMeet } from '@presentation/contexts/MeetContext';
 export const useLeaveMeet = () => {
     const router = useRouter();
 
-    const { updateMeetData } = useMeet();
+    const { setMeet } = useMeet();
 
     const leave = () => {
-        updateMeetData(null);
+        setMeet(null);
         router.replace('/home');
     };
 

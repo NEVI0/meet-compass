@@ -2,20 +2,22 @@ import { FC } from 'react';
 
 import { IconButton } from '@presentation/components';
 
+import { useParticipantsRequestingAccess } from './hooks';
 import * as S from './styles';
 
 export const ParticipantsRequestingAccessModal: FC = () => {
-    const participantsRequestingAccess: any[] = [];
+    const { participants, answerParticipant } =
+        useParticipantsRequestingAccess();
 
-    if (!participantsRequestingAccess.length) return null;
+    if (!participants.length) return null;
 
     return (
         <S.Container>
             <div>
-                {participantsRequestingAccess.map((_, index) => (
-                    <S.Participant key={index}>
+                {participants.map(participant => (
+                    <S.Participant key={participant.id}>
                         <div>
-                            <h3>Outro Teste</h3>
+                            <h3>{participant.name}</h3>
                             <small>está ligando...</small>
                         </div>
 
@@ -23,13 +25,23 @@ export const ParticipantsRequestingAccessModal: FC = () => {
                             <IconButton
                                 variant="error"
                                 icon="x"
-                                onClick={() => null}
+                                onClick={() => {
+                                    answerParticipant({
+                                        answer: 'DENIED',
+                                        participant,
+                                    });
+                                }}
                             />
 
                             <IconButton
                                 variant="success"
                                 icon="double-check"
-                                onClick={() => null}
+                                onClick={() => {
+                                    answerParticipant({
+                                        answer: 'ACCEPTED',
+                                        participant,
+                                    });
+                                }}
                             />
                         </div>
                     </S.Participant>

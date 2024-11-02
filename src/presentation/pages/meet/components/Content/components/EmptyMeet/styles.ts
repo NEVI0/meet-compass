@@ -18,10 +18,13 @@ export const Container = styled.div`
         > p {
             color: ${props => props.theme.colors.text.light};
 
-            a {
-                cursor: pointer;
-                color: ${props => props.theme.colors.primary};
+            button {
+                border: none;
+                outline: none;
+                background: none;
+
                 transition: 0.3s;
+                color: ${props => props.theme.colors.primary};
 
                 &:hover {
                     color: ${props => props.theme.colors.secondary};

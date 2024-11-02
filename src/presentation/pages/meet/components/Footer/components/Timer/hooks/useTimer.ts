@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react';
 
+import { useMeet } from '@presentation/contexts/MeetContext';
+
 export const useTimer = () => {
+    const { meet } = useMeet();
+
     const [count, setCount] = useState<number>(0);
     const [time, setTime] = useState<string>('00:00:00');
 
-    let initTime = new Date();
+    let initTime = !!meet?.createdAt ? new Date(meet.createdAt) : new Date();
 
     const showTimer = (ms: number) => {
         const second = Math.floor((ms / 1000) % 60)

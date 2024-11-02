@@ -6,12 +6,14 @@ import { useWindowSize } from '@presentation/hooks';
 import { Animation } from '@presentation/components';
 
 import { ANIMATIONS } from '@presentation/constants/animations';
-import { ANIMATION_DIMENSIONS } from '../../constants/animationDimensions';
 
+import { useCopyMeetLink } from '@presentation/pages/meet/hooks';
+import { ANIMATION_DIMENSIONS } from './constants/animationDimensions';
 import * as S from './styles';
 
 export const EmptyMeet: FC = () => {
     const { t } = useLocale();
+    const { copyLink } = useCopyMeetLink();
     const { breakpoint } = useWindowSize();
 
     return (
@@ -30,7 +32,9 @@ export const EmptyMeet: FC = () => {
 
                 <p>
                     {t('page.meet.empty.message')}
-                    <a href="#">{t('page.meet.empty.messageLink')}</a>
+                    <button onClick={copyLink}>
+                        {t('page.meet.empty.messageLink')}
+                    </button>
                 </p>
             </div>
         </S.Container>
