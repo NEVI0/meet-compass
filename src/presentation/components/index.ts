@@ -6,3 +6,5 @@ export * from './Tooltip';
 export * from './Animation';
 export * from './IconButton';
 export * from './Redirect';
+
+export { default as DropdownMenu } from './DropdownMenu';
