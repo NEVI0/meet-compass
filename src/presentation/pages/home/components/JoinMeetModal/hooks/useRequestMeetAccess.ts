@@ -26,7 +26,7 @@ export const useRequestMeetAccess = () => {
             toast.success('Acesso permitido!');
             router.push('/meet');
         } catch (error) {
-            toast.error('Acesso negado!');
+            toast.error(error as string);
         } finally {
             setLoading(false);
         }

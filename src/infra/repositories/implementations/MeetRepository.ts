@@ -26,24 +26,19 @@ export class MeetRepository implements MeetRepositoryAbstract {
             this.socketClientProvider.on<MeetAbstract>(
                 'request-accepted',
                 meet => {
-                    this.socketClientProvider.removeEventListener(
-                        'request-accepted',
-                    );
-                    this.socketClientProvider.removeEventListener(
-                        'request-denied',
-                    );
-
+                    this.removeListenersOfRequestAccess();
                     return resolve(meet);
                 },
             );
 
             this.socketClientProvider.on('request-denied', () => {
-                this.socketClientProvider.removeEventListener(
-                    'request-accepted',
-                );
-                this.socketClientProvider.removeEventListener('request-denied');
+                this.removeListenersOfRequestAccess();
+                return reject('Acesso negado!');
+            });
 
-                return reject();
+            this.socketClientProvider.on('meet-not-available', () => {
+                this.removeListenersOfRequestAccess();
+                return reject('Reunião indisponível no momento!');
             });
 
             const user = new User({
@@ -58,5 +53,11 @@ export class MeetRepository implements MeetRepositoryAbstract {
                 signal: params.signal,
             });
         }) as Promise<MeetAbstract>;
+    }
+
+    private removeListenersOfRequestAccess() {
+        this.socketClientProvider.removeEventListener('meet-not-available');
+        this.socketClientProvider.removeEventListener('request-accepted');
+        this.socketClientProvider.removeEventListener('request-denied');
     }
 }

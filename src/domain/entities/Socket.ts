@@ -3,7 +3,8 @@ import { DefaultEventsMap, Server, Socket } from 'socket.io';
 export type SocketServerEventName =
     | 'participant-requesting-meet-access'
     | 'request-accepted'
-    | 'request-denied';
+    | 'request-denied'
+    | 'meet-not-available';
 
 export type SocketClientEventName =
     | 'register-user'

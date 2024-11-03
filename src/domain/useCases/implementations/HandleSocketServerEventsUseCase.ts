@@ -48,11 +48,14 @@ export class HandleSocketServerEventsUseCase {
         this.socketServerProvider.on<any>('request-meet-access', data => {
             const { meet, from, signal } = data;
 
-            const found = this.serverStorageProvider.findMeetById(meet.id);
-            if (!found) return;
-
             const user = this.serverStorageProvider.findUserById(from.id);
             from.socketId = user?.socketId || '';
+
+            const found = this.serverStorageProvider.findMeetById(meet.id);
+            if (!found) {
+                this.socketServerProvider.emit('meet-not-available', null);
+                return;
+            }
 
             this.socketServerProvider.emitToSocket(
                 found.owner.socketId,

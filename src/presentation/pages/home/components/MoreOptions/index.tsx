@@ -11,7 +11,7 @@ export const MoreOptions: FC = () => {
 
     return (
         <S.Container>
-            <DropdownMenu
+            {/* <DropdownMenu
                 content={
                     <>
                         <DropdownMenu.Option
@@ -29,7 +29,7 @@ export const MoreOptions: FC = () => {
                 }
             >
                 <IconButton icon="locale" />
-            </DropdownMenu>
+            </DropdownMenu> */}
 
             <IconButton
                 icon={theme.darkMode ? 'sun' : 'moon'}
