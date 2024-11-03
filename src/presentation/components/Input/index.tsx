@@ -31,10 +31,11 @@ export const Input: FC<InputAbstract> = ({
 }) => {
     const [field, meta] = useField<string>(name);
 
+    const isValid = Boolean(!meta.error && meta.touched);
     const hasError = Boolean(meta.error && meta.touched);
 
     return (
-        <S.Container error={hasError} disabled={disabled}>
+        <S.Container error={hasError} valid={isValid} disabled={disabled}>
             <label htmlFor={name}>{label}</label>
 
             <div className="input">
@@ -46,7 +47,11 @@ export const Input: FC<InputAbstract> = ({
                     {...field}
                 />
 
-                {loading ? <LoadingSpinner /> : <Icon name={icon} />}
+                {loading ? (
+                    <LoadingSpinner />
+                ) : (
+                    <Icon name={isValid ? 'double-check' : icon} />
+                )}
             </div>
 
             {hasError && <span className="error">{meta.error}</span>}

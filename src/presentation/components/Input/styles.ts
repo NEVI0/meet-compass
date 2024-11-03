@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 
 interface ContainerAbstract {
     error?: boolean;
+    valid?: boolean;
     disabled?: boolean;
 }
 
@@ -47,6 +48,8 @@ export const Container = styled.div<ContainerAbstract>`
                     ? darken(0.4, props.theme.colors.text.light)
                     : props.error
                     ? props.theme.colors.others.red
+                    : props.valid
+                    ? props.theme.colors.others.green
                     : props.theme.colors.primary};
         }
 
@@ -54,7 +57,9 @@ export const Container = styled.div<ContainerAbstract>`
             !props.error &&
             css`
                 &:focus-within {
-                    border-color: ${props => props.theme.colors.primary};
+                    border-color: ${props.valid
+                        ? props.theme.colors.others.green
+                        : props.theme.colors.primary};
                 }
             `}
     }
