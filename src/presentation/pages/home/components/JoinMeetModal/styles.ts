@@ -12,7 +12,7 @@ export const Container = styled.div`
 
     z-index: 5;
 
-    .modal {
+    > div {
         padding: 2rem;
         border-radius: 2rem;
 
@@ -24,31 +24,25 @@ export const Container = styled.div`
 
         background-color: ${props => props.theme.colors.container};
 
-        &__header {
+        > header {
             display: flex;
             align-items: center;
             justify-content: space-between;
+
+            > h2 {
+                font-size: ${props => props.theme.typography.size.h2};
+            }
         }
 
-        &__title {
-            font-size: ${props => props.theme.typography.size.h2};
-        }
-
-        &__form {
+        > form {
             display: flex;
             flex-direction: column;
             gap: 2rem;
-        }
 
-        &__content {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        &__footer {
-            > button {
-                width: 100%;
+            > div {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
             }
         }
     }

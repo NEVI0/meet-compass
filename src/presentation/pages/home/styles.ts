@@ -2,21 +2,26 @@ import styled from 'styled-components';
 
 export const Containter = styled.div`
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     transition: 0.3s;
 
-    .left {
+    > aside {
         display: none;
+        position: relative;
 
-        .logo {
+        > svg {
             position: fixed;
-            font-size: 60rem;
+
+            bottom: -20rem;
+            right: -20rem;
+            font-size: 72rem;
+
             transition: 0.3s;
             fill: ${props => props.theme.colors.primary};
         }
     }
 
-    .home {
+    > main {
         min-height: 100vh;
 
         display: flex;
@@ -29,43 +34,55 @@ export const Containter = styled.div`
         transition: 0.3s;
         overflow: auto;
 
-        &__header {
+        > header {
             display: flex;
             flex-direction: column;
             row-gap: 1rem;
-        }
 
-        &__logo {
-            width: 52px;
-            height: 52px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 0.75rem;
-            background-color: ${props => props.theme.colors.body};
+            > div:first-child {
+                width: 52px;
+                height: 52px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 0.75rem;
+                background-color: ${props => props.theme.colors.body};
 
-            &-icon {
-                font-size: 1.75rem;
-                fill: ${props => props.theme.colors.primary};
+                > svg {
+                    font-size: 1.75rem;
+                    fill: ${props => props.theme.colors.primary};
+                }
+            }
+
+            > div:last-child {
+                display: flex;
+                flex-direction: column;
+                gap: 0.25rem;
+
+                > h1 {
+                    margin-bottom: 0.25rem;
+                    font-size: ${props => props.theme.typography.size.biggest};
+                }
+
+                > p {
+                    color: ${props => props.theme.colors.text.light};
+                }
             }
         }
 
-        &__title {
-            margin-bottom: 0.25rem;
-            font-size: ${props => props.theme.typography.size.biggest};
-        }
-
-        &__description {
-            color: ${props => props.theme.colors.text.light};
-        }
-
-        &__content {
+        > form {
             display: flex;
             flex-direction: column;
-            row-gap: 1rem;
+            row-gap: 2.5rem;
+
+            > div {
+                display: flex;
+                flex-direction: column;
+                row-gap: 1rem;
+            }
         }
 
-        &__divider {
+        > div {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -74,7 +91,7 @@ export const Containter = styled.div`
             color: ${props => props.theme.colors.text.light};
             text-transform: uppercase;
 
-            &-line {
+            > div {
                 height: 1px;
                 width: 50px;
                 border-radius: 1rem;
@@ -82,7 +99,7 @@ export const Containter = styled.div`
             }
         }
 
-        &__join {
+        > span {
             text-align: center;
             font-size: ${props => props.theme.typography.size.small};
 
@@ -99,20 +116,14 @@ export const Containter = styled.div`
         }
     }
 
-    .language-switch {
-        position: fixed;
-        top: 1.5rem;
-        right: 1.5rem;
-    }
-
     @media screen and (min-width: 576px) {
-        .home {
+        > main {
             padding: 3rem 6rem;
         }
     }
 
     @media screen and (min-width: 767px) {
-        .home {
+        > main {
             padding: 5rem 10rem;
         }
     }
@@ -120,36 +131,24 @@ export const Containter = styled.div`
     @media screen and (min-width: 992px) {
         flex-direction: row;
 
-        .left {
-            width: 50%;
+        > aside {
             display: block;
-
-            .logo {
-                left: -450px;
-                bottom: -350px;
-            }
         }
 
-        .home {
+        > main {
             width: 50%;
             padding: 2rem 2.5rem;
         }
     }
 
     @media screen and (min-width: 1120px) {
-        .home {
+        > main {
             padding: 2rem 4rem;
         }
     }
 
     @media screen and (min-width: 1490px) {
-        .left .logo {
-            font-size: 80rem;
-            left: -550px;
-            bottom: -450px;
-        }
-
-        .home {
+        > main {
             padding: 5rem 10rem;
         }
     }

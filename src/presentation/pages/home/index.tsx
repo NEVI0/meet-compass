@@ -1,23 +1,34 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
+import { useRouter } from 'next/router';
 import { NextPage } from 'next';
 import Head from 'next/head';
 
-import { Form, Formik } from 'formik';
+import { Formik } from 'formik';
 
 import { useLocale } from '@presentation/contexts/LocaleContext';
 import { Button, Input, Icon } from '@presentation/components';
+import { CreateMeetSchema } from '@presentation/validations';
 
-import { JoinMeetModal } from './components';
+import { JoinMeetModal, MoreOptions } from './components';
 import { useCreateMeet } from './hooks';
 import * as S from './styles';
 
 export const Home: NextPage = () => {
+    const router = useRouter();
+
     const { t } = useLocale();
     const { create, loading } = useCreateMeet();
 
     const [isJoinMeetModalVisible, setIsJoinMeetModalVisible] =
         useState<boolean>(false);
+
+    const { meetId } = router.query;
+
+    useEffect(() => {
+        if (!meetId) return;
+        setIsJoinMeetModalVisible(true);
+    }, [meetId]);
 
     return (
         <S.Containter>
@@ -25,22 +36,15 @@ export const Home: NextPage = () => {
                 <title>Meet Compass</title>
             </Head>
 
-            <aside className="left">
-                <Icon name="compass" className="logo" />
-            </aside>
-
-            <main className="home">
-                <header className="home__header">
-                    <div className="home__logo">
-                        <Icon name="compass" className="home__logo-icon" />
+            <main>
+                <header>
+                    <div>
+                        <Icon name="compass" />
                     </div>
 
                     <div>
-                        <h1 className="home__title">{t('page.home.title')}</h1>
-
-                        <p className="home__description">
-                            {t('page.home.subtitle')}
-                        </p>
+                        <h1>{t('page.home.title')}</h1>
+                        <p>{t('page.home.subtitle')}</p>
                     </div>
                 </header>
 
@@ -50,6 +54,8 @@ export const Home: NextPage = () => {
                         email: '',
                         meet: '',
                     }}
+                    validateOnMount={false}
+                    validationSchema={CreateMeetSchema(t)}
                     onSubmit={values => {
                         create({
                             meet: {
@@ -62,40 +68,44 @@ export const Home: NextPage = () => {
                         });
                     }}
                 >
-                    <Form className="home__content">
-                        <Input
-                            name="user"
-                            icon="user"
-                            label={t('inputPlaceholder.userName')}
-                        />
+                    {props => (
+                        <form onSubmit={props.handleSubmit}>
+                            <div>
+                                <Input
+                                    name="user"
+                                    icon="user"
+                                    label={t('inputPlaceholder.userName')}
+                                />
 
-                        <Input
-                            name="email"
-                            type="email"
-                            icon="mail"
-                            label={t('inputPlaceholder.email')}
-                            placeholder="example@gmail.com"
-                        />
+                                <Input
+                                    name="email"
+                                    type="email"
+                                    icon="mail"
+                                    label={t('inputPlaceholder.email')}
+                                    placeholder="example@gmail.com"
+                                />
 
-                        <Input
-                            name="meet"
-                            icon="at"
-                            label={t('inputPlaceholder.meetName')}
-                        />
+                                <Input
+                                    name="meet"
+                                    icon="at"
+                                    label={t('inputPlaceholder.meetName')}
+                                />
+                            </div>
 
-                        <Button type="submit" icon="plus" loading={loading}>
-                            {t('page.home.button')}
-                        </Button>
-                    </Form>
+                            <Button type="submit" icon="plus" loading={loading}>
+                                {t('page.home.button')}
+                            </Button>
+                        </form>
+                    )}
                 </Formik>
 
-                <div className="home__divider">
-                    <div className="home__divider-line" />
+                <div>
+                    <div />
                     {t('page.home.or')}
-                    <div className="home__divider-line" />
+                    <div />
                 </div>
 
-                <span className="home__join">
+                <span>
                     {t('page.home.joinMeet')}{' '}
                     <a
                         data-testid="joinMeetLink"
@@ -108,8 +118,15 @@ export const Home: NextPage = () => {
                 </span>
             </main>
 
+            <aside>
+                <Icon name="compass" className="logo" />
+            </aside>
+
+            <MoreOptions />
+
             {isJoinMeetModalVisible ? (
                 <JoinMeetModal
+                    meetId={meetId as string}
                     onClose={() => {
                         setIsJoinMeetModalVisible(!isJoinMeetModalVisible);
                     }}
