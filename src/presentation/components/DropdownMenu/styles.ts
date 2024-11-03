@@ -12,6 +12,10 @@ export const Container = styled(Dropdown.Content)`
     flex-direction: column;
 `;
 
+export const Trigger = styled(Dropdown.Trigger)`
+    background-color: transparent;
+`;
+
 export const Arrow = styled(Dropdown.Arrow)`
     fill: ${props => props.theme.colors.container};
 `;

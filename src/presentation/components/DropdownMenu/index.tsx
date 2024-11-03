@@ -19,7 +19,7 @@ const DropdownMenu: DropdownMenuAbstract = ({
     children,
 }) => (
     <Dropdown.Root onOpenChange={onOpenChange}>
-        <Dropdown.Trigger>{children}</Dropdown.Trigger>
+        <S.Trigger>{children}</S.Trigger>
 
         <Dropdown.Portal>
             <S.Container sideOffset={4}>
