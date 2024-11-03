@@ -4,7 +4,7 @@ export const Container = styled.button`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 48px;
+    height: 52px;
     padding: 0 1.5rem;
     border-radius: 1rem;
 
