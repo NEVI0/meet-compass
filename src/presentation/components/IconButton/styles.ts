@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 
-export type Variant = 'default' | 'success' | 'error';
+export type Variant = 'default' | 'container' | 'success' | 'error';
 
 interface ContainerAbstract {
     variant: Variant;
@@ -9,6 +9,13 @@ interface ContainerAbstract {
 const VARIANTS: Record<Variant, any> = {
     default: css`
         background-color: ${props => props.theme.colors.body};
+
+        > svg {
+            fill: ${props => props.theme.colors.text.main};
+        }
+    `,
+    container: css`
+        background-color: ${props => props.theme.colors.container};
 
         > svg {
             fill: ${props => props.theme.colors.text.main};
