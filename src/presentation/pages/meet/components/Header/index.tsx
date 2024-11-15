@@ -12,8 +12,8 @@ import * as S from './styles';
 
 export const Header: FC = () => {
     const { t } = useLocale();
-    const { meet } = useMeet();
     const { copyLink } = useCopyMeetLink();
+    const { meet, chat } = useMeet();
     const { theme, toggleTheme } = useTheme();
 
     if (!meet) return undefined;
@@ -55,7 +55,7 @@ export const Header: FC = () => {
                         onClick={toggleTheme}
                     />
 
-                    <IconButton icon="chat" />
+                    <IconButton icon="chat" onClick={chat.toogle} />
                 </div>
             </S.Container>
         </>

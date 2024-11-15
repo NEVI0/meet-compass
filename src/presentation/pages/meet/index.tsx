@@ -8,6 +8,7 @@ import {
     Header,
     Content,
     Footer,
+    Chat,
     ParticipantsRequestingAccessModal,
 } from './components';
 import * as S from './styles';
@@ -22,6 +23,7 @@ export const Meet: FC = () => {
             <Content />
             <Footer />
 
+            <Chat />
             <ParticipantsRequestingAccessModal />
         </S.Container>
     );

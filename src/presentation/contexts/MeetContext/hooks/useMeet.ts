@@ -3,9 +3,16 @@ import { isEmpty } from 'lodash';
 
 import { MeetAbstract } from '@domain/entities';
 
+interface ChatAbstract {
+    open: boolean;
+    toogle: () => void;
+}
+
 export interface MeetContextAbstract {
     meet: MeetAbstract | null;
     setMeet: Dispatch<SetStateAction<MeetAbstract | null>>;
+
+    chat: ChatAbstract;
 }
 
 export const MeetContext = createContext<MeetContextAbstract>(
