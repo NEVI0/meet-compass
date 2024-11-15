@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-    position: fixed;
+    position: absolute;
     top: 2rem;
     right: 2rem;
 

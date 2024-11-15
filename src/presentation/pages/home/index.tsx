@@ -37,6 +37,8 @@ export const Home: NextPage = () => {
             </Head>
 
             <main>
+                <MoreOptions />
+
                 <header>
                     <div>
                         <Icon name="compass" />
@@ -68,8 +70,8 @@ export const Home: NextPage = () => {
                         });
                     }}
                 >
-                    {props => (
-                        <form onSubmit={props.handleSubmit}>
+                    {form => (
+                        <form onSubmit={form.handleSubmit}>
                             <div>
                                 <Input
                                     name="user"
@@ -92,7 +94,12 @@ export const Home: NextPage = () => {
                                 />
                             </div>
 
-                            <Button type="submit" icon="plus" loading={loading}>
+                            <Button
+                                type="submit"
+                                icon="plus"
+                                loading={loading}
+                                disabled={!form.isValid}
+                            >
                                 {t('page.home.button')}
                             </Button>
                         </form>
@@ -121,8 +128,6 @@ export const Home: NextPage = () => {
             <aside>
                 <Icon name="compass" className="logo" />
             </aside>
-
-            <MoreOptions />
 
             {isJoinMeetModalVisible ? (
                 <JoinMeetModal

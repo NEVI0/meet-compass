@@ -29,6 +29,7 @@ export const Containter = styled.div`
         justify-content: center;
         row-gap: 2.5rem;
         padding: 2rem;
+        position: relative;
 
         background-color: ${props => props.theme.colors.container};
         transition: 0.3s;
