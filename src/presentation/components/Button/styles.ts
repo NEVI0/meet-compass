@@ -32,6 +32,10 @@ export const Container = styled.button`
         color: ${props => props.theme.colors.text.light};
         background-color: ${props => props.theme.colors.body};
         cursor: no-drop;
+
+        svg {
+            fill: ${props => props.theme.colors.text.light};
+        }
     }
 
     @media screen and (min-width: 767px) {
