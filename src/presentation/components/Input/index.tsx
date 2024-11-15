@@ -14,7 +14,6 @@ interface InputAbstract {
     icon: IconName;
 
     type?: HTMLInputTypeAttribute;
-    error?: string;
     loading?: boolean;
     disabled?: boolean;
 }
@@ -25,7 +24,6 @@ export const Input: FC<InputAbstract> = ({
     label,
     placeholder,
     type = 'text',
-    error,
     loading,
     disabled,
 }) => {
