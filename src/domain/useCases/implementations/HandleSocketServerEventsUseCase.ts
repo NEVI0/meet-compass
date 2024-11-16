@@ -1,4 +1,4 @@
-import { ParticipantAccessAnswerDTO } from '@domain/dtos';
+import { ParticipantAccessAnswerDTO, SendMessageDTO } from '@domain/dtos';
 import { MeetAbstract, UserAbstract } from '@domain/entities';
 import {
     ServerStorageProviderAbstract,
@@ -18,7 +18,13 @@ export class HandleSocketServerEventsUseCase {
 
             this.handleRequestMeetAccess();
             this.handleAnswerMeetAccessRequest();
+
+            this.handleChatMessages();
         });
+    }
+
+    private emitMeetUpdatedEvent(meet: MeetAbstract) {
+        this.socketServerProvider.emit('updated-meet', meet);
     }
 
     private handleRegisterUser() {
@@ -41,6 +47,9 @@ export class HandleSocketServerEventsUseCase {
             meet.owner.socketId = owner?.socketId || '';
 
             this.serverStorageProvider.addMeet(meet);
+            this.serverStorageProvider.addMeetParticipant(meet.id, meet.owner);
+
+            this.emitMeetUpdatedEvent(meet);
         });
     }
 
@@ -88,7 +97,28 @@ export class HandleSocketServerEventsUseCase {
                 if (!meet) return;
 
                 this.socketServerProvider.emit('request-accepted', meet);
+                this.emitMeetUpdatedEvent(meet);
             },
         );
+    }
+
+    private handleChatMessages() {
+        this.socketServerProvider.on<SendMessageDTO>('message', data => {
+            const { meetId, sent } = data;
+
+            const meet = this.serverStorageProvider.findMeetById(meetId);
+            if (!meet) return;
+
+            meet.participants
+                .filter(participant => participant.id !== sent.by.id)
+                .forEach(participant => {
+                    console.log({ participant });
+                    this.socketServerProvider.emitToSocket(
+                        participant.socketId,
+                        'message',
+                        data,
+                    );
+                });
+        });
     }
 }

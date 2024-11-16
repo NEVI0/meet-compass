@@ -15,7 +15,7 @@ export const Container = styled.div<ContainerAbstract>`
         props.variant === 'current-user' ? 'flex-end' : 'flex-start'};
 
     > div {
-        width: 90%;
+        max-width: 90%;
 
         display: flex;
         flex-direction: column;
@@ -43,8 +43,6 @@ export const Container = styled.div<ContainerAbstract>`
     }
 
     > small {
-        margin: 0 0.75rem;
-
         font-size: ${props => props.theme.typography.size.smaller};
         font-weight: ${props => props.theme.typography.weight.light};
         color: ${props => props.theme.colors.text.light};

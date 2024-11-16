@@ -1,6 +1,7 @@
 import {
+    ListenForMeetUpdatedDTO,
+    ListenForNewMessageDTO,
     ListenForParticipantRequestingAccessDTO,
-    ParticipantAccessAnswerDTO,
 } from '@domain/dtos';
 
 export interface MeetEventHandlersRepositoryAbstract {
@@ -8,5 +9,6 @@ export interface MeetEventHandlersRepositoryAbstract {
         params: ListenForParticipantRequestingAccessDTO,
     ): void;
 
-    onAnswerParticipantAccessRequest(param: ParticipantAccessAnswerDTO): void;
+    onNewMessage(params: ListenForNewMessageDTO): void;
+    onMeetUpdate(params: ListenForMeetUpdatedDTO): void;
 }

@@ -12,7 +12,7 @@ export const useRequestMeetAccess = () => {
     const router = useRouter();
 
     const { toast } = useToast();
-    const { setMeet } = useMeet();
+    const { setMeet, setUser } = useMeet();
 
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -20,8 +20,11 @@ export const useRequestMeetAccess = () => {
         try {
             setLoading(true);
 
-            const meet = await makeRequestMeetAccessUseCase().execute(params);
+            const { meet, currentUser } =
+                await makeRequestMeetAccessUseCase().execute(params);
+
             setMeet(meet);
+            setUser(currentUser);
 
             toast.success('Acesso permitido!');
             router.push('/meet');

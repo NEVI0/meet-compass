@@ -1,10 +1,12 @@
 import { DefaultEventsMap, Server, Socket } from 'socket.io';
 
 export type SocketServerEventName =
+    | 'updated-meet'
     | 'participant-requesting-meet-access'
     | 'request-accepted'
     | 'request-denied'
-    | 'meet-not-available';
+    | 'meet-not-available'
+    | 'message';
 
 export type SocketClientEventName =
     | 'register-user'
@@ -12,7 +14,8 @@ export type SocketClientEventName =
     | 'unregister-user'
     | 'unregister-meet'
     | 'request-meet-access'
-    | 'answer-meet-access-request';
+    | 'answer-meet-access-request'
+    | 'message';
 
 export type IoServer = Server<
     DefaultEventsMap,

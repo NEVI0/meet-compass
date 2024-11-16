@@ -1,12 +1,14 @@
 import { FC } from 'react';
 import moment from 'moment';
 
+import { UserAbstract } from '@domain/entities';
+
 import * as S from './styles';
 
 interface MessageAbstract {
     message: string;
     sent: {
-        by: string;
+        by: UserAbstract;
         at: string;
     };
 
@@ -21,7 +23,8 @@ export const Message: FC<MessageAbstract> = ({ message, sent, variant }) => {
             </div>
 
             <small>
-                {sent.by} at {moment(sent.at).format('HH:MM')}
+                {variant === 'current-user' ? 'You' : sent.by.name} at{' '}
+                {moment(sent.at).format('HH:MM')}
             </small>
         </S.Container>
     );

@@ -1,7 +1,7 @@
 import { createContext, Dispatch, SetStateAction, useContext } from 'react';
 import { isEmpty } from 'lodash';
 
-import { MeetAbstract } from '@domain/entities';
+import { MeetAbstract, UserAbstract } from '@domain/entities';
 
 interface ChatAbstract {
     open: boolean;
@@ -9,6 +9,9 @@ interface ChatAbstract {
 }
 
 export interface MeetContextAbstract {
+    user: UserAbstract | null;
+    setUser: Dispatch<SetStateAction<UserAbstract | null>>;
+
     meet: MeetAbstract | null;
     setMeet: Dispatch<SetStateAction<MeetAbstract | null>>;
 

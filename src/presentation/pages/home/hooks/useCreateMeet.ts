@@ -11,7 +11,7 @@ export const useCreateMeet = () => {
     const router = useRouter();
 
     const { toast } = useToast();
-    const { setMeet } = useMeet();
+    const { setMeet, setUser } = useMeet();
 
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -23,6 +23,8 @@ export const useCreateMeet = () => {
             if (!meet) throw Error();
 
             setMeet(meet);
+            setUser(meet.owner);
+
             router.push('/meet');
         } catch (error) {
             toast.error('Não foi possível criar a meet!');

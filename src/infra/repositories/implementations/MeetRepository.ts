@@ -1,5 +1,4 @@
 import { MeetAbstract } from '@domain/entities';
-import { CreateMeetDTO, RequestMeetAccessDTO } from '@domain/dtos';
 
 import { MeetRepositoryAbstract } from '@domain/repositories';
 import { SocketClientProviderAbstract } from '@domain/providers';
@@ -9,25 +8,42 @@ import { Meet, User } from '@infra/adapters';
 export class MeetRepository implements MeetRepositoryAbstract {
     constructor(private socketClientProvider: SocketClientProviderAbstract) {}
 
-    public create(params: CreateMeetDTO) {
-        const meet = new Meet({
-            name: params.meet.name,
-            owner: params.owner,
+    public create: MeetRepositoryAbstract['create'] = params => {
+        return new Promise(resolve => {
+            const meet = new Meet({
+                name: params.meet.name,
+                owner: params.owner,
+            });
+
+            this.socketClientProvider.emit('register-user', meet.owner);
+            this.socketClientProvider.emit('register-meet', meet);
+
+            this.socketClientProvider.on<MeetAbstract>('updated-meet', data => {
+                this.socketClientProvider.removeEventListener('updated-meet');
+
+                return resolve(data);
+            });
         });
+    };
 
-        this.socketClientProvider.emit('register-user', meet.owner);
-        this.socketClientProvider.emit('register-meet', meet);
-
-        return meet;
-    }
-
-    public requestAccess(params: RequestMeetAccessDTO) {
+    public requestAccess: MeetRepositoryAbstract['requestAccess'] = params => {
         return new Promise((resolve, reject) => {
+            const user = new User({
+                name: params.user,
+                email: params.email,
+            });
+
             this.socketClientProvider.on<MeetAbstract>(
                 'request-accepted',
                 meet => {
                     this.removeListenersOfRequestAccess();
-                    return resolve(meet);
+
+                    const currentUser =
+                        meet.participants.find(
+                            participant => participant.id === user.id,
+                        ) || null;
+
+                    return resolve({ meet, currentUser });
                 },
             );
 
@@ -41,19 +57,26 @@ export class MeetRepository implements MeetRepositoryAbstract {
                 return reject('Reunião indisponível no momento!');
             });
 
-            const user = new User({
-                name: params.user,
-                email: params.email,
-            });
-
             this.socketClientProvider.emit('register-user', user);
             this.socketClientProvider.emit('request-meet-access', {
                 from: user,
                 meet: params.meet,
                 signal: params.signal,
             });
-        }) as Promise<MeetAbstract>;
-    }
+        });
+    };
+
+    public sendMessage: MeetRepositoryAbstract['sendMessage'] = params => {
+        this.socketClientProvider.emit('message', params);
+    };
+
+    public answerParticipantAccessRequest: MeetRepositoryAbstract['answerParticipantAccessRequest'] =
+        params => {
+            this.socketClientProvider.emit(
+                'answer-meet-access-request',
+                params,
+            );
+        };
 
     private removeListenersOfRequestAccess() {
         this.socketClientProvider.removeEventListener('meet-not-available');

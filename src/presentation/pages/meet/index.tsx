@@ -11,10 +11,13 @@ import {
     Chat,
     ParticipantsRequestingAccessModal,
 } from './components';
+import { useMeetUpdate } from './hooks';
 import * as S from './styles';
 
 export const Meet: FC = () => {
     const { meet } = useMeet();
+    useMeetUpdate();
+
     if (!meet) return <Redirect to="/home" />;
 
     return (
