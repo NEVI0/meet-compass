@@ -9,7 +9,6 @@ const handler = (_: unknown, response: any) => {
     response.socket.server.io = server;
 
     makeHandleSocketServerEventsUseCase(server).execute();
-
     response.end();
 };
 

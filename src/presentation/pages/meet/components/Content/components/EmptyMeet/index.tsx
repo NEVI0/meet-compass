@@ -7,7 +7,7 @@ import { Animation } from '@presentation/components';
 
 import { ANIMATIONS } from '@presentation/constants/animations';
 
-import { useCopyMeetLink } from '@presentation/pages/meet/hooks';
+import { useCopyMeetLink } from '@presentation/pages/Meet/hooks';
 import { ANIMATION_DIMENSIONS } from './constants/animationDimensions';
 import * as S from './styles';
 
