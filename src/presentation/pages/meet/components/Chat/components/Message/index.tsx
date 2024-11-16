@@ -24,7 +24,7 @@ export const Message: FC<MessageAbstract> = ({ message, sent, variant }) => {
 
             <small>
                 {variant === 'current-user' ? 'You' : sent.by.name} at{' '}
-                {moment(sent.at).format('HH:MM')}
+                {moment(sent.at).format('HH:mm')}
             </small>
         </S.Container>
     );

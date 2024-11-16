@@ -8,8 +8,6 @@ export const useSendMessage = () => {
     const { toast } = useToast();
 
     const send = (message: string) => {
-        console.log({ sendMessage: meet, user });
-
         if (!message || !meet || !user) {
             toast.error('Não foi possível enviar a sua mensagem!');
             return null;
