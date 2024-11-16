@@ -18,7 +18,7 @@ export const ParticipantsRequestingAccessModal: FC = () => {
                     <S.Participant key={participant.id}>
                         <div>
                             <h3>{participant.name}</h3>
-                            <small>está ligando...</small>
+                            <small>quer participar...</small>
                         </div>
 
                         <div>

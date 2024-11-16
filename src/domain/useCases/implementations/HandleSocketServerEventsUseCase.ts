@@ -23,10 +23,6 @@ export class HandleSocketServerEventsUseCase {
         });
     }
 
-    private emitMeetUpdatedEvent(meet: MeetAbstract) {
-        this.socketServerProvider.emit('updated-meet', meet);
-    }
-
     private handleRegisterUser() {
         this.socketServerProvider.on<UserAbstract>('register-user', user => {
             const socketId = this.socketServerProvider.socket?.id || '';
@@ -49,7 +45,11 @@ export class HandleSocketServerEventsUseCase {
             this.serverStorageProvider.addMeet(meet);
             this.serverStorageProvider.addMeetParticipant(meet.id, meet.owner);
 
-            this.emitMeetUpdatedEvent(meet);
+            this.socketServerProvider.emitToSocket(
+                meet.owner.socketId,
+                'updated-meet',
+                meet,
+            );
         });
     }
 
@@ -84,7 +84,8 @@ export class HandleSocketServerEventsUseCase {
                 const { meetId, answer, participant } = data;
 
                 if (answer === 'DENIED') {
-                    return this.socketServerProvider.emit(
+                    return this.socketServerProvider.emitToSocket(
+                        participant.socketId,
                         'request-denied',
                         null,
                     );
@@ -96,8 +97,16 @@ export class HandleSocketServerEventsUseCase {
                 );
                 if (!meet) return;
 
-                this.socketServerProvider.emit('request-accepted', meet);
-                this.emitMeetUpdatedEvent(meet);
+                this.socketServerProvider.emitToSocket(
+                    participant.socketId,
+                    'request-accepted',
+                    meet,
+                );
+                this.socketServerProvider.emitToSocket(
+                    meet.owner.socketId,
+                    'updated-meet',
+                    meet,
+                );
             },
         );
     }
@@ -112,7 +121,6 @@ export class HandleSocketServerEventsUseCase {
             meet.participants
                 .filter(participant => participant.id !== sent.by.id)
                 .forEach(participant => {
-                    console.log({ participant });
                     this.socketServerProvider.emitToSocket(
                         participant.socketId,
                         'message',

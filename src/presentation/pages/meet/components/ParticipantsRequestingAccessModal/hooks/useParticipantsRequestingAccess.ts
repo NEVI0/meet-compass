@@ -10,7 +10,7 @@ import {
 import { useMeet } from '@presentation/contexts/MeetContext';
 
 export const useParticipantsRequestingAccess = () => {
-    const { meet, setMeet } = useMeet();
+    const { meet } = useMeet();
 
     const [participants, setParticipants] = useState<UserAbstract[]>([]);
 
@@ -28,13 +28,6 @@ export const useParticipantsRequestingAccess = () => {
             return currentParticipants.filter(
                 participant => participant.id !== params.participant.id,
             );
-        });
-
-        setMeet(currentMeet => {
-            if (!currentMeet) return currentMeet;
-
-            currentMeet.addParticipant(params.participant);
-            return currentMeet;
         });
     };
 

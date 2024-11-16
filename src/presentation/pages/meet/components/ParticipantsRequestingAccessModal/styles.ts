@@ -24,7 +24,7 @@ export const Participant = styled.div`
     align-items: center;
     justify-content: space-between;
 
-    padding: 1rem 2rem;
+    padding: 1rem;
     border-radius: 1rem;
     box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.25);
     background-color: ${props => props.theme.colors.container};
@@ -35,9 +35,6 @@ export const Participant = styled.div`
         display: flex;
         flex-direction: column;
         gap: 0.25rem;
-
-        > h3 {
-        }
 
         > small {
             font-size: ${props => props.theme.typography.size.small};
