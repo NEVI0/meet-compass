@@ -1,10 +1,6 @@
 import { io, Socket } from 'socket.io-client';
 
-import { SocketClientEventName, SocketServerEventName } from '@domain/entities';
-import {
-    ClientListenerCallback,
-    SocketClientProviderAbstract,
-} from '@domain/providers';
+import { SocketClientProviderAbstract } from '@domain/providers';
 
 const SOCKET_SERVER_PATH = '/api/socket';
 
@@ -16,27 +12,26 @@ export class SocketIoClientProvider implements SocketClientProviderAbstract {
         this.server = io();
     }
 
-    public emit(event: SocketClientEventName, data: unknown) {
+    public emit: SocketClientProviderAbstract['emit'] = (event, data) => {
         this.server.emit(event, data);
-    }
+    };
 
-    public on<T>(
-        event: SocketServerEventName,
-        listener: ClientListenerCallback<T>,
-    ) {
+    public on: SocketClientProviderAbstract['on'] = (event, listener) => {
         this.server.on(event, listener);
-    }
+    };
 
-    public removeEventListener(event: SocketServerEventName) {
-        this.server.removeListener(event);
-    }
+    public removeEventListener: SocketClientProviderAbstract['removeEventListener'] =
+        event => {
+            this.server.removeListener(event);
+        };
 
-    public removeAllEventListener() {
-        this.server.removeAllListeners();
-    }
+    public removeAllEventListener: SocketClientProviderAbstract['removeAllEventListener'] =
+        () => {
+            this.server.removeAllListeners();
+        };
 
-    public disconnect() {
+    public disconnect: SocketClientProviderAbstract['disconnect'] = () => {
         this.removeAllEventListener();
         this.server.disconnect();
-    }
+    };
 }

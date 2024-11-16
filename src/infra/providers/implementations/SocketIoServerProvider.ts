@@ -1,13 +1,5 @@
-import {
-    ServerListenerCallback,
-    SocketServerProviderAbstract,
-} from '@domain/providers';
-import {
-    IoServer,
-    SocketServer,
-    SocketClientEventName,
-    SocketServerEventName,
-} from '@domain/entities';
+import { IoServer, SocketServer } from '@domain/entities';
+import { SocketServerProviderAbstract } from '@domain/providers';
 
 export class SocketIoServerProvider implements SocketServerProviderAbstract {
     public io: IoServer;
@@ -17,32 +9,29 @@ export class SocketIoServerProvider implements SocketServerProviderAbstract {
         this.io = server;
     }
 
-    public connect(callback: () => void) {
+    public connect: SocketServerProviderAbstract['connect'] = callback => {
         this.io.on('connection', socket => {
             this.socket = socket;
             callback();
         });
-    }
+    };
 
-    public emit(event: SocketServerEventName, data: unknown) {
+    public emit: SocketServerProviderAbstract['emit'] = (event, data) => {
         if (!this.socket) throw Error();
         this.socket.emit(event, data);
-    }
+    };
 
-    public emitToSocket(
-        socketId: string,
-        event: SocketServerEventName,
-        data: unknown,
-    ) {
+    public emitToSocket: SocketServerProviderAbstract['emitToSocket'] = (
+        socketId,
+        event,
+        data,
+    ) => {
         if (!this.socket) throw Error();
-        this.socket.to(socketId).emit(event, data);
-    }
+        this.io.to(socketId).emit(event, data);
+    };
 
-    public on<T>(
-        event: SocketClientEventName,
-        listener: ServerListenerCallback<T>,
-    ) {
+    public on: SocketServerProviderAbstract['on'] = (event, listener) => {
         if (!this.socket) throw Error();
         this.socket.on(event, listener);
-    }
+    };
 }
