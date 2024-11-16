@@ -5,8 +5,6 @@ import { useWindowSize } from '@presentation/hooks';
 
 import { Animation } from '@presentation/components';
 
-import { ANIMATIONS } from '@presentation/constants/animations';
-
 import { useCopyMeetLink } from '@presentation/pages/Meet/hooks';
 import { ANIMATION_DIMENSIONS } from './constants/animationDimensions';
 import * as S from './styles';
@@ -20,8 +18,8 @@ export const EmptyMeet: FC = () => {
         <S.Container>
             <Animation
                 loop={true}
-                animation={{
-                    data: ANIMATIONS.SPACE,
+                animation="space"
+                size={{
                     width: ANIMATION_DIMENSIONS[breakpoint].width,
                     height: ANIMATION_DIMENSIONS[breakpoint].height,
                 }}

@@ -4,9 +4,7 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 
 import { useWindowSize } from '@presentation/hooks';
-
 import { Animation } from '@presentation/components';
-import { ANIMATIONS } from '@presentation/constants/animations';
 
 import { ANIMATION_DIMENSIONS } from './constants/animationDimensions';
 import * as S from './styles';
@@ -30,8 +28,8 @@ export const NotFound: FC = () => {
             <main>
                 <Animation
                     loop={true}
-                    animation={{
-                        data: ANIMATIONS.NOT_FOUND,
+                    animation="not-found"
+                    size={{
                         width: ANIMATION_DIMENSIONS[breakpoint].width,
                         height: ANIMATION_DIMENSIONS[breakpoint].height,
                     }}
