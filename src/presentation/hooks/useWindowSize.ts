@@ -5,21 +5,29 @@ import { getWindowDimensions } from '@presentation/helpers';
 type Size = { width: number; height: number };
 type Breakpoint = 'xsm' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
 
+const getBreakPoint = (width: number) => {
+    if (width < 576) return 'xsm';
+    if (width >= 576) return 'sm';
+    if (width >= 768) return 'md';
+    if (width >= 992) return 'lg';
+    if (width >= 1200) return 'xl';
+    if (width >= 1400) return 'xxl';
+
+    return 'md';
+};
+
 export const useWindowSize = () => {
     const [size, setSize] = useState<Size>(getWindowDimensions());
-    const [breakpoint, setBreakpoint] = useState<Breakpoint>('md');
+    const [breakpoint, setBreakpoint] = useState<Breakpoint>(
+        getBreakPoint(size.width),
+    );
 
     useEffect(() => {
         const handleResize = () => {
             const { width, height } = getWindowDimensions();
             setSize({ width, height });
 
-            if (width < 576) setBreakpoint('xsm');
-            if (width >= 576) setBreakpoint('sm');
-            if (width >= 768) setBreakpoint('md');
-            if (width >= 992) setBreakpoint('lg');
-            if (width >= 1200) setBreakpoint('xl');
-            if (width >= 1400) setBreakpoint('xxl');
+            setBreakpoint(getBreakPoint(width));
         };
 
         window.addEventListener('resize', handleResize);
