@@ -27,4 +27,12 @@ export class MeetEventHandlersRepository
                 params.onReceive,
             );
         };
+
+    public onLeavingParticipant: MeetEventHandlersRepositoryAbstract['onLeavingParticipant'] =
+        params => {
+            this.socketClientProvider.on<{ name: string }>(
+                'participant-left',
+                params.onReceive,
+            );
+        };
 }

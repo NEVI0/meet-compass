@@ -78,6 +78,10 @@ export class MeetRepository implements MeetRepositoryAbstract {
             );
         };
 
+    public leave: MeetRepositoryAbstract['leave'] = params => {
+        this.socketClientProvider.emit('leave-meet', params);
+    };
+
     private removeListenersOfRequestAccess() {
         this.socketClientProvider.removeEventListener('meet-not-available');
         this.socketClientProvider.removeEventListener('request-accepted');

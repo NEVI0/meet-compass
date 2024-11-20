@@ -3,16 +3,19 @@ import { FC, useRef } from 'react';
 import { useMeet } from '@presentation/contexts/MeetContext';
 import { useLocale } from '@presentation/contexts/LocaleContext';
 
-import { useCopyMeetLink, useLeaveMeet, useUserStream } from '../../hooks';
+import { useCopyMeetLink, useUserStream } from '../../hooks';
+
+import { useLeaveMeet } from './hooks';
 import { Timer, ActionButton } from './components';
 import * as S from './styles';
 
 export const Footer: FC = () => {
     const localUserVideoRef = useRef<HTMLVideoElement>(null);
 
+    const leaveCtrl = useLeaveMeet();
+
     const { t } = useLocale();
     const { meet } = useMeet();
-    const { leave } = useLeaveMeet();
     const { copyLink } = useCopyMeetLink();
     const {
         loading,
@@ -69,11 +72,11 @@ export const Footer: FC = () => {
                 />
 
                 <ActionButton
-                    loading={loading}
+                    loading={loading || leaveCtrl.loading}
                     label={t('page.meet.tooltip.left')}
                     icon="phone-off"
                     variant="red"
-                    onClick={leave}
+                    onClick={leaveCtrl.leave}
                 />
             </section>
 

@@ -1,6 +1,7 @@
 import { MeetAbstract, UserAbstract } from '@domain/entities';
 import {
     CreateMeetDTO,
+    LeaveMeetDTO,
     ParticipantAccessAnswerDTO,
     RequestMeetAccessDTO,
     SendMessageDTO,
@@ -17,4 +18,6 @@ export interface MeetRepositoryAbstract {
     sendMessage(params: SendMessageDTO): void;
 
     answerParticipantAccessRequest(param: ParticipantAccessAnswerDTO): void;
+
+    leave(params: LeaveMeetDTO): void;
 }

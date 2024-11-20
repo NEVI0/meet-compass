@@ -8,5 +8,6 @@ export function makeCreateMeetUseCase() {
         const meetRepository = makeMeetRepository();
         instace = new CreateMeetUseCase(meetRepository);
     }
+
     return instace;
 }

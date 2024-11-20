@@ -6,7 +6,8 @@ export type SocketServerEventName =
     | 'request-accepted'
     | 'request-denied'
     | 'meet-not-available'
-    | 'message';
+    | 'message'
+    | 'participant-left';
 
 export type SocketClientEventName =
     | 'register-user'
@@ -15,7 +16,8 @@ export type SocketClientEventName =
     | 'unregister-meet'
     | 'request-meet-access'
     | 'answer-meet-access-request'
-    | 'message';
+    | 'message'
+    | 'leave-meet';
 
 export type IoServer = Server<
     DefaultEventsMap,

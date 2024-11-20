@@ -1,4 +1,8 @@
-import { ParticipantAccessAnswerDTO, SendMessageDTO } from '@domain/dtos';
+import {
+    LeaveMeetDTO,
+    ParticipantAccessAnswerDTO,
+    SendMessageDTO,
+} from '@domain/dtos';
 import { MeetAbstract, UserAbstract } from '@domain/entities';
 import {
     ServerStorageProviderAbstract,
@@ -20,6 +24,7 @@ export class HandleSocketServerEventsUseCase {
             this.handleAnswerMeetAccessRequest();
 
             this.handleChatMessages();
+            this.handleLeavingParticipant();
         });
     }
 
@@ -127,6 +132,32 @@ export class HandleSocketServerEventsUseCase {
                         data,
                     );
                 });
+        });
+    }
+
+    private handleLeavingParticipant() {
+        this.socketServerProvider.on<LeaveMeetDTO>('leave-meet', data => {
+            const { meetId, user } = data;
+
+            const meet = this.serverStorageProvider.removeMeetParticipant(
+                meetId,
+                user,
+            );
+            if (!meet) return;
+
+            meet.participants.forEach(participant => {
+                this.socketServerProvider.emitToSocket(
+                    participant.socketId,
+                    'participant-left',
+                    { name: user.name },
+                );
+
+                this.socketServerProvider.emitToSocket(
+                    participant.socketId,
+                    'updated-meet',
+                    meet,
+                );
+            });
         });
     }
 }
