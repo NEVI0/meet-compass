@@ -19,14 +19,14 @@ export const Container = styled.div`
             display: flex;
             flex-direction: column;
             gap: 0.25rem;
-        }
 
-        > h1 {
-            font-size: ${props => props.theme.typography.size.h1};
-        }
+            > h1 {
+                font-size: ${props => props.theme.typography.size.h1};
+            }
 
-        > p {
-            color: ${props => props.theme.colors.text.light};
+            > p {
+                color: ${props => props.theme.colors.text.light};
+            }
         }
     }
 `;
