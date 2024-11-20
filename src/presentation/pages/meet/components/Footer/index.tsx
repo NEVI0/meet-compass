@@ -1,39 +1,35 @@
-import { FC, useRef } from 'react';
+import { FC } from 'react';
 
 import { useMeet } from '@presentation/contexts/MeetContext';
 import { useLocale } from '@presentation/contexts/LocaleContext';
 
-import { useCopyMeetLink, useUserStream } from '../../hooks';
+import { useCopyMeetLink } from '../../hooks';
 
 import { useLeaveMeet } from './hooks';
 import { Timer, ActionButton } from './components';
+import { useMeetPrivateContext } from '../../context';
 import * as S from './styles';
 
 export const Footer: FC = () => {
-    const localUserVideoRef = useRef<HTMLVideoElement>(null);
-
     const leaveCtrl = useLeaveMeet();
 
     const { t } = useLocale();
     const { meet } = useMeet();
     const { copyLink } = useCopyMeetLink();
+    const { media } = useMeetPrivateContext();
+
+    if (!meet) return undefined;
+
     const {
         loading,
         hasUserStream,
 
-        isUsingVideo,
         isUsingAudio,
+        isUsingVideo,
 
-        toggleVideo,
         toggleAudio,
-    } = useUserStream({
-        onSuccessGettingStream: stream => {
-            if (!localUserVideoRef.current) return;
-            localUserVideoRef.current.srcObject = stream;
-        },
-    });
-
-    if (!meet) return undefined;
+        toggleVideo,
+    } = media;
 
     return (
         <S.Container>

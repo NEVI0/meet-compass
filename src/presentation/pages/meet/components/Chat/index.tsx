@@ -6,12 +6,14 @@ import { useMeet } from '@presentation/contexts/MeetContext';
 import { Icon, IconButton } from '@presentation/components';
 
 import { Message } from './components';
+import { useMeetPrivateContext } from '../../context';
 import { useMessages, useSendMessage } from './hooks';
 import * as S from './styles';
 
 export const Chat: FC = () => {
+    const { user } = useMeet();
     const { send } = useSendMessage();
-    const { chat, user } = useMeet();
+    const { chat } = useMeetPrivateContext();
     const { messages, addMessage } = useMessages();
 
     return (

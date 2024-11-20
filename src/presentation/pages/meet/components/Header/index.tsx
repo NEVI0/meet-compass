@@ -8,12 +8,14 @@ import { useLocale } from '@presentation/contexts/LocaleContext';
 import { IconButton, DropdownMenu } from '@presentation/components';
 
 import { useCopyMeetLink } from '../../hooks';
+import { useMeetPrivateContext } from '../../context';
 import * as S from './styles';
 
 export const Header: FC = () => {
     const { t } = useLocale();
+    const { meet } = useMeet();
     const { copyLink } = useCopyMeetLink();
-    const { meet, chat } = useMeet();
+    const { chat } = useMeetPrivateContext();
     const { theme, toggleTheme } = useTheme();
 
     if (!meet) return undefined;

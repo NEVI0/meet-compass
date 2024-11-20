@@ -4,8 +4,8 @@ import { useMeet } from '@presentation/contexts/MeetContext';
 import { useToast } from '@presentation/contexts/ToastContext';
 
 export const useSendMessage = () => {
-    const { user, meet } = useMeet();
     const { toast } = useToast();
+    const { user, meet } = useMeet();
 
     const send = (message: string) => {
         if (!message || !meet || !user) {

@@ -1,4 +1,4 @@
 export * from './useMeetUpdate';
-export * from './useUserStream';
+export * from './useMedia';
 export * from './useCopyMeetLink';
 export * from './useLeavingParticipant';

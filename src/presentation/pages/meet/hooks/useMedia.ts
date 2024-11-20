@@ -8,7 +8,7 @@ interface ParamsAbstract {
     onSuccessGettingStream: (stream: StreamType) => void;
 }
 
-export const useUserStream = (params: ParamsAbstract) => {
+export const useMedia = (params?: ParamsAbstract) => {
     const { toast } = useToast();
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -40,7 +40,8 @@ export const useUserStream = (params: ParamsAbstract) => {
             });
 
             setStream(media);
-            params.onSuccessGettingStream(media);
+
+            if (params) params.onSuccessGettingStream(media);
         } catch (error) {
         } finally {
             setLoading(false);
@@ -64,7 +65,8 @@ export const useUserStream = (params: ParamsAbstract) => {
 
             setStream(tempStream);
             setIsUsingVideo(!isUsingVideo);
-            params.onSuccessGettingStream(tempStream);
+
+            if (params) params.onSuccessGettingStream(tempStream);
         } catch (error) {}
     };
 
@@ -85,7 +87,8 @@ export const useUserStream = (params: ParamsAbstract) => {
 
             setStream(tempStream);
             setIsUsingAudio(!isUsingAudio);
-            params.onSuccessGettingStream(tempStream);
+
+            if (params) params.onSuccessGettingStream(tempStream);
         } catch (error) {}
     };
 
