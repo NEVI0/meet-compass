@@ -6,14 +6,16 @@ type Size = { width: number; height: number };
 type Breakpoint = 'xsm' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
 
 const getBreakPoint = (width: number) => {
-    if (width < 576) return 'xsm';
-    if (width >= 576) return 'sm';
-    if (width >= 768) return 'md';
-    if (width >= 992) return 'lg';
-    if (width >= 1200) return 'xl';
-    if (width >= 1400) return 'xxl';
+    let breakpoint: Breakpoint = 'md';
 
-    return 'md';
+    if (width < 576) breakpoint = 'xsm';
+    if (width >= 576) breakpoint = 'sm';
+    if (width >= 768) breakpoint = 'md';
+    if (width >= 992) breakpoint = 'lg';
+    if (width >= 1200) breakpoint = 'xl';
+    if (width >= 1400) breakpoint = 'xxl';
+
+    return breakpoint;
 };
 
 export const useWindowSize = () => {
@@ -25,8 +27,8 @@ export const useWindowSize = () => {
     useEffect(() => {
         const handleResize = () => {
             const { width, height } = getWindowDimensions();
-            setSize({ width, height });
 
+            setSize({ width, height });
             setBreakpoint(getBreakPoint(width));
         };
 
