@@ -53,9 +53,9 @@ export class ServerStorageProvider implements ServerStorageProviderAbstract {
         (meetId, participant) => {
             if (!this.meets[meetId]) return null;
 
-            this.meets[meetId].participants.filter(
-                ptc => ptc.id !== participant.id,
-            );
+            this.meets[meetId].participants = this.meets[
+                meetId
+            ].participants.filter(ptc => ptc.id !== participant.id);
 
             return this.meets[meetId];
         };
