@@ -3,6 +3,7 @@ import { FC } from 'react';
 import { useMeet } from '@presentation/contexts/MeetContext';
 import { useLocale } from '@presentation/contexts/LocaleContext';
 
+import { useWindowSize } from '@presentation/hooks';
 import { useCopyMeetLink } from '../../hooks';
 
 import { useLeaveMeet } from './hooks';
@@ -16,6 +17,7 @@ export const Footer: FC = () => {
     const { t } = useLocale();
     const { meet } = useMeet();
     const { copyLink } = useCopyMeetLink();
+    const { breakpoint } = useWindowSize();
     const { media } = useMeetPrivateContext();
 
     if (!meet) return undefined;
@@ -30,6 +32,9 @@ export const Footer: FC = () => {
         toggleAudio,
         toggleVideo,
     } = media;
+
+    const isUnderMd =
+        breakpoint === 'md' || breakpoint === 'sm' || breakpoint === 'xsm';
 
     return (
         <S.Container>
@@ -76,7 +81,9 @@ export const Footer: FC = () => {
                 />
             </section>
 
-            <button onClick={copyLink}>{meet.id}</button>
+            <button onClick={copyLink}>
+                {isUnderMd ? 'Link Reunião' : meet.id}
+            </button>
         </S.Container>
     );
 };
