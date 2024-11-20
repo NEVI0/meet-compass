@@ -8,7 +8,7 @@ export const Container = styled.button`
     align-items: center;
     column-gap: 0.75rem;
 
-    color: ${props => props.theme.colors.text};
+    color: ${props => props.theme.colors.text.main};
     font-size: ${props => props.theme.typography.size.normal};
     font-weight: ${props => props.theme.typography.weight.regular};
 
