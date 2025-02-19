@@ -1,8 +1,6 @@
 export interface RequestMeetAccessDTO {
     user: string;
     email: string;
-    meet: {
-        id: string;
-    };
+    meetId: string;
     signal: any;
 }

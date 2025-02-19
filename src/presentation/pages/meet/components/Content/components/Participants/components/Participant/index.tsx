@@ -1,15 +1,21 @@
 import { FC, useEffect } from 'react';
 
+import { UserAbstract } from '@domain/entities';
 import { Icon } from '@presentation/components';
 
 import * as S from './styles';
 
 interface ParticipantAbstract {
+    participant: UserAbstract;
     index: number;
 }
 
-export const Participant: FC<ParticipantAbstract> = ({ index }) => {
+export const Participant: FC<ParticipantAbstract> = ({
+    participant,
+    index,
+}) => {
     useEffect(() => {
+        console.log({ participant });
         (async () => {
             const media = await navigator.mediaDevices.getUserMedia({
                 audio: false,
@@ -34,7 +40,7 @@ export const Participant: FC<ParticipantAbstract> = ({ index }) => {
             />
 
             <div className="participant">
-                <small className="participant__name">Nome do meliante</small>
+                <small className="participant__name">{participant.name}</small>
 
                 <div className="participant__stream">
                     <Icon name="microphone" />

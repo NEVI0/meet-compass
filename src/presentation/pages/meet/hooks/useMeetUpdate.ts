@@ -9,7 +9,7 @@ export const useMeetUpdate = () => {
     useEffect(() => {
         makeListenForMeetUpdateUseCase().execute({
             onReceive: meet => {
-                console.log({ meet });
+                // console.log({ meet });
                 setMeet(meet);
             },
         });

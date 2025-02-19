@@ -2,22 +2,21 @@ import { FC } from 'react';
 
 import { IconButton } from '@presentation/components';
 
-import { useParticipantsRequestingAccess } from './hooks';
+import { useParticipantsRequests } from './hooks';
 import * as S from './styles';
 
 export const ParticipantsRequestingAccessModal: FC = () => {
-    const { participants, answerParticipant } =
-        useParticipantsRequestingAccess();
+    const { requests, answerRequest } = useParticipantsRequests();
 
-    if (!participants.length) return null;
+    if (!requests.length) return null;
 
     return (
         <S.Container>
             <div>
-                {participants.map(participant => (
-                    <S.Participant key={participant.id}>
+                {requests.map(request => (
+                    <S.Participant key={request.from.id}>
                         <div>
-                            <h3>{participant.name}</h3>
+                            <h3>{request.from.name}</h3>
                             <small>quer participar...</small>
                         </div>
 
@@ -26,9 +25,9 @@ export const ParticipantsRequestingAccessModal: FC = () => {
                                 variant="error"
                                 icon="x"
                                 onClick={() => {
-                                    answerParticipant({
+                                    answerRequest({
+                                        ...request,
                                         answer: 'DENIED',
-                                        participant,
                                     });
                                 }}
                             />
@@ -37,9 +36,9 @@ export const ParticipantsRequestingAccessModal: FC = () => {
                                 variant="success"
                                 icon="double-check"
                                 onClick={() => {
-                                    answerParticipant({
+                                    answerRequest({
+                                        ...request,
                                         answer: 'ACCEPTED',
-                                        participant,
                                     });
                                 }}
                             />

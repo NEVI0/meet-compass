@@ -41,9 +41,7 @@ export const JoinMeetModal: FC<JoinMeetModalAbstract> = ({
                         request({
                             user: values.user,
                             email: values.email,
-                            meet: {
-                                id: values.meet,
-                            },
+                            meetId: values.meet,
                             signal: null,
                         });
                     }}

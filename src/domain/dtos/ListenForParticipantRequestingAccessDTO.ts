@@ -2,7 +2,7 @@ import { UserAbstract } from '@domain/entities';
 
 interface DataAbstract {
     from: UserAbstract;
-    signal: any;
+    offer: RTCSessionDescriptionInit;
 }
 
 export interface ListenForParticipantRequestingAccessDTO {

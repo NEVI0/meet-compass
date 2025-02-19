@@ -1,7 +1,12 @@
 import { UserAbstract } from '@domain/entities';
 
 export interface ParticipantAccessAnswerDTO {
-    answer: 'ACCEPTED' | 'DENIED';
     meetId: string;
+    answer: 'ACCEPTED' | 'DENIED';
     participant: UserAbstract;
+    offer: RTCSessionDescriptionInit;
+    media: {
+        track: MediaStreamTrack;
+        stream: MediaStream;
+    };
 }

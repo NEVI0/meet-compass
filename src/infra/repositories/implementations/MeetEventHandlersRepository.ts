@@ -9,10 +9,10 @@ export class MeetEventHandlersRepository
 
     public onParticipantRequestingAccess: MeetEventHandlersRepositoryAbstract['onParticipantRequestingAccess'] =
         params => {
-            this.socketClientProvider.on<{ from: UserAbstract; signal: any }>(
-                'participant-requesting-meet-access',
-                params.onReceive,
-            );
+            this.socketClientProvider.on<{
+                from: UserAbstract;
+                offer: RTCSessionDescriptionInit;
+            }>('participant-requesting-meet-access', params.onReceive);
         };
 
     public onNewMessage: MeetEventHandlersRepositoryAbstract['onNewMessage'] =

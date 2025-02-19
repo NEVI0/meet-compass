@@ -1,1 +1,1 @@
-export * from './useParticipantsRequestingAccess';
+export * from './useParticipantsRequests';

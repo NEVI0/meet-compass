@@ -3,4 +3,5 @@ export interface UserAbstract {
     name: string;
     email: string;
     socketId: string;
+    peerSignal?: RTCPeerConnection;
 }

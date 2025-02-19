@@ -1,18 +1,29 @@
 import { MeetAbstract } from '@domain/entities';
 
 import { MeetRepositoryAbstract } from '@domain/repositories';
-import { SocketClientProviderAbstract } from '@domain/providers';
+import {
+    PeerConnectionProviderAbstract,
+    SocketClientProviderAbstract,
+} from '@domain/providers';
 
 import { Meet, User } from '@infra/adapters';
 
 export class MeetRepository implements MeetRepositoryAbstract {
-    constructor(private socketClientProvider: SocketClientProviderAbstract) {}
+    constructor(
+        private socketClientProvider: SocketClientProviderAbstract,
+        private peerConnectionProvider: PeerConnectionProviderAbstract,
+    ) {}
 
     public create: MeetRepositoryAbstract['create'] = params => {
         return new Promise(resolve => {
+            const { peer } = this.peerConnectionProvider;
+
             const meet = new Meet({
                 name: params.meet.name,
-                owner: params.owner,
+                owner: {
+                    ...params.owner,
+                    peerSignal: peer,
+                },
             });
 
             this.socketClientProvider.emit('register-user', meet.owner);
@@ -27,10 +38,13 @@ export class MeetRepository implements MeetRepositoryAbstract {
     };
 
     public requestAccess: MeetRepositoryAbstract['requestAccess'] = params => {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
+            const { peer } = this.peerConnectionProvider;
+
             const user = new User({
                 name: params.user,
                 email: params.email,
+                peerSignal: peer,
             });
 
             this.socketClientProvider.on<MeetAbstract>(
@@ -57,11 +71,13 @@ export class MeetRepository implements MeetRepositoryAbstract {
                 return reject('Reunião indisponível no momento!');
             });
 
+            const offer = await this.peerConnectionProvider.createOffer();
+
             this.socketClientProvider.emit('register-user', user);
             this.socketClientProvider.emit('request-meet-access', {
+                offer,
                 from: user,
-                meet: params.meet,
-                signal: params.signal,
+                meetId: params.meetId,
             });
         });
     };
@@ -71,7 +87,12 @@ export class MeetRepository implements MeetRepositoryAbstract {
     };
 
     public answerParticipantAccessRequest: MeetRepositoryAbstract['answerParticipantAccessRequest'] =
-        params => {
+        async params => {
+            await this.peerConnectionProvider.answerOffer({
+                offer: params.offer,
+                media: params.media,
+            });
+
             this.socketClientProvider.emit(
                 'answer-meet-access-request',
                 params,

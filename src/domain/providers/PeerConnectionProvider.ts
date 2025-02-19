@@ -1,15 +1,14 @@
-import { MeetAbstract } from '@domain/entities';
-
-interface CreatePeerConnectionAbstract {
-    meet: {
-        name: string;
+interface AnswerOfferParams {
+    media: {
+        track: MediaStreamTrack;
+        stream: MediaStream;
     };
-    owner: {
-        name: string;
-        email: string;
-    };
+    offer: RTCSessionDescriptionInit;
 }
 
 export interface PeerConnectionProviderAbstract {
-    create(params: CreatePeerConnectionAbstract): Promise<MeetAbstract>;
+    peer: RTCPeerConnection;
+
+    createOffer(): Promise<RTCSessionDescriptionInit>;
+    answerOffer(params: AnswerOfferParams): Promise<RTCSessionDescriptionInit>;
 }

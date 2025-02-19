@@ -20,7 +20,10 @@
         "paths": {
             "@domain/*": ["domain/*"],
             "@infra/*": ["infra/*"],
-            "@presentation/*": ["presentation/*"]
+            "@presentation/*": ["presentation/*"],
+            "@app/*": ["app/*"],
+            "@server/*": ["server/*"],
+            "@shared/*": ["shared/*"]
         },
         "plugins": [
             {

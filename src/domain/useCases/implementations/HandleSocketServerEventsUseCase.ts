@@ -9,6 +9,12 @@ import {
     SocketServerProviderAbstract,
 } from '@domain/providers';
 
+interface RequestMeetAccessData {
+    offer: RTCSessionDescriptionInit;
+    meetId: string;
+    from: UserAbstract;
+}
+
 export class HandleSocketServerEventsUseCase {
     constructor(
         private serverStorageProvider: ServerStorageProviderAbstract,
@@ -59,27 +65,30 @@ export class HandleSocketServerEventsUseCase {
     }
 
     private handleRequestMeetAccess() {
-        this.socketServerProvider.on<any>('request-meet-access', data => {
-            const { meet, from, signal } = data;
+        this.socketServerProvider.on<RequestMeetAccessData>(
+            'request-meet-access',
+            data => {
+                const { offer, from, meetId } = data;
 
-            const user = this.serverStorageProvider.findUserById(from.id);
-            from.socketId = user?.socketId || '';
+                const user = this.serverStorageProvider.findUserById(from.id);
+                from.socketId = user?.socketId || '';
 
-            const found = this.serverStorageProvider.findMeetById(meet.id);
-            if (!found) {
-                this.socketServerProvider.emit('meet-not-available', null);
-                return;
-            }
+                const meet = this.serverStorageProvider.findMeetById(meetId);
+                if (!meet) {
+                    this.socketServerProvider.emit('meet-not-available', null);
+                    return;
+                }
 
-            this.socketServerProvider.emitToSocket(
-                found.owner.socketId,
-                'participant-requesting-meet-access',
-                {
-                    from,
-                    signal,
-                },
-            );
-        });
+                this.socketServerProvider.emitToSocket(
+                    meet.owner.socketId,
+                    'participant-requesting-meet-access',
+                    {
+                        from,
+                        offer,
+                    },
+                );
+            },
+        );
     }
 
     private handleAnswerMeetAccessRequest() {
