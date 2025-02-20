@@ -1,0 +1,30 @@
+import { makeSendMessageUseCase } from '@app/domain/useCases';
+
+import { useMeet } from '@app/presentation/contexts/MeetContext';
+import { useToast } from '@app/presentation/contexts/ToastContext';
+
+export const useSendMessage = () => {
+    const { toast } = useToast();
+    const { user, meet } = useMeet();
+
+    const send = (message: string) => {
+        if (!message || !meet || !user) {
+            toast.error('Não foi possível enviar a sua mensagem!');
+            return null;
+        }
+
+        const params = {
+            message,
+            meetId: meet.id,
+            sent: {
+                at: new Date().toISOString(),
+                by: user,
+            },
+        };
+
+        makeSendMessageUseCase().execute(params);
+        return params;
+    };
+
+    return { send };
+};

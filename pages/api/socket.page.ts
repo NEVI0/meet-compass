@@ -19,12 +19,14 @@ const handler = (_: unknown, response: any) => {
 
     const socketServerProvider = makeSocketServerProvider(server);
 
-    makeRegisterUserUseCase(socketServerProvider).execute();
-    makeRegisterMeetUseCase(socketServerProvider).execute();
-    makeRequestMeetAccessUseCase(socketServerProvider).execute();
-    makeAnswerMeetAccessRequestUseCase(socketServerProvider).execute();
-    makeLeaveMeetUseCase(socketServerProvider).execute();
-    makeSendMessageUseCase(socketServerProvider).execute();
+    socketServerProvider.connect(() => {
+        makeRegisterUserUseCase(socketServerProvider).execute();
+        makeRegisterMeetUseCase(socketServerProvider).execute();
+        makeRequestMeetAccessUseCase(socketServerProvider).execute();
+        makeAnswerMeetAccessRequestUseCase(socketServerProvider).execute();
+        makeLeaveMeetUseCase(socketServerProvider).execute();
+        makeSendMessageUseCase(socketServerProvider).execute();
+    });
 
     response.end();
 };

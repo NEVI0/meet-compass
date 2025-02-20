@@ -1,0 +1,10 @@
+import { ParticipantAccessAnswerDTO } from '@app/domain/dtos';
+import { MeetRepositoryAbstract } from '@app/domain/repositories';
+
+export class AnswerParticipantAccessRequestUseCase {
+    constructor(private meetRepository: MeetRepositoryAbstract) {}
+
+    public execute(params: ParticipantAccessAnswerDTO) {
+        this.meetRepository.answerParticipantAccessRequest(params);
+    }
+}

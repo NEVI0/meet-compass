@@ -18,9 +18,6 @@
         "incremental": true,
         "baseUrl": "./src",
         "paths": {
-            "@domain/*": ["domain/*"],
-            "@infra/*": ["infra/*"],
-            "@presentation/*": ["presentation/*"],
             "@app/*": ["app/*"],
             "@server/*": ["server/*"],
             "@shared/*": ["shared/*"]

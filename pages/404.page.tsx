@@ -1,2 +1,2 @@
-import { NotFound } from '@presentation/pages/NotFound';
+import { NotFound } from '@app/presentation/pages/NotFound';
 export default NotFound;
