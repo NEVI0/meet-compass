@@ -1,4 +1,4 @@
-import { UserAbstract } from '@domain/entities';
+import { UserAbstract } from '@shared/domain/entities';
 
 export interface MeetAbstract {
     id: string;
