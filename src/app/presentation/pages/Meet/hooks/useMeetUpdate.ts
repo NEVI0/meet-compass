@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 import { useMeet } from '@app/presentation/contexts/MeetContext';
-import { makeListenForMeetUpdateUseCase } from '@domain/useCases';
+import { makeListenForMeetUpdateUseCase } from '@app/domain/useCases';
 
 export const useMeetUpdate = () => {
     const { setMeet } = useMeet();
