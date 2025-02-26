@@ -22,12 +22,13 @@ export class MeetRepository implements MeetRepositoryAbstract {
                 owner: params.owner,
             });
 
-            this.socketClientProvider.emit('register-user', meet.owner);
-            this.socketClientProvider.emit('register-meet', meet);
+            this.socketClientProvider.emit('register-user', {
+                user: meet.owner,
+            });
+            this.socketClientProvider.emit('register-meet', { meet });
 
             this.socketClientProvider.on<MeetAbstract>('updated-meet', data => {
                 this.socketClientProvider.removeEventListener('updated-meet');
-
                 return resolve(data);
             });
         });
@@ -68,7 +69,7 @@ export class MeetRepository implements MeetRepositoryAbstract {
 
             const offer = await this.peerConnectionProvider.createOffer();
 
-            this.socketClientProvider.emit('register-user', user);
+            this.socketClientProvider.emit('register-user', { user });
             this.socketClientProvider.emit('request-meet-access', {
                 offer,
                 from: user,

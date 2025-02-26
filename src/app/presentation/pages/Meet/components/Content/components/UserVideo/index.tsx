@@ -1,6 +1,6 @@
 import { FC, useEffect, useRef } from 'react';
 
-import { useMeetPrivateContext } from '../../../../context';
+import { useMeetPrivateContext } from 'app/presentation/pages/Meet/context';
 import * as S from './styles';
 
 export const UserVideo: FC = () => {
