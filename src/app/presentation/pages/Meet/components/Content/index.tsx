@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import { useMeet } from '@app/presentation/contexts/MeetContext';
 
-import { EmptyMeet, Participants, UserVideo } from './components';
+import { EmptyMeet, Participants, LocalVideo } from './components';
 import * as S from './styles';
 
 export const Content: FC = () => {
@@ -24,7 +24,7 @@ export const Content: FC = () => {
                 )}
             </S.Content>
 
-            <UserVideo />
+            <LocalVideo />
         </>
     );
 };

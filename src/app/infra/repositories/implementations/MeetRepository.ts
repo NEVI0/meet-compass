@@ -2,21 +2,13 @@ import { MeetAbstract } from '@shared/domain/entities';
 import { Meet, User } from '@shared/infra/adapters';
 
 import { MeetRepositoryAbstract } from '@app/domain/repositories';
-import {
-    PeerConnectionProviderAbstract,
-    SocketClientProviderAbstract,
-} from '@app/domain/providers';
+import { SocketClientProviderAbstract } from '@app/domain/providers';
 
 export class MeetRepository implements MeetRepositoryAbstract {
-    constructor(
-        private socketClientProvider: SocketClientProviderAbstract,
-        private peerConnectionProvider: PeerConnectionProviderAbstract,
-    ) {}
+    constructor(private socketClientProvider: SocketClientProviderAbstract) {}
 
     public create: MeetRepositoryAbstract['create'] = params => {
         return new Promise(resolve => {
-            // const { peer } = this.peerConnectionProvider;
-
             const meet = new Meet({
                 name: params.meet.name,
                 owner: params.owner,
@@ -36,8 +28,6 @@ export class MeetRepository implements MeetRepositoryAbstract {
 
     public requestAccess: MeetRepositoryAbstract['requestAccess'] = params => {
         return new Promise(async (resolve, reject) => {
-            // const { peer } = this.peerConnectionProvider;
-
             const user = new User({
                 name: params.user,
                 email: params.email,
@@ -67,11 +57,9 @@ export class MeetRepository implements MeetRepositoryAbstract {
                 return reject('Reunião indisponível no momento!');
             });
 
-            const offer = await this.peerConnectionProvider.createOffer();
-
             this.socketClientProvider.emit('register-user', { user });
             this.socketClientProvider.emit('request-meet-access', {
-                offer,
+                offer: {} as any,
                 from: user,
                 meetId: params.meetId,
             });
@@ -84,11 +72,6 @@ export class MeetRepository implements MeetRepositoryAbstract {
 
     public answerParticipantAccessRequest: MeetRepositoryAbstract['answerParticipantAccessRequest'] =
         async params => {
-            await this.peerConnectionProvider.answerOffer({
-                offer: params.offer,
-                media: params.media,
-            });
-
             this.socketClientProvider.emit(
                 'answer-meet-access-request',
                 params,

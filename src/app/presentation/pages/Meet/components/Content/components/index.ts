@@ -1,3 +1,3 @@
 export * from './Participants';
 export * from './EmptyMeet';
-export * from './UserVideo';
+export * from './LocalVideo';

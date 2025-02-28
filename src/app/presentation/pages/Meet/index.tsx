@@ -1,9 +1,9 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 import { useMeet } from '@app/presentation/contexts/MeetContext';
-
 import { Redirect } from '@app/presentation/components';
 
+import { MeetPrivateProvider } from './context';
 import {
     Header,
     Content,
@@ -11,31 +11,28 @@ import {
     Chat,
     ParticipantsRequestingAccessModal,
 } from './components';
-import { MeetPrivateProvider } from './context';
-import { useLeavingParticipant, useMeetUpdate, useMedia } from './hooks';
+import {
+    useLeavingParticipant,
+    useMeetUpdate,
+    useMedia,
+    useChat,
+} from './hooks';
+
 import * as S from './styles';
 
 export const Meet: FC = () => {
     const { meet, user } = useMeet();
 
-    useMeetUpdate();
-    useLeavingParticipant();
+    const chat = useChat();
     const media = useMedia();
 
-    const [isChatOpen, setIsChatOpen] = useState<boolean>(false);
+    useLeavingParticipant();
+    useMeetUpdate(media);
 
     if (!meet || !user) return <Redirect to="/home" />;
 
     return (
-        <MeetPrivateProvider
-            value={{
-                media,
-                chat: {
-                    open: isChatOpen,
-                    toogle: () => setIsChatOpen(currentValue => !currentValue),
-                },
-            }}
-        >
+        <MeetPrivateProvider value={{ media, chat }}>
             <S.Container>
                 <Header />
                 <Content />

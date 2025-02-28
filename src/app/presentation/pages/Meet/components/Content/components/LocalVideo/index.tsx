@@ -3,22 +3,24 @@ import { FC, useEffect, useRef } from 'react';
 import { useMeetPrivateContext } from 'app/presentation/pages/Meet/context';
 import * as S from './styles';
 
-export const UserVideo: FC = () => {
-    const userVideoRef = useRef<HTMLVideoElement>(null);
+export const LocalVideo: FC = () => {
+    const localVideoRef = useRef<HTMLVideoElement>(null);
 
     const { media } = useMeetPrivateContext();
 
     useEffect(() => {
-        if (media.stream && userVideoRef.current) {
-            userVideoRef.current.srcObject = media.stream;
+        console.log({ localStream: media.localStream });
+
+        if (media.localStream && localVideoRef.current) {
+            localVideoRef.current.srcObject = media.localStream;
         }
-    }, [media.stream]);
+    }, [media.localStream]);
 
     return (
         <S.Container visible={media.isUsingVideo}>
             <video
-                id="userVideo"
-                ref={userVideoRef}
+                id="localVideo"
+                ref={localVideoRef}
                 autoPlay
                 playsInline
                 muted

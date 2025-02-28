@@ -1,10 +1,12 @@
-import { createContext, useContext } from 'react';
+import { createContext, Dispatch, SetStateAction, useContext } from 'react';
 import { isEmpty } from 'lodash';
 
 type StreamType = MediaStream | null;
 
 interface MediaAbstract {
-    stream: StreamType;
+    localStream: StreamType;
+    participantStream: StreamType;
+
     loading: boolean;
     hasUserStream: boolean;
 
@@ -13,6 +15,8 @@ interface MediaAbstract {
 
     toggleVideo: () => void;
     toggleAudio: () => void;
+
+    setParticipantStream: Dispatch<SetStateAction<StreamType>>;
 }
 
 interface ChatAbstract {

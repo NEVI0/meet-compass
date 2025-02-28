@@ -1,4 +1,7 @@
-import { SocketClientProviderAbstract } from '@app/domain/providers';
+import {
+    PeerConnectionProviderAbstract,
+    SocketClientProviderAbstract,
+} from '@app/domain/providers';
 import { MeetEventHandlersRepositoryAbstract } from '@app/domain/repositories';
 
 import { MeetAbstract, UserAbstract } from '@shared/domain/entities';
@@ -6,7 +9,10 @@ import { MeetAbstract, UserAbstract } from '@shared/domain/entities';
 export class MeetEventHandlersRepository
     implements MeetEventHandlersRepositoryAbstract
 {
-    constructor(private socketClientProvider: SocketClientProviderAbstract) {}
+    constructor(
+        private socketClientProvider: SocketClientProviderAbstract,
+        private peerConnectionProvider: PeerConnectionProviderAbstract,
+    ) {}
 
     public onParticipantRequestingAccess: MeetEventHandlersRepositoryAbstract['onParticipantRequestingAccess'] =
         params => {
@@ -23,9 +29,14 @@ export class MeetEventHandlersRepository
 
     public onMeetUpdate: MeetEventHandlersRepositoryAbstract['onMeetUpdate'] =
         params => {
+            this.peerConnectionProvider.start({
+                localStream: params.localStream,
+                onReceivedParticipantStream: params.onReceivedParticipantStream,
+            });
+
             this.socketClientProvider.on<MeetAbstract>(
                 'updated-meet',
-                params.onReceive,
+                params.onReceiveMeetData,
             );
         };
 

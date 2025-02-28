@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { useToast } from '@app/presentation/contexts/ToastContext';
 
@@ -12,7 +12,10 @@ export const useMedia = (params?: ParamsAbstract) => {
     const { toast } = useToast();
 
     const [loading, setLoading] = useState<boolean>(false);
-    const [stream, setStream] = useState<StreamType>(null);
+
+    const [localStream, setLocalStream] = useState<StreamType>(null);
+    const [participantStream, setParticipantStream] =
+        useState<StreamType>(null);
 
     const [isUsingVideo, setIsUsingVideo] = useState<boolean>(true);
     const [isUsingAudio, setIsUsingAudio] = useState<boolean>(true);
@@ -39,7 +42,7 @@ export const useMedia = (params?: ParamsAbstract) => {
                 audio: true,
             });
 
-            setStream(media);
+            setLocalStream(media);
 
             if (params) params.onSuccessGettingStream(media);
         } catch (error) {
@@ -50,9 +53,9 @@ export const useMedia = (params?: ParamsAbstract) => {
 
     const toggleVideo = async () => {
         try {
-            if (!stream) return;
+            if (!localStream) return;
 
-            let tempStream: StreamType = stream.clone();
+            let tempStream: StreamType = localStream.clone();
 
             if (isUsingVideo) {
                 tempStream.getVideoTracks().forEach(track => track.stop());
@@ -63,7 +66,7 @@ export const useMedia = (params?: ParamsAbstract) => {
                 });
             }
 
-            setStream(tempStream);
+            setLocalStream(tempStream);
             setIsUsingVideo(!isUsingVideo);
 
             if (params) params.onSuccessGettingStream(tempStream);
@@ -72,9 +75,9 @@ export const useMedia = (params?: ParamsAbstract) => {
 
     const toggleAudio = async () => {
         try {
-            if (!stream) return;
+            if (!localStream) return;
 
-            let tempStream: StreamType = stream.clone();
+            let tempStream: StreamType = localStream.clone();
 
             if (isUsingAudio) {
                 tempStream.getAudioTracks().forEach(track => track.stop());
@@ -85,7 +88,7 @@ export const useMedia = (params?: ParamsAbstract) => {
                 });
             }
 
-            setStream(tempStream);
+            setLocalStream(tempStream);
             setIsUsingAudio(!isUsingAudio);
 
             if (params) params.onSuccessGettingStream(tempStream);
@@ -96,10 +99,12 @@ export const useMedia = (params?: ParamsAbstract) => {
         startStream();
     }, []);
 
-    const hasUserStream = !!stream;
+    const hasUserStream = !!localStream;
 
     return {
-        stream,
+        localStream,
+        participantStream,
+
         loading,
         hasUserStream,
 
@@ -108,5 +113,7 @@ export const useMedia = (params?: ParamsAbstract) => {
 
         toggleVideo,
         toggleAudio,
+
+        setParticipantStream,
     };
 };

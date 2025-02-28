@@ -26,41 +26,60 @@ const PEER_CONFIGS = {
 export class RTCPeerConnectionProvider
     implements PeerConnectionProviderAbstract
 {
-    public peer: RTCPeerConnection;
+    private localPeerConnection: RTCPeerConnection;
+    private remotePeerConnection: RTCPeerConnection;
 
     constructor() {
-        this.peer = new RTCPeerConnection(PEER_CONFIGS);
+        this.localPeerConnection = new RTCPeerConnection(PEER_CONFIGS);
+        this.remotePeerConnection = new RTCPeerConnection(PEER_CONFIGS);
     }
 
-    public createOffer: PeerConnectionProviderAbstract['createOffer'] =
-        async () => {
-            try {
-                const offer = await this.peer.createOffer();
-                this.peer.setLocalDescription(offer);
+    public start: PeerConnectionProviderAbstract['start'] = async params => {
+        try {
+            this.listenForIceCandidates();
+            this.listenForNewTracks(params.onReceivedParticipantStream);
+            this.addLocalTracks(params.localStream);
 
-                return offer;
-            } catch (error) {
-                console.log({ error });
-                return null as any;
-            }
-        };
+            const offer = await this.localPeerConnection.createOffer({
+                offerToReceiveAudio: true,
+                offerToReceiveVideo: true,
+            });
 
-    public answerOffer: PeerConnectionProviderAbstract['answerOffer'] =
-        async params => {
-            try {
-                const { offer, media } = params;
+            await this.localPeerConnection.setLocalDescription(offer);
+            await this.remotePeerConnection.setRemoteDescription(offer);
 
-                this.peer.setRemoteDescription(
-                    new RTCSessionDescription(offer),
-                );
+            const answer = await this.remotePeerConnection.createAnswer();
 
-                const answer = await this.peer.createAnswer();
-                await this.peer.setLocalDescription(answer);
+            await this.remotePeerConnection.setLocalDescription(answer);
+            await this.localPeerConnection.setRemoteDescription(answer);
+        } catch (error) {
+            console.log({ error });
+        }
+    };
 
-                this.peer.addTrack(media.track, media.stream);
-            } catch (error) {
-                console.log({ error });
-                return null as any;
-            }
-        };
+    private listenForIceCandidates() {
+        this.localPeerConnection.addEventListener('icecandidate', event =>
+            this.remotePeerConnection.addIceCandidate(event.candidate!),
+        );
+
+        this.remotePeerConnection.addEventListener('icecandidate', event =>
+            this.localPeerConnection.addIceCandidate(event.candidate!),
+        );
+    }
+
+    private listenForNewTracks(
+        onReceivedParticipantStream: (stream: MediaStream) => void,
+    ) {
+        this.remotePeerConnection.addEventListener('track', event => {
+            onReceivedParticipantStream(event.streams[0]);
+        });
+    }
+
+    private addLocalTracks(localStream: MediaStream) {
+        localStream
+            .getTracks()
+            .forEach(track =>
+                this.localPeerConnection.addTrack(track, localStream),
+            );
+    }
 }

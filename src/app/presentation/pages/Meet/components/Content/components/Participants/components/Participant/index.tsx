@@ -1,7 +1,9 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useRef } from 'react';
 
 import { UserAbstract } from '@shared/domain/entities';
 import { Icon } from '@app/presentation/components';
+
+import { useMeetPrivateContext } from '@app/presentation/pages/Meet/context';
 
 import * as S from './styles';
 
@@ -14,26 +16,23 @@ export const Participant: FC<ParticipantAbstract> = ({
     participant,
     index,
 }) => {
-    useEffect(() => {
-        console.log({ participant });
-        (async () => {
-            const media = await navigator.mediaDevices.getUserMedia({
-                audio: false,
-                video: true,
-            });
-            const video = document.getElementById(
-                `remoteParticipantVideo[${index}]`,
-            );
+    const participantVideoRef = useRef<HTMLVideoElement>(null);
 
-            if (!video) return;
-            (video as HTMLVideoElement).srcObject = media;
-        })();
-    }, []);
+    const { media } = useMeetPrivateContext();
+
+    useEffect(() => {
+        console.log({ participantStream: media.participantStream });
+
+        if (media.participantStream && participantVideoRef.current) {
+            participantVideoRef.current.srcObject = media.participantStream;
+        }
+    }, [media.participantStream]);
 
     return (
         <S.Container visible={true}>
             <video
                 id={`remoteParticipantVideo[${index}]`}
+                ref={participantVideoRef}
                 autoPlay
                 playsInline
                 muted

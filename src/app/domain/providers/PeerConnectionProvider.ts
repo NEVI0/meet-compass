@@ -1,14 +1,8 @@
-interface AnswerOfferParams {
-    offer: RTCSessionDescriptionInit;
-    media: {
-        track: MediaStreamTrack;
-        stream: MediaStream;
-    };
+interface StartParams {
+    localStream: MediaStream;
+    onReceivedParticipantStream: (stream: MediaStream) => void;
 }
 
 export interface PeerConnectionProviderAbstract {
-    peer: RTCPeerConnection;
-
-    createOffer(): Promise<RTCSessionDescriptionInit>;
-    answerOffer(params: AnswerOfferParams): Promise<RTCSessionDescriptionInit>;
+    start(params: StartParams): Promise<void>;
 }

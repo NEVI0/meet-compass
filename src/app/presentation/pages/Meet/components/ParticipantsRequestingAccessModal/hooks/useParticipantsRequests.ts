@@ -25,7 +25,7 @@ export const useParticipantsRequests = () => {
     const [requests, setRequests] = useState<RequestsAbstract[]>([]);
 
     const answerRequest = (params: ParamsAbstract) => {
-        if (!meet || !media.stream) return;
+        if (!meet || !media.localStream) return;
 
         makeAnswerParticipantAccessRequestUseCase().execute({
             answer: params.answer,
@@ -33,8 +33,8 @@ export const useParticipantsRequests = () => {
             participant: params.from,
             offer: params.offer,
             media: {
-                stream: media.stream,
-                track: media.stream.getTracks()[0],
+                stream: media.localStream,
+                track: media.localStream.getTracks()[0],
             },
         });
 
