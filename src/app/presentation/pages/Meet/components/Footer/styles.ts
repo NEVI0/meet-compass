@@ -10,16 +10,15 @@ export const Container = styled.footer`
     align-items: center;
     justify-content: space-between;
 
-    padding: 0 2rem;
-    height: ${props => props.theme.layout.footerHeight};
+    padding: 0 1rem;
+    height: calc(${props => props.theme.layout.footerHeight} - 12px);
     background-color: ${props => props.theme.colors.container};
-    /* z-index: 5; */
     transition: 0.3s;
 
     > section {
         display: flex;
         align-items: center;
-        column-gap: 1rem;
+        column-gap: 0.75rem;
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
@@ -35,5 +34,14 @@ export const Container = styled.footer`
         border: none;
         outline: none;
         background: none;
+    }
+
+    @media screen and (min-width: 767px) {
+        padding: 0 2rem;
+        height: ${props => props.theme.layout.footerHeight};
+
+        > section {
+            column-gap: 1rem;
+        }
     }
 `;

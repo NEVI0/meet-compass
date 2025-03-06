@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 export const Container = styled.div<{ active: boolean }>`
     position: fixed;
     top: 0;
-    right: ${props => (props.active ? '0' : '-450px')};
+    right: ${props => (props.active ? '0' : '-100vw')};
     bottom: 0;
     z-index: 5;
 
@@ -13,7 +13,7 @@ export const Container = styled.div<{ active: boolean }>`
         display: flex;
         flex-direction: column;
 
-        width: 450px;
+        width: 100vw;
         height: 100%;
 
         background-color: ${props => props.theme.colors.body};
@@ -29,8 +29,8 @@ export const Container = styled.div<{ active: boolean }>`
             align-items: center;
             justify-content: space-between;
 
-            padding: 0 1.5rem;
-            height: ${props => props.theme.layout.headerHeight};
+            padding: 0 1rem;
+            height: calc(${props => props.theme.layout.headerHeight} - 12px);
             border-bottom: 1px solid ${props => props.theme.colors.container};
         }
 
@@ -42,7 +42,7 @@ export const Container = styled.div<{ active: boolean }>`
             overflow-y: auto;
 
             padding: 1.5rem;
-            gap: 1.5rem;
+            gap: 1rem;
 
             > span {
                 text-align: center;
@@ -51,8 +51,8 @@ export const Container = styled.div<{ active: boolean }>`
         }
 
         > footer {
-            padding: 0.5rem 1.5rem;
-            height: ${props => props.theme.layout.footerHeight};
+            padding: 0.5rem 1rem;
+            height: calc(${props => props.theme.layout.footerHeight} - 12px);
             border-top: 1px solid ${props => props.theme.colors.container};
 
             > form {
@@ -86,6 +86,29 @@ export const Container = styled.div<{ active: boolean }>`
                     background-color: transparent;
                     color: ${props => props.theme.colors.text.main};
                 }
+            }
+        }
+    }
+
+    @media screen and (min-width: 767px) {
+        right: ${props => (props.active ? '0' : '-450px')};
+
+        > aside {
+            width: 450px;
+
+            > header {
+                padding: 0 1.5rem;
+                height: ${props => props.theme.layout.headerHeight};
+            }
+
+            > div {
+                padding: 1.5rem;
+                gap: 1.5rem;
+            }
+
+            > footer {
+                padding: 0.5rem 1.5rem;
+                height: ${props => props.theme.layout.footerHeight};
             }
         }
     }

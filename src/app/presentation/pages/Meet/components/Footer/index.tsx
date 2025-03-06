@@ -82,7 +82,7 @@ export const Footer: FC = () => {
             </section>
 
             <button onClick={copyLink}>
-                {isUnderMd ? 'Link Reunião' : meet.id}
+                {isUnderMd ? 'Meet link' : meet.id}
             </button>
         </S.Container>
     );

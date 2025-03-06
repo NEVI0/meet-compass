@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 
 import {
     Icon,
@@ -8,6 +8,7 @@ import {
 } from '@app/presentation/components';
 
 import * as S from './styles';
+import { useWindowSize } from '@app/presentation/hooks';
 
 interface ActionButtonAbstract {
     label: string;
@@ -27,14 +28,25 @@ export const ActionButton: FC<ActionButtonAbstract> = ({
     loading = false,
     disabled = false,
     onClick,
-}) => (
-    <Tooltip message={label} forceHide={disabled || loading}>
-        <S.Container
-            variant={variant}
-            disabled={disabled || loading}
-            onClick={onClick}
+}) => {
+    const { size } = useWindowSize();
+
+    const shouldHideTooltip = useMemo(() => {
+        return size.width < 768;
+    }, [size]);
+
+    return (
+        <Tooltip
+            message={label}
+            forceHide={shouldHideTooltip || disabled || loading}
         >
-            {loading ? <LoadingSpinner /> : <Icon name={icon} />}
-        </S.Container>
-    </Tooltip>
-);
+            <S.Container
+                variant={variant}
+                disabled={disabled || loading}
+                onClick={onClick}
+            >
+                {loading ? <LoadingSpinner /> : <Icon name={icon} />}
+            </S.Container>
+        </Tooltip>
+    );
+};

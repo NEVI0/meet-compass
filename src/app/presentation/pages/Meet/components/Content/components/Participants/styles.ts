@@ -14,8 +14,12 @@ export const Container = styled.div<{ participants: number }>`
     ${props =>
         props.participants === 1 &&
         css`
-            margin: 0 10rem;
+            margin: 0;
             grid-template-columns: 1fr;
+
+            @media screen and (min-width: 767px) {
+                margin: 0 10rem;
+            }
         `}
 
     ${props =>

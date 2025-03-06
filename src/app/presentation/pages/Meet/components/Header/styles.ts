@@ -9,9 +9,9 @@ export const Container = styled.header`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: ${props => props.theme.layout.headerHeight};
+    height: calc(${props => props.theme.layout.headerHeight} - 12px);
 
-    padding: 0 2rem;
+    padding: 0 1rem;
     background-color: ${props => props.theme.colors.container};
     transition: 0.3s;
 
@@ -22,6 +22,15 @@ export const Container = styled.header`
     > div {
         display: flex;
         align-items: center;
-        gap: 1rem;
+        column-gap: 0.75rem;
+    }
+
+    @media screen and (min-width: 767px) {
+        padding: 0 2rem;
+        height: ${props => props.theme.layout.headerHeight};
+
+        > div {
+            column-gap: 1rem;
+        }
     }
 `;
