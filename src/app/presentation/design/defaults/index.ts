@@ -34,7 +34,7 @@ export const DefaultStyles = createGlobalStyle`
 
 	body {
 		color: ${props => props.theme.colors.text.main};
-		background-color: ${props => props.theme.colors.body};
+		background-color: ${props => props.theme.colors.container} !important;
 	}
 
 	button {
