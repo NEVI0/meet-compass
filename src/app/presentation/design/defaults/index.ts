@@ -33,6 +33,7 @@ export const DefaultStyles = createGlobalStyle`
 	}
 
 	body {
+		overflow-x: hidden;
 		color: ${props => props.theme.colors.text.main};
 		background-color: ${props => props.theme.colors.container} !important;
 	}
