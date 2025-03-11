@@ -8,6 +8,7 @@
     "homepage": "https://meet-compass.herokuapp.com/home",
     "scripts": {
         "dev": "next dev",
+        "https": "next dev --experimental-https",
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
