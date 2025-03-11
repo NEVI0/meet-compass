@@ -125,10 +125,6 @@ export const Home: NextPage = () => {
                 </span>
             </main>
 
-            <aside>
-                <Icon name="compass" className="logo" />
-            </aside>
-
             {isJoinMeetModalVisible ? (
                 <JoinMeetModal
                     meetId={meetId as string}

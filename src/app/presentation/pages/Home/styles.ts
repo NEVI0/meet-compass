@@ -1,39 +1,24 @@
 import styled from 'styled-components';
 
 export const Containter = styled.div`
+    min-height: 100vh;
+
     display: flex;
     flex-direction: column;
+
     transition: 0.3s;
 
-    > aside {
-        display: none;
-        position: relative;
-
-        > svg {
-            position: fixed;
-
-            bottom: -20rem;
-            right: -20rem;
-            font-size: 72rem;
-
-            transition: 0.3s;
-            fill: ${props => props.theme.colors.primary};
-        }
-    }
-
     > main {
-        min-height: 100vh;
+        flex: 1;
 
         display: flex;
         flex-direction: column;
         justify-content: center;
         row-gap: 2.5rem;
         padding: 2rem;
-        position: relative;
 
-        background-color: ${props => props.theme.colors.container};
         transition: 0.3s;
-        overflow: auto;
+        overflow-y: auto;
 
         > header {
             display: flex;
@@ -130,27 +115,20 @@ export const Containter = styled.div`
     }
 
     @media screen and (min-width: 992px) {
-        flex-direction: row;
-
-        > aside {
-            display: block;
-        }
-
         > main {
-            width: 50%;
-            padding: 2rem 2.5rem;
+            padding: 5rem 15rem;
         }
     }
 
     @media screen and (min-width: 1120px) {
         > main {
-            padding: 2rem 4rem;
+            padding: 5rem 28rem;
         }
     }
 
     @media screen and (min-width: 1490px) {
         > main {
-            padding: 5rem 10rem;
+            padding: 5rem 36rem;
         }
     }
 `;

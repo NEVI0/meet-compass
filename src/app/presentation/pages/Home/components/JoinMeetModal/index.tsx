@@ -46,8 +46,8 @@ export const JoinMeetModal: FC<JoinMeetModalAbstract> = ({
                         });
                     }}
                 >
-                    {props => (
-                        <form onSubmit={props.handleSubmit}>
+                    {form => (
+                        <form onSubmit={form.handleSubmit}>
                             <div>
                                 <Input
                                     name="user"
@@ -70,7 +70,12 @@ export const JoinMeetModal: FC<JoinMeetModalAbstract> = ({
                                 />
                             </div>
 
-                            <Button type="submit" icon="send" loading={loading}>
+                            <Button
+                                type="submit"
+                                icon="send"
+                                loading={loading}
+                                disabled={!form.isValid}
+                            >
                                 Pedir para entrar
                             </Button>
                         </form>
