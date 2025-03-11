@@ -1,4 +1,5 @@
-import { FC } from 'react';
+import { NextPage } from 'next';
+import Head from 'next/head';
 
 import { useMeet } from '@app/presentation/contexts/MeetContext';
 import { Redirect } from '@app/presentation/components';
@@ -20,7 +21,7 @@ import {
 
 import * as S from './styles';
 
-export const Meet: FC = () => {
+export const Meet: NextPage = () => {
     const { meet, user } = useMeet();
 
     const chat = useChat();
@@ -33,6 +34,10 @@ export const Meet: FC = () => {
 
     return (
         <MeetPrivateProvider value={{ media, chat }}>
+            <Head>
+                <title>{meet.name} | Meet Compass</title>
+            </Head>
+
             <S.Container>
                 <Header />
                 <Content />

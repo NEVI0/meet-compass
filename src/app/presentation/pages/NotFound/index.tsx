@@ -1,7 +1,9 @@
-import { FC, useEffect } from 'react';
+import { useEffect } from 'react';
 
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
+import { NextPage } from 'next';
+import Head from 'next/head';
 
 import { useWindowSize } from '@app/presentation/hooks';
 import { Animation } from '@app/presentation/components';
@@ -9,7 +11,7 @@ import { Animation } from '@app/presentation/components';
 import { ANIMATION_DIMENSIONS } from './constants/animationDimensions';
 import * as S from './styles';
 
-export const NotFound: FC = () => {
+export const NotFound: NextPage = () => {
     const router = useRouter();
 
     const { t } = useTranslation();
@@ -25,6 +27,10 @@ export const NotFound: FC = () => {
 
     return (
         <S.Container>
+            <Head>
+                <title>Page not found | Meet Compass</title>
+            </Head>
+
             <main>
                 <Animation
                     loop={true}
