@@ -13,90 +13,86 @@ export const Container = styled.div`
 
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        row-gap: 2.5rem;
+        row-gap: 2rem;
         padding: 2rem;
 
         transition: 0.3s;
         overflow-y: auto;
 
-        > header {
-            display: flex;
-            flex-direction: column;
-            row-gap: 1rem;
-
-            > div:first-child {
-                width: 52px;
-                height: 52px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 0.75rem;
-                background-color: ${props => props.theme.colors.body};
-
-                > svg {
-                    font-size: 1.75rem;
-                    fill: ${props => props.theme.colors.primary};
-                }
-            }
-
-            > div:last-child {
-                display: flex;
-                flex-direction: column;
-                gap: 0.25rem;
-
-                > h1 {
-                    margin-bottom: 0.25rem;
-                    font-size: ${props => props.theme.typography.size.biggest};
-                }
-
-                > p {
-                    color: ${props => props.theme.colors.text.light};
-                }
-            }
-        }
-
-        > form {
-            display: flex;
-            flex-direction: column;
-            row-gap: 2.5rem;
-
-            > div {
-                display: flex;
-                flex-direction: column;
-                row-gap: 1rem;
-            }
+        > header > h1 {
+            font-size: ${props => props.theme.typography.size.h1};
         }
 
         > div {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            column-gap: 1rem;
-            font-size: ${props => props.theme.typography.size.smaller};
-            color: ${props => props.theme.colors.text.light};
-            text-transform: uppercase;
+            flex-direction: column;
+            gap: 2rem;
 
-            > div {
-                height: 1px;
-                width: 50px;
-                border-radius: 1rem;
-                background-color: ${props => props.theme.colors.text.light};
+            section:first-child {
+                position: relative;
+
+                display: flex;
+                justify-content: center;
+
+                width: 100%;
+                height: 500px;
+
+                border-radius: 1.5rem;
+                border: 3px solid ${props => props.theme.colors.primary};
+                background-color: ${props => props.theme.colors.body};
+
+                overflow: hidden;
+
+                > video {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+
+                > aside {
+                    position: absolute;
+
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+
+                    > svg {
+                        fill: ${props => props.theme.colors.primary};
+                        font-size: ${props => props.theme.typography.size.icon};
+                    }
+                }
             }
-        }
 
-        > span {
-            text-align: center;
-            font-size: ${props => props.theme.typography.size.small};
+            section:last-child {
+                display: flex;
+                flex-direction: column;
 
-            > a {
-                cursor: pointer;
-                transition: 0.3s;
-                color: ${props => props.theme.colors.primary};
+                gap: 2rem;
 
-                &:hover {
-                    text-decoration: underline;
-                    color: ${props => props.theme.colors.secondary};
+                > div {
+                    display: flex;
+                    flex-direction: column;
+
+                    gap: 1rem;
+
+                    > p {
+                        font-size: ${props =>
+                            props.theme.typography.size.normal};
+                    }
+
+                    > ol {
+                        list-style-position: inside;
+                    }
+                }
+
+                > footer {
+                    flex: 1;
+
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-end;
+
+                    gap: 1rem;
                 }
             }
         }
@@ -122,13 +118,29 @@ export const Container = styled.div`
 
     @media screen and (min-width: 1120px) {
         > main {
-            padding: 5rem 28rem;
+            padding: 5rem 20rem;
         }
     }
 
     @media screen and (min-width: 1490px) {
         > main {
-            padding: 5rem 36rem;
+            padding: 5rem 20rem;
+
+            align-items: flex-start;
+            justify-content: center;
+
+            > div {
+                flex-direction: row;
+
+                section:first-child {
+                    flex: 1;
+                    height: 400px;
+                }
+
+                section:last-child {
+                    flex: 1;
+                }
+            }
         }
     }
 `;
