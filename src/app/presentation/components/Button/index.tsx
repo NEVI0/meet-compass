@@ -10,6 +10,7 @@ interface ButtonAbstract {
 
     loading?: boolean;
     disabled?: boolean;
+    variant?: S.VariantType;
     type?: 'button' | 'submit';
 
     children: string;
@@ -20,6 +21,7 @@ export const Button: FC<ButtonAbstract> = ({
     icon,
     loading,
     disabled,
+    variant = 'default',
     type = 'button',
     children,
     onClick,
@@ -27,6 +29,7 @@ export const Button: FC<ButtonAbstract> = ({
     return (
         <S.Container
             type={type}
+            variant={variant}
             disabled={disabled || loading}
             onClick={onClick}
         >
