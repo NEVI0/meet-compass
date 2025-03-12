@@ -10,7 +10,7 @@ import { useLocale } from '@app/presentation/contexts/LocaleContext';
 import { Button, Input, Icon } from '@app/presentation/components';
 import { CreateMeetSchema } from '@app/presentation/validations';
 
-import { JoinMeetModal, MoreOptions } from './components';
+import { JoinMeetModal } from './components';
 import { useCreateMeet } from './hooks';
 import * as S from './styles';
 
@@ -37,8 +37,6 @@ export const Home: NextPage = () => {
             </Head>
 
             <main>
-                <MoreOptions />
-
                 <header>
                     <div>
                         <Icon name="compass" />
