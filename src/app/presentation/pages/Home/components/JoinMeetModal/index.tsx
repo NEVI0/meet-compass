@@ -73,6 +73,7 @@ export const JoinMeetModal: FC<JoinMeetModalAbstract> = ({
                             <Button
                                 type="submit"
                                 icon="send"
+                                variant="primary"
                                 loading={loading}
                                 disabled={!form.isValid}
                             >

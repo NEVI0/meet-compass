@@ -97,6 +97,7 @@ export const Home: NextPage = () => {
                             <Button
                                 type="submit"
                                 icon="plus"
+                                variant="primary"
                                 loading={loading}
                                 disabled={!form.isValid}
                             >
