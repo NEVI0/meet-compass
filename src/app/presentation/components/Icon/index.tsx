@@ -26,6 +26,9 @@ import {
     BiMoon,
     BiShareAlt,
     BiGlobe,
+    BiArrowToLeft,
+    BiArrowToRight,
+    BiLockOpen,
 } from 'react-icons/bi';
 
 import { useTheme } from '@app/presentation/contexts/ThemeContext';
@@ -56,6 +59,9 @@ const ICONS = {
     moon: BiMoon,
     share: BiShareAlt,
     locale: BiGlobe,
+    'arrow-left': BiArrowToLeft,
+    'arrow-right': BiArrowToRight,
+    'lock-open': BiLockOpen,
 };
 
 export type IconName = keyof typeof ICONS;
