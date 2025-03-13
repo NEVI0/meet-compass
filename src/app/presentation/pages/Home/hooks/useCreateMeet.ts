@@ -25,7 +25,7 @@ export const useCreateMeet = () => {
             setMeet(meet);
             setUser(meet.owner);
 
-            router.push('/meet');
+            router.push('/request-stream');
         } catch (error) {
             toast.error('Não foi possível criar a meet!');
         } finally {

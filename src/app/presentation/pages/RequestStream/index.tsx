@@ -1,16 +1,21 @@
 import { useEffect, useRef } from 'react';
 
+import { useRouter } from 'next/router';
 import { NextPage } from 'next';
 import Head from 'next/head';
 
+import { useMeet } from '@app/presentation/contexts/MeetContext';
 import { useMedia } from '@app/presentation/hooks';
 
+import { Button, Icon, Redirect } from '@app/presentation/components';
+
 import * as S from './styles';
-import { Button, Icon } from '@app/presentation/components';
 
 export const RequestStream: NextPage = () => {
     const localVideoRef = useRef<HTMLVideoElement>(null);
 
+    const router = useRouter();
+    const { meet, user } = useMeet();
     const { startStream, localStream, hasUserStream, loading } = useMedia();
 
     useEffect(() => {
@@ -18,6 +23,8 @@ export const RequestStream: NextPage = () => {
             localVideoRef.current.srcObject = localStream;
         }
     }, [localStream]);
+
+    if (!meet || !user) return <Redirect to="/" />;
 
     return (
         <S.Container>
@@ -84,6 +91,7 @@ export const RequestStream: NextPage = () => {
                                 icon="arrow-right"
                                 loading={loading}
                                 disabled={!hasUserStream}
+                                onClick={() => router.push('/meet')}
                             >
                                 Continue
                             </Button>

@@ -30,7 +30,7 @@ export const Meet: NextPage = () => {
     useLeavingParticipant();
     useMeetUpdate(media);
 
-    if (!meet || !user) return <Redirect to="/home" />;
+    if (!meet || !user) return <Redirect to="/" />;
 
     return (
         <MeetPrivateProvider value={{ media, chat }}>
