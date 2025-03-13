@@ -11,14 +11,14 @@ import { Button, Input, Icon } from '@app/presentation/components';
 import { CreateMeetSchema } from '@app/presentation/validations';
 
 import { JoinMeetModal } from './components';
-import { useCreateMeet } from './hooks';
+import { useRegisterMeet } from './hooks';
 import * as S from './styles';
 
 export const Home: NextPage = () => {
     const router = useRouter();
 
     const { t } = useLocale();
-    const { create, loading } = useCreateMeet();
+    const { register } = useRegisterMeet();
 
     const [isJoinMeetModalVisible, setIsJoinMeetModalVisible] =
         useState<boolean>(false);
@@ -57,7 +57,7 @@ export const Home: NextPage = () => {
                     validateOnMount={false}
                     validationSchema={CreateMeetSchema(t)}
                     onSubmit={values => {
-                        create({
+                        register({
                             meet: {
                                 name: values.meet,
                             },
@@ -96,7 +96,6 @@ export const Home: NextPage = () => {
                                 type="submit"
                                 icon="plus"
                                 variant="primary"
-                                loading={loading}
                                 disabled={!form.isValid}
                             >
                                 {t('page.home.button')}

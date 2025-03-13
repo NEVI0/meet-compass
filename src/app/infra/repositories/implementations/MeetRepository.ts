@@ -17,7 +17,9 @@ export class MeetRepository implements MeetRepositoryAbstract {
             this.socketClientProvider.emit('register-user', {
                 user: meet.owner,
             });
-            this.socketClientProvider.emit('register-meet', { meet });
+            this.socketClientProvider.emit('register-meet', {
+                meet,
+            });
 
             this.socketClientProvider.on<MeetAbstract>('updated-meet', data => {
                 this.socketClientProvider.removeEventListener('updated-meet');

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 
-import { CreateMeetDTO } from '@app/domain/dtos';
 import { makeCreateMeetUseCase } from '@app/domain/useCases';
 
 import { useMeet } from '@app/presentation/contexts/MeetContext';
@@ -11,21 +10,23 @@ export const useCreateMeet = () => {
     const router = useRouter();
 
     const { toast } = useToast();
-    const { setMeet, setUser } = useMeet();
+    const { tempMeetData, setMeet, setUser } = useMeet();
 
     const [loading, setLoading] = useState<boolean>(false);
 
-    const create = async (params: CreateMeetDTO) => {
+    const create = async () => {
+        if (!tempMeetData) return;
+
         try {
             setLoading(true);
 
-            const meet = await makeCreateMeetUseCase().execute(params);
+            const meet = await makeCreateMeetUseCase().execute(tempMeetData);
             if (!meet) throw Error();
 
             setMeet(meet);
             setUser(meet.owner);
 
-            router.push('/request-stream');
+            router.push('/meet');
         } catch (error) {
             toast.error('Não foi possível criar a meet!');
         } finally {

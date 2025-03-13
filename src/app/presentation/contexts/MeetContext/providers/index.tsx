@@ -5,6 +5,8 @@ import { MeetContext, MeetContextAbstract } from '../hooks/useMeet';
 export const MeetProvider: FC<{ children: ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<MeetContextAbstract['user']>(null);
     const [meet, setMeet] = useState<MeetContextAbstract['meet']>(null);
+    const [tempMeetData, setTempMeetData] =
+        useState<MeetContextAbstract['tempMeetData']>(null);
 
     return (
         <MeetContext.Provider
@@ -14,6 +16,9 @@ export const MeetProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
                 user,
                 setUser,
+
+                tempMeetData,
+                setTempMeetData,
             }}
         >
             {children}
