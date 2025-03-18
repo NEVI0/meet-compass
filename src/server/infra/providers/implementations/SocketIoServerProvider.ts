@@ -1,13 +1,11 @@
 import { IoServer, SocketServer } from '@shared/domain/entities';
 import { SocketServerProviderAbstract } from '@server/domain/providers';
-import { console } from 'inspector';
 
 export class SocketIoServerProvider implements SocketServerProviderAbstract {
     public io: IoServer;
     public socket: SocketServer | undefined;
 
     constructor(server: IoServer) {
-        console.log({ server });
         this.io = server;
     }
 
