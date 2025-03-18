@@ -4,18 +4,28 @@ export const Container = styled.div`
     display: flex;
     align-items: flex-start;
     justify-content: flex-end;
-    padding: 2rem;
 
     width: 100%;
     height: 100%;
     position: fixed;
 
+    transition: 0.3s;
     z-index: 5;
 
     > div {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        align-items: flex-end;
+
+        width: 100%;
+    }
+
+    @media screen and (min-width: 767px) {
+        padding: 2rem;
+
+        > div {
+            gap: 1rem;
+        }
     }
 `;
 
@@ -25,11 +35,11 @@ export const Participant = styled.div`
     justify-content: space-between;
 
     padding: 1rem;
-    border-radius: 1rem;
-    box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.25);
     background-color: ${props => props.theme.colors.container};
 
-    width: 400px;
+    width: 100%;
+    border-bottom: 1px solid ${props => props.theme.colors.others.gray};
+    transition: 0.3s;
 
     > div:nth-child(1) {
         display: flex;
@@ -45,6 +55,14 @@ export const Participant = styled.div`
     > div:nth-child(2) {
         display: flex;
         align-items: center;
-        gap: 1rem;
+        gap: 0.75rem;
+    }
+
+    @media screen and (min-width: 767px) {
+        width: 400px;
+        padding: 1.25rem;
+
+        border-radius: 1rem;
+        box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.15);
     }
 `;
