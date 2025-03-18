@@ -1,9 +1,7 @@
 import { FC } from 'react';
-import Head from 'next/head';
 
 import { useMeet } from '@app/presentation/contexts/MeetContext';
 import { useTheme } from '@app/presentation/contexts/ThemeContext';
-import { useLocale } from '@app/presentation/contexts/LocaleContext';
 
 import { IconButton, DropdownMenu } from '@app/presentation/components';
 
@@ -12,7 +10,6 @@ import { useMeetPrivateContext } from '../../context';
 import * as S from './styles';
 
 export const Header: FC = () => {
-    const { t } = useLocale();
     const { meet } = useMeet();
     const { copyLink } = useCopyMeetLink();
     const { chat } = useMeetPrivateContext();
@@ -21,45 +18,39 @@ export const Header: FC = () => {
     if (!meet) return undefined;
 
     return (
-        <>
-            <Head>
-                <title>Meet Compass - {t('page.meet.title')}</title>
-            </Head>
+        <S.Container>
+            <h2>{meet.name}</h2>
 
-            <S.Container>
-                <h2>{meet.name}</h2>
+            <div>
+                <DropdownMenu
+                    content={
+                        <>
+                            <DropdownMenu.Option
+                                onClick={() => console.log('Teste')}
+                            >
+                                Português
+                            </DropdownMenu.Option>
 
-                <div>
-                    <DropdownMenu
-                        content={
-                            <>
-                                <DropdownMenu.Option
-                                    onClick={() => console.log('Teste')}
-                                >
-                                    Português
-                                </DropdownMenu.Option>
+                            <DropdownMenu.Option
+                                onClick={() => console.log('Teste')}
+                            >
+                                English
+                            </DropdownMenu.Option>
+                        </>
+                    }
+                >
+                    <IconButton icon="locale" />
+                </DropdownMenu>
 
-                                <DropdownMenu.Option
-                                    onClick={() => console.log('Teste')}
-                                >
-                                    English
-                                </DropdownMenu.Option>
-                            </>
-                        }
-                    >
-                        <IconButton icon="locale" />
-                    </DropdownMenu>
+                <IconButton icon="share" onClick={copyLink} />
 
-                    <IconButton icon="share" onClick={copyLink} />
+                <IconButton
+                    icon={theme.darkMode ? 'sun' : 'moon'}
+                    onClick={toggleTheme}
+                />
 
-                    <IconButton
-                        icon={theme.darkMode ? 'sun' : 'moon'}
-                        onClick={toggleTheme}
-                    />
-
-                    <IconButton icon="chat" onClick={chat.toogle} />
-                </div>
-            </S.Container>
-        </>
+                <IconButton icon="chat" onClick={chat.toogle} />
+            </div>
+        </S.Container>
     );
 };

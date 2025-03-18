@@ -14,7 +14,7 @@ export const Container = styled.aside<{ visible: boolean }>`
     height: 150px;
 
     border-radius: 1rem;
-    border: 3px solid ${props => props.theme.colors.primary};
+    border: 3px solid ${props => props.theme.colors.others.gray};
     background-color: ${props => props.theme.colors.body};
     z-index: 5;
 

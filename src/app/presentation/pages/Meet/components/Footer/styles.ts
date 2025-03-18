@@ -12,6 +12,7 @@ export const Container = styled.footer`
 
     padding: 0 1rem;
     height: calc(${props => props.theme.layout.footerHeight} - 12px);
+    border-top: 1px solid ${props => props.theme.colors.others.gray};
     background-color: ${props => props.theme.colors.container};
     transition: 0.3s;
 

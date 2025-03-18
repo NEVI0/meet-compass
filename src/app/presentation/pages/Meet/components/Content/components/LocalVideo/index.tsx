@@ -9,8 +9,6 @@ export const LocalVideo: FC = () => {
     const { media } = useMeetPrivateContext();
 
     useEffect(() => {
-        console.log({ localStream: media.localStream });
-
         if (media.localStream && localVideoRef.current) {
             localVideoRef.current.srcObject = media.localStream;
         }

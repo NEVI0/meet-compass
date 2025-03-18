@@ -13,6 +13,7 @@ export const Container = styled.header`
 
     padding: 0 1rem;
     background-color: ${props => props.theme.colors.container};
+    border-bottom: 1px solid ${props => props.theme.colors.others.gray};
     transition: 0.3s;
 
     > h2 {
