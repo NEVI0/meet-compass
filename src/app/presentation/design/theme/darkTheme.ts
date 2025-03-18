@@ -13,6 +13,7 @@ export const darkTheme = {
     others: {
         red: '#e22b2b',
         green: '#1e9228',
+        gray: '#2c2c2d',
     },
 
     toast: {

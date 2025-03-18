@@ -13,6 +13,7 @@ export const lightTheme = {
     others: {
         red: '#e22b2b',
         green: '#1e9228',
+        gray: '#e7e7e7',
     },
 
     toast: {
