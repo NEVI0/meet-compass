@@ -29,6 +29,7 @@ import {
     BiArrowToLeft,
     BiArrowToRight,
     BiLockOpen,
+    BiDotsVerticalRounded,
 } from 'react-icons/bi';
 
 import { useTheme } from '@app/presentation/contexts/ThemeContext';
@@ -62,6 +63,7 @@ const ICONS = {
     'arrow-left': BiArrowToLeft,
     'arrow-right': BiArrowToRight,
     'lock-open': BiLockOpen,
+    options: BiDotsVerticalRounded,
 };
 
 export type IconName = keyof typeof ICONS;
