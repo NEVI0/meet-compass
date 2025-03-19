@@ -1,8 +1,5 @@
-import { MeetAbstract } from '@shared/domain/entities';
+import { MeetUpdatedAbstract } from '@app/domain/entities';
 
 export interface ListenForMeetUpdatedDTO {
-    localStream: MediaStream;
-
-    onReceiveMeetData(meet: MeetAbstract): void;
-    onReceivedParticipantStream: (stream: MediaStream) => void;
+    onUpdated(updated: MeetUpdatedAbstract): void;
 }

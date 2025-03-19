@@ -1,11 +1,17 @@
-import { MeetAbstract } from '@shared/domain/entities';
 import { Meet, User } from '@shared/infra/adapters';
 
+import { MeetUpdatedAbstract } from '@app/domain/entities';
 import { MeetRepositoryAbstract } from '@app/domain/repositories';
-import { SocketClientProviderAbstract } from '@app/domain/providers';
+import {
+    PeerConnectionProviderAbstract,
+    SocketClientProviderAbstract,
+} from '@app/domain/providers';
 
 export class MeetRepository implements MeetRepositoryAbstract {
-    constructor(private socketClientProvider: SocketClientProviderAbstract) {}
+    constructor(
+        private socketClientProvider: SocketClientProviderAbstract,
+        private peerConnectionProvider: PeerConnectionProviderAbstract,
+    ) {}
 
     public create: MeetRepositoryAbstract['create'] = params => {
         return new Promise(resolve => {
@@ -21,31 +27,47 @@ export class MeetRepository implements MeetRepositoryAbstract {
                 meet,
             });
 
-            this.socketClientProvider.on<MeetAbstract>('updated-meet', data => {
-                this.socketClientProvider.removeEventListener('updated-meet');
-                return resolve(data);
-            });
+            this.socketClientProvider.on<MeetUpdatedAbstract>(
+                'updated-meet',
+                updated => {
+                    this.socketClientProvider.removeEventListener(
+                        'updated-meet',
+                    );
+
+                    return resolve(updated);
+                },
+            );
         });
     };
 
     public requestAccess: MeetRepositoryAbstract['requestAccess'] = params => {
         return new Promise(async (resolve, reject) => {
             const user = new User({
-                name: params.user,
-                email: params.email,
+                name: params.participant.name,
+                email: params.participant.email,
             });
 
-            this.socketClientProvider.on<MeetAbstract>(
-                'request-accepted',
-                meet => {
+            this.socketClientProvider.emit('register-user', { user });
+            this.socketClientProvider.emit('request-meet-access', {
+                from: user,
+                meetId: params.meet.id,
+                offer: {} as any,
+            });
+
+            this.socketClientProvider.on<MeetUpdatedAbstract>(
+                'updated-meet',
+                updated => {
                     this.removeListenersOfRequestAccess();
 
-                    const currentUser =
-                        meet.participants.find(
-                            participant => participant.id === user.id,
-                        ) || null;
+                    const currentUser = updated.meet.participants.find(
+                        participant => participant.id === user.id,
+                    );
+                    if (!currentUser) return reject('Acesso negado!');
 
-                    return resolve({ meet, currentUser });
+                    return resolve({
+                        meet: updated.meet,
+                        user: currentUser,
+                    });
                 },
             );
 
@@ -57,13 +79,6 @@ export class MeetRepository implements MeetRepositoryAbstract {
             this.socketClientProvider.on('meet-not-available', () => {
                 this.removeListenersOfRequestAccess();
                 return reject('Reunião indisponível no momento!');
-            });
-
-            this.socketClientProvider.emit('register-user', { user });
-            this.socketClientProvider.emit('request-meet-access', {
-                offer: {} as any,
-                from: user,
-                meetId: params.meetId,
             });
         });
     };
@@ -86,7 +101,7 @@ export class MeetRepository implements MeetRepositoryAbstract {
 
     private removeListenersOfRequestAccess() {
         this.socketClientProvider.removeEventListener('meet-not-available');
-        this.socketClientProvider.removeEventListener('request-accepted');
         this.socketClientProvider.removeEventListener('request-denied');
+        this.socketClientProvider.removeEventListener('updated-meet');
     }
 }
