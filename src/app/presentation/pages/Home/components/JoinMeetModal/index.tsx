@@ -1,12 +1,15 @@
 import { FC } from 'react';
 
+import { useRouter } from 'next/router';
+
 import { Formik } from 'formik';
 
+import { useMeet } from '@app/presentation/contexts/MeetContext';
 import { useLocale } from '@app/presentation/contexts/LocaleContext';
+
 import { Button, IconButton, Input } from '@app/presentation/components';
 import { JoinMeetSchema } from '@app/presentation/validations';
 
-import { useRequestMeetAccess } from './hooks';
 import * as S from './styles';
 
 interface JoinMeetModalAbstract {
@@ -18,8 +21,10 @@ export const JoinMeetModal: FC<JoinMeetModalAbstract> = ({
     meetId,
     onClose,
 }) => {
+    const router = useRouter();
+
     const { t } = useLocale();
-    const { request, loading } = useRequestMeetAccess();
+    const { setTempParticipantData } = useMeet();
 
     return (
         <S.Container>
@@ -31,26 +36,31 @@ export const JoinMeetModal: FC<JoinMeetModalAbstract> = ({
 
                 <Formik
                     initialValues={{
-                        user: '',
+                        name: '',
                         email: '',
                         meet: meetId || '',
                     }}
                     validateOnMount={false}
                     validationSchema={JoinMeetSchema(t)}
                     onSubmit={values => {
-                        request({
-                            user: values.user,
-                            email: values.email,
-                            meetId: values.meet,
-                            signal: null,
+                        setTempParticipantData({
+                            meet: {
+                                id: values.meet,
+                            },
+                            participant: {
+                                name: values.name,
+                                email: values.email,
+                            },
                         });
+
+                        router.push('/request-stream');
                     }}
                 >
                     {form => (
                         <form onSubmit={form.handleSubmit}>
                             <div>
                                 <Input
-                                    name="user"
+                                    name="name"
                                     icon="user"
                                     label={t('inputPlaceholder.userName')}
                                 />
@@ -74,7 +84,6 @@ export const JoinMeetModal: FC<JoinMeetModalAbstract> = ({
                                 type="submit"
                                 icon="send"
                                 variant="primary"
-                                loading={loading}
                                 disabled={!form.isValid}
                             >
                                 Pedir para entrar

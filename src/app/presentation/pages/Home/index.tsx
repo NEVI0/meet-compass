@@ -6,19 +6,20 @@ import Head from 'next/head';
 
 import { Formik } from 'formik';
 
+import { useMeet } from '@app/presentation/contexts/MeetContext';
 import { useLocale } from '@app/presentation/contexts/LocaleContext';
+
 import { Button, Input, Icon } from '@app/presentation/components';
 import { CreateMeetSchema } from '@app/presentation/validations';
 
 import { JoinMeetModal } from './components';
-import { useRegisterMeet } from './hooks';
 import * as S from './styles';
 
 export const Home: NextPage = () => {
     const router = useRouter();
 
     const { t } = useLocale();
-    const { register } = useRegisterMeet();
+    const { setTempMeetData } = useMeet();
 
     const [isJoinMeetModalVisible, setIsJoinMeetModalVisible] =
         useState<boolean>(false);
@@ -57,7 +58,7 @@ export const Home: NextPage = () => {
                     validateOnMount={false}
                     validationSchema={CreateMeetSchema(t)}
                     onSubmit={values => {
-                        register({
+                        setTempMeetData({
                             meet: {
                                 name: values.meet,
                             },
@@ -66,6 +67,8 @@ export const Home: NextPage = () => {
                                 email: values.email,
                             },
                         });
+
+                        router.push('/request-stream');
                     }}
                 >
                     {form => (
