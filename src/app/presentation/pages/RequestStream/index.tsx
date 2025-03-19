@@ -8,16 +8,19 @@ import { useMedia } from '@app/presentation/hooks';
 
 import { Button, Icon, Redirect } from '@app/presentation/components';
 
-import { useCreateMeet } from './hooks';
+import { useCreateMeet, useRequestMeetAccess } from './hooks';
 import * as S from './styles';
 
 export const RequestStream: NextPage = () => {
     const localVideoRef = useRef<HTMLVideoElement>(null);
 
-    const controller = useCreateMeet();
+    const createController = useCreateMeet();
+    const accessController = useRequestMeetAccess();
 
-    const { tempMeetData } = useMeet();
+    const { tempMeetData, tempParticipantData } = useMeet();
     const { startStream, localStream, hasUserStream, loading } = useMedia();
+
+    const isRequestingAccess = tempParticipantData !== null;
 
     useEffect(() => {
         if (localStream && localVideoRef.current) {
@@ -25,7 +28,8 @@ export const RequestStream: NextPage = () => {
         }
     }, [localStream]);
 
-    if (!tempMeetData) return <Redirect to="/" />;
+    if (!isRequestingAccess && !tempMeetData) return <Redirect to="/" />;
+    if (isRequestingAccess && !tempParticipantData) return <Redirect to="/" />;
 
     return (
         <S.Container>
@@ -90,11 +94,17 @@ export const RequestStream: NextPage = () => {
                             <Button
                                 variant="primary"
                                 icon="arrow-right"
-                                loading={loading}
                                 disabled={!hasUserStream}
-                                onClick={controller.create}
+                                loading={loading || accessController.loading}
+                                onClick={
+                                    isRequestingAccess
+                                        ? accessController.request
+                                        : createController.create
+                                }
                             >
-                                Continue
+                                {isRequestingAccess
+                                    ? 'Request access'
+                                    : 'Continue'}
                             </Button>
                         </footer>
                     </section>

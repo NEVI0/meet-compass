@@ -20,7 +20,9 @@ export const useCreateMeet = () => {
         try {
             setLoading(true);
 
-            const meet = await makeCreateMeetUseCase().execute(tempMeetData);
+            const { meet } = await makeCreateMeetUseCase().execute(
+                tempMeetData,
+            );
             if (!meet) throw Error();
 
             setMeet(meet);
