@@ -30,11 +30,7 @@ export class RegisterMeetUseCase {
                 data.meet.owner,
             );
 
-            this.socketServerProvider.emitToSocket(
-                data.meet.owner.socketId,
-                'updated-meet',
-                data.meet,
-            );
+            this.socketServerProvider.emit('updated-meet', { meet: data.meet });
         });
     }
 }

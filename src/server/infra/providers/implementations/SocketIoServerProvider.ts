@@ -21,7 +21,7 @@ export class SocketIoServerProvider implements SocketServerProviderAbstract {
         this.socket.emit(event, data);
     };
 
-    public emitToSocket: SocketServerProviderAbstract['emitToSocket'] = (
+    public emitTo: SocketServerProviderAbstract['emitTo'] = (
         socketId,
         event,
         data,

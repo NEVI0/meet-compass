@@ -21,16 +21,16 @@ export class LeaveMeetUseCase {
             if (!meet) return;
 
             meet.participants.forEach(participant => {
-                this.socketServerProvider.emitToSocket(
+                this.socketServerProvider.emitTo(
                     participant.socketId,
                     'participant-left',
                     { name: user.name },
                 );
 
-                this.socketServerProvider.emitToSocket(
+                this.socketServerProvider.emitTo(
                     participant.socketId,
                     'updated-meet',
-                    meet,
+                    { meet },
                 );
             });
         });

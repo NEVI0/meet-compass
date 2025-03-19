@@ -25,7 +25,7 @@ export class RequestMeetAccessUseCase {
                     return;
                 }
 
-                this.socketServerProvider.emitToSocket(
+                this.socketServerProvider.emitTo(
                     meet.owner.socketId,
                     'participant-requesting-meet-access',
                     {

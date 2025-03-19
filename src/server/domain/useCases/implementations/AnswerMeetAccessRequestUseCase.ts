@@ -17,7 +17,7 @@ export class AnswerMeetAccessRequestUseCase {
                 const { meetId, answer, participant } = data;
 
                 if (answer === 'DENIED') {
-                    return this.socketServerProvider.emitToSocket(
+                    return this.socketServerProvider.emitTo(
                         participant.socketId,
                         'request-denied',
                         null,
@@ -30,16 +30,13 @@ export class AnswerMeetAccessRequestUseCase {
                 );
                 if (!meet) return;
 
-                this.socketServerProvider.emitToSocket(
-                    participant.socketId,
-                    'request-accepted',
-                    meet,
-                );
-                this.socketServerProvider.emitToSocket(
-                    meet.owner.socketId,
-                    'updated-meet',
-                    meet,
-                );
+                meet.participants.forEach(participant => {
+                    this.socketServerProvider.emitTo(
+                        participant.socketId,
+                        'updated-meet',
+                        { meet },
+                    );
+                });
             },
         );
     }

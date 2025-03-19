@@ -20,7 +20,7 @@ export class SendMessageUseCase {
             meet.participants
                 .filter(participant => participant.id !== sent.by.id)
                 .forEach(participant => {
-                    this.socketServerProvider.emitToSocket(
+                    this.socketServerProvider.emitTo(
                         participant.socketId,
                         'message',
                         data,

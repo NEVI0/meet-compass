@@ -16,11 +16,7 @@ export interface SocketServerProviderAbstract {
     connect(callback: VoidFunction): void;
 
     emit(event: SocketServerEventName, data: unknown): void;
-    emitToSocket(
-        socketId: string,
-        event: SocketServerEventName,
-        data: unknown,
-    ): void;
+    emitTo(socketId: string, event: SocketServerEventName, data: unknown): void;
 
     on<T>(
         event: SocketClientEventName,
