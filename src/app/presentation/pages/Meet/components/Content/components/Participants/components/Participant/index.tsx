@@ -21,12 +21,10 @@ export const Participant: FC<ParticipantAbstract> = ({
     const { media } = useMeetPrivateContext();
 
     useEffect(() => {
-        console.log({ participantStream: media.participantStream });
-
-        if (media.participantStream && participantVideoRef.current) {
-            participantVideoRef.current.srcObject = media.participantStream;
+        if (media.localStream && participantVideoRef.current) {
+            participantVideoRef.current.srcObject = media.localStream;
         }
-    }, [media.participantStream]);
+    }, [media.localStream]);
 
     return (
         <S.Container visible={true}>

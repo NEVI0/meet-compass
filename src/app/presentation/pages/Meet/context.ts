@@ -5,8 +5,6 @@ type StreamType = MediaStream | null;
 
 interface MediaAbstract {
     localStream: StreamType;
-    participantStream: StreamType;
-
     loading: boolean;
     hasUserStream: boolean;
 
@@ -15,8 +13,6 @@ interface MediaAbstract {
 
     toggleVideo: () => void;
     toggleAudio: () => void;
-
-    setParticipantStream: Dispatch<SetStateAction<StreamType>>;
 }
 
 interface ChatAbstract {
